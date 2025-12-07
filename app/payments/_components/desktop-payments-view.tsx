@@ -7,7 +7,7 @@ import { DataTable } from "@/components/ui/data-table"
 import { SearchInput } from "@/components/shared/search-input"
 import { TransactionDetailsModal } from "@/components/transaction-details-modal"
 import { PaymentsStats } from "./payments-stats"
-import { FundWalletModal, WithdrawalModal, OtpModal, SuccessModal } from "./payment-modals"
+import { FundWalletModal, WithdrawalModal } from "./payment-modals"
 import { formatCurrency, getStatusBadge, getTypeIcon } from "./payments-utils"
 
 interface Transaction {
@@ -21,21 +21,44 @@ interface Transaction {
   balance: number
 }
 
-interface DesktopPaymentsViewProps {
-  transactions: Transaction[]
-  onTransactionClick: (transaction: Transaction) => void
-  onPaymentAction: (action: string) => void
+interface VirtualAccount {
+  account_number: string
+  account_name: string
+  bank: string
+  user_id: number
 }
 
-export function DesktopPaymentsView({ transactions, onTransactionClick, onPaymentAction }: DesktopPaymentsViewProps) {
+interface DesktopPaymentsViewProps {
+  walletBalance: number
+  virtualAccount?: VirtualAccount
+  transactions: Transaction[]
+  isLoadingWallet: boolean
+  onTransactionClick: (transaction: Transaction) => void
+  onPaymentAction: (action: string) => void
+  withdrawAmount: string
+  onWithdrawAmountChange: (amount: string) => void
+  onWithdraw: () => void
+  showWithdrawModal: boolean
+  onWithdrawModalChange: (show: boolean) => void
+  isWithdrawing: boolean
+}
+
+export function DesktopPaymentsView({
+  walletBalance,
+  virtualAccount,
+  transactions,
+  isLoadingWallet,
+  onTransactionClick,
+  onPaymentAction,
+  withdrawAmount,
+  onWithdrawAmountChange,
+  onWithdraw,
+  showWithdrawModal,
+  onWithdrawModalChange,
+  isWithdrawing,
+}: DesktopPaymentsViewProps) {
   const [searchQuery, setSearchQuery] = useState("")
   const [showFundingModal, setShowFundingModal] = useState(false)
-  const [showWithdrawalModal, setShowWithdrawalModal] = useState(false)
-  const [withdrawalAmount, setWithdrawalAmount] = useState("")
-  const [showOtpModal, setShowOtpModal] = useState(false)
-  const [otp, setOtp] = useState("")
-  const [otpError, setOtpError] = useState("")
-  const [showSuccessModal, setShowSuccessModal] = useState(false)
   const [selectedTransaction, setSelectedTransaction] = useState<Transaction | null>(null)
   const [showTransactionModal, setShowTransactionModal] = useState(false)
 
@@ -52,25 +75,6 @@ export function DesktopPaymentsView({ transactions, onTransactionClick, onPaymen
     onPaymentAction(action)
     if (action === "fund") {
       setShowFundingModal(true)
-    } else if (action === "withdraw") {
-      setShowWithdrawalModal(true)
-    }
-  }
-
-  const handleWithdrawalSubmit = () => {
-    setShowWithdrawalModal(false)
-    setShowOtpModal(true)
-  }
-
-  const handleOtpSubmit = () => {
-    if (otp === "123456") {
-      setShowOtpModal(false)
-      setShowSuccessModal(true)
-      setTimeout(() => {
-        setShowSuccessModal(false)
-      }, 3000)
-    } else {
-      setOtpError("Invalid OTP. Please try again.")
     }
   }
 
@@ -100,7 +104,7 @@ export function DesktopPaymentsView({ transactions, onTransactionClick, onPaymen
         </Button>
       </div>
 
-      <PaymentsStats isMobile={false} />
+      <PaymentsStats isMobile={false} walletBalance={walletBalance} virtualAccount={virtualAccount} isLoading={isLoadingWallet} />
 
       <Card className="border-none shadow-sm">
         <CardHeader className="bg-gradient-to-r from-[#F9F0FC] to-[#F9F0FC]/50 dark:from-[#0E0E0E] dark:to-[#0E0E0E]/50 rounded-t-lg flex flex-row justify-between items-center">
@@ -178,27 +182,16 @@ export function DesktopPaymentsView({ transactions, onTransactionClick, onPaymen
         </CardContent>
       </Card>
 
-      <FundWalletModal open={showFundingModal} onOpenChange={setShowFundingModal} />
+      <FundWalletModal open={showFundingModal} onOpenChange={setShowFundingModal} virtualAccount={virtualAccount} />
 
       <WithdrawalModal
-        open={showWithdrawalModal}
-        onOpenChange={setShowWithdrawalModal}
-        onSubmit={handleWithdrawalSubmit}
-        amount={withdrawalAmount}
-        onAmountChange={setWithdrawalAmount}
+        open={showWithdrawModal}
+        onOpenChange={onWithdrawModalChange}
+        onSubmit={onWithdraw}
+        amount={withdrawAmount}
+        onAmountChange={onWithdrawAmountChange}
+        isLoading={isWithdrawing}
       />
-
-      <OtpModal
-        open={showOtpModal}
-        onOpenChange={setShowOtpModal}
-        onSubmit={handleOtpSubmit}
-        otp={otp}
-        onOtpChange={setOtp}
-        error={otpError}
-        isMobile={false}
-      />
-
-      <SuccessModal open={showSuccessModal} onOpenChange={setShowSuccessModal} />
 
       <TransactionDetailsModal
         open={showTransactionModal}

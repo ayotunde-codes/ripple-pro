@@ -11,20 +11,29 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog"
 import { Copy, Check, X } from "lucide-react"
-import { virtualAccount } from "./payments-data"
+
+interface VirtualAccount {
+  account_number: string
+  account_name: string
+  bank: string
+  user_id: number
+}
 
 interface FundWalletModalProps {
   open: boolean
   onOpenChange: (open: boolean) => void
+  virtualAccount?: VirtualAccount
 }
 
-export function FundWalletModal({ open, onOpenChange }: FundWalletModalProps) {
+export function FundWalletModal({ open, onOpenChange, virtualAccount }: FundWalletModalProps) {
   const [copied, setCopied] = useState(false)
 
   const handleCopyAccountNumber = () => {
-    navigator.clipboard.writeText(virtualAccount.accountNumber)
-    setCopied(true)
-    setTimeout(() => setCopied(false), 2000)
+    if (virtualAccount?.account_number) {
+      navigator.clipboard.writeText(virtualAccount.account_number)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    }
   }
 
   return (
@@ -41,40 +50,48 @@ export function FundWalletModal({ open, onOpenChange }: FundWalletModalProps) {
         </div>
 
         <div className="p-6">
-          <p className="text-gray-600 dark:text-[#FAFAFA] mb-6">
-            Transfer funds to the virtual account below to fund your wallet.
-          </p>
+          {virtualAccount ? (
+            <>
+              <p className="text-gray-600 dark:text-[#FAFAFA] mb-6">
+                Transfer funds to the virtual account below to fund your wallet.
+              </p>
 
-          <div className="space-y-6">
-            <div className="space-y-2">
-              <Label className="text-gray-700 dark:text-[#FAFAFA] font-medium">Bank name</Label>
-              <div className="flex h-14 w-full rounded-full border border-gray-200 bg-background px-4 py-3 text-gray-700 dark:text-[#FAFAFA]">
-                {virtualAccount.bankName}
-              </div>
-            </div>
+              <div className="space-y-6">
+                <div className="space-y-2">
+                  <Label className="text-gray-700 dark:text-[#FAFAFA] font-medium">Bank name</Label>
+                  <div className="flex h-14 w-full rounded-full border border-gray-200 bg-background px-4 py-3 text-gray-700 dark:text-[#FAFAFA]">
+                    {virtualAccount.bank}
+                  </div>
+                </div>
 
-            <div className="space-y-2">
-              <Label className="text-gray-700 dark:text-[#FAFAFA] font-medium">Account number</Label>
-              <div className="flex h-14 w-full rounded-full border border-gray-200 bg-background px-4 py-3 text-gray-700 dark:text-[#FAFAFA] relative">
-                {virtualAccount.accountNumber}
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#B125F9]"
-                  onClick={handleCopyAccountNumber}
-                >
-                  {copied ? <Check className="h-5 w-5" /> : <Copy className="h-5 w-5" />}
-                </Button>
-              </div>
-            </div>
+                <div className="space-y-2">
+                  <Label className="text-gray-700 dark:text-[#FAFAFA] font-medium">Account number</Label>
+                  <div className="flex h-14 w-full rounded-full border border-gray-200 bg-background px-4 py-3 text-gray-700 dark:text-[#FAFAFA] relative">
+                    {virtualAccount.account_number}
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#B125F9]"
+                      onClick={handleCopyAccountNumber}
+                    >
+                      {copied ? <Check className="h-5 w-5" /> : <Copy className="h-5 w-5" />}
+                    </Button>
+                  </div>
+                </div>
 
-            <div className="space-y-2">
-              <Label className="text-gray-700 dark:text-[#FAFAFA] font-medium">Account name</Label>
-              <div className="flex h-14 w-full rounded-full border border-gray-200 bg-background px-4 py-3 text-gray-700 dark:text-[#FAFAFA]">
-                {virtualAccount.accountName}
+                <div className="space-y-2">
+                  <Label className="text-gray-700 dark:text-[#FAFAFA] font-medium">Account name</Label>
+                  <div className="flex h-14 w-full rounded-full border border-gray-200 bg-background px-4 py-3 text-gray-700 dark:text-[#FAFAFA]">
+                    {virtualAccount.account_name}
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
+            </>
+          ) : (
+            <p className="text-gray-600 dark:text-[#FAFAFA] mb-6 text-center">
+              Loading virtual account details...
+            </p>
+          )}
         </div>
       </DialogContent>
     </Dialog>
@@ -87,9 +104,10 @@ interface WithdrawalModalProps {
   onSubmit: () => void
   amount: string
   onAmountChange: (amount: string) => void
+  isLoading?: boolean
 }
 
-export function WithdrawalModal({ open, onOpenChange, onSubmit, amount, onAmountChange }: WithdrawalModalProps) {
+export function WithdrawalModal({ open, onOpenChange, onSubmit, amount, onAmountChange, isLoading }: WithdrawalModalProps) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md rounded-lg p-0 overflow-hidden">
@@ -132,10 +150,10 @@ export function WithdrawalModal({ open, onOpenChange, onSubmit, amount, onAmount
               <Button
                 type="button"
                 onClick={onSubmit}
-                disabled={!amount || Number.parseFloat(amount) <= 0}
+                disabled={!amount || Number.parseFloat(amount) <= 0 || isLoading}
                 className="w-full bg-[#B125F9] hover:bg-[#B125F9]/90 rounded-full py-6 text-white font-medium"
               >
-                Withdraw
+                {isLoading ? "Processing..." : "Withdraw"}
               </Button>
 
               <Button

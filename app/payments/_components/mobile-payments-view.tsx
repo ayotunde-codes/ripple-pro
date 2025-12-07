@@ -6,7 +6,7 @@ import { SearchInput } from "@/components/shared/search-input"
 import { PaginationControls } from "@/components/shared/pagination-controls"
 import { PaymentsStats } from "./payments-stats"
 import { TransactionItem } from "./transaction-item"
-import { FundWalletModal, WithdrawalModal, OtpModal, SuccessModal } from "./payment-modals"
+import { FundWalletModal, WithdrawalModal } from "./payment-modals"
 
 interface Transaction {
   id: string
@@ -19,24 +19,47 @@ interface Transaction {
   balance: number
 }
 
-interface MobilePaymentsViewProps {
-  transactions: Transaction[]
-  onTransactionClick: (transaction: Transaction) => void
-  onPaymentAction: (action: string) => void
+interface VirtualAccount {
+  account_number: string
+  account_name: string
+  bank: string
+  user_id: number
 }
 
-export function MobilePaymentsView({ transactions, onTransactionClick, onPaymentAction }: MobilePaymentsViewProps) {
+interface MobilePaymentsViewProps {
+  walletBalance: number
+  virtualAccount?: VirtualAccount
+  transactions: Transaction[]
+  isLoadingWallet: boolean
+  onTransactionClick: (transaction: Transaction) => void
+  onPaymentAction: (action: string) => void
+  withdrawAmount: string
+  onWithdrawAmountChange: (amount: string) => void
+  onWithdraw: () => void
+  showWithdrawModal: boolean
+  onWithdrawModalChange: (show: boolean) => void
+  isWithdrawing: boolean
+}
+
+export function MobilePaymentsView({
+  walletBalance,
+  virtualAccount,
+  transactions,
+  isLoadingWallet,
+  onTransactionClick,
+  onPaymentAction,
+  withdrawAmount,
+  onWithdrawAmountChange,
+  onWithdraw,
+  showWithdrawModal,
+  onWithdrawModalChange,
+  isWithdrawing,
+}: MobilePaymentsViewProps) {
   const [searchQuery, setSearchQuery] = useState("")
   const [currentPage, setCurrentPage] = useState(1)
   const [itemsPerPage] = useState(5)
 
   const [showFundingModal, setShowFundingModal] = useState(false)
-  const [showWithdrawalModal, setShowWithdrawalModal] = useState(false)
-  const [withdrawalAmount, setWithdrawalAmount] = useState("")
-  const [showOtpModal, setShowOtpModal] = useState(false)
-  const [otp, setOtp] = useState("")
-  const [otpError, setOtpError] = useState("")
-  const [showSuccessModal, setShowSuccessModal] = useState(false)
 
   // Filter transactions based on search query
   const filteredTransactions = transactions.filter(
@@ -57,25 +80,6 @@ export function MobilePaymentsView({ transactions, onTransactionClick, onPayment
     onPaymentAction(action)
     if (action === "fund") {
       setShowFundingModal(true)
-    } else if (action === "withdraw") {
-      setShowWithdrawalModal(true)
-    }
-  }
-
-  const handleWithdrawalSubmit = () => {
-    setShowWithdrawalModal(false)
-    setShowOtpModal(true)
-  }
-
-  const handleOtpSubmit = () => {
-    if (otp === "123456") {
-      setShowOtpModal(false)
-      setShowSuccessModal(true)
-      setTimeout(() => {
-        setShowSuccessModal(false)
-      }, 3000)
-    } else {
-      setOtpError("Invalid OTP. Please try again.")
     }
   }
 
@@ -104,7 +108,7 @@ export function MobilePaymentsView({ transactions, onTransactionClick, onPayment
           </Button>
         </div>
 
-        <PaymentsStats isMobile={true} />
+        <PaymentsStats isMobile={true} walletBalance={walletBalance} virtualAccount={virtualAccount} isLoading={isLoadingWallet} />
 
         <h2 className="text-xl font-semibold mb-4">Transaction history</h2>
 
@@ -133,27 +137,16 @@ export function MobilePaymentsView({ transactions, onTransactionClick, onPayment
 
       <MobileBottomNav />
 
-      <FundWalletModal open={showFundingModal} onOpenChange={setShowFundingModal} />
+      <FundWalletModal open={showFundingModal} onOpenChange={setShowFundingModal} virtualAccount={virtualAccount} />
 
       <WithdrawalModal
-        open={showWithdrawalModal}
-        onOpenChange={setShowWithdrawalModal}
-        onSubmit={handleWithdrawalSubmit}
-        amount={withdrawalAmount}
-        onAmountChange={setWithdrawalAmount}
+        open={showWithdrawModal}
+        onOpenChange={onWithdrawModalChange}
+        onSubmit={onWithdraw}
+        amount={withdrawAmount}
+        onAmountChange={onWithdrawAmountChange}
+        isLoading={isWithdrawing}
       />
-
-      <OtpModal
-        open={showOtpModal}
-        onOpenChange={setShowOtpModal}
-        onSubmit={handleOtpSubmit}
-        otp={otp}
-        onOtpChange={setOtp}
-        error={otpError}
-        isMobile={true}
-      />
-
-      <SuccessModal open={showSuccessModal} onOpenChange={setShowSuccessModal} />
     </div>
   )
 }
