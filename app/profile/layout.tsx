@@ -13,12 +13,18 @@ export default function ProfileLayout({ children }: { children: React.ReactNode 
   const isMobile = useMobile()
 
   // Determine the active tab based on the current path
-  const activeTab = pathname.includes("/change-password") ? "change-password" : "profile"
+  const activeTab = pathname.includes("/change-password")
+    ? "change-password"
+    : pathname.includes("/kyc")
+    ? "kyc"
+    : "profile"
 
   // Handle tab change
   const handleTabChange = (value: string) => {
     if (value === "profile") {
       router.push("/profile/information")
+    } else if (value === "kyc") {
+      router.push("/profile/kyc")
     } else if (value === "change-password") {
       router.push("/profile/change-password")
     }
@@ -31,7 +37,7 @@ export default function ProfileLayout({ children }: { children: React.ReactNode 
       <div className={`${isMobile ? "mb-4" : "mb-8"}`}>
         <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
           <TabsList
-            className={`grid w-full ${isMobile ? "max-w-full" : "max-w-md"} grid-cols-2 ${isMobile ? "bg-transparent p-0 gap-2" : ""}`}
+            className={`grid w-full ${isMobile ? "max-w-full" : "max-w-lg"} grid-cols-3 ${isMobile ? "bg-transparent p-0 gap-2" : ""}`}
           >
             <TabsTrigger
               value="profile"
@@ -40,10 +46,16 @@ export default function ProfileLayout({ children }: { children: React.ReactNode 
               Profile
             </TabsTrigger>
             <TabsTrigger
+              value="kyc"
+              className={isMobile ? `rounded-full data-[state=active]:bg-[#1A0B2E] data-[state=active]:text-white` : ""}
+            >
+              KYC
+            </TabsTrigger>
+            <TabsTrigger
               value="change-password"
               className={isMobile ? `rounded-full data-[state=active]:bg-[#1A0B2E] data-[state=active]:text-white` : ""}
             >
-              Change Password
+              Password
             </TabsTrigger>
           </TabsList>
         </Tabs>
