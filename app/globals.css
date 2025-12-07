@@ -1,0 +1,163 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 240 10% 3.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 3.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 3.9%;
+    --primary: 270 75% 60%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 240 4.8% 95.9%;
+    --secondary-foreground: 240 5.9% 10%;
+    --muted: 240 4.8% 95.9%;
+    --muted-foreground: 240 3.8% 46.1%;
+    --accent: 240 4.8% 95.9%;
+    --accent-foreground: 240 5.9% 10%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 5.9% 90%;
+    --input: 240 5.9% 90%;
+    --ring: 270 75% 60%;
+    --radius: 0.75rem;
+
+    /* Dark mode variables */
+    --background-dark: 0 0% 0%;
+    --foreground-dark: 0 0% 98%;
+    --card-dark: 0 0% 7%;
+    --card-dark-foreground: 0 0% 98%;
+    --popover-dark: 0 0% 7%;
+    --popover-dark-foreground: 0 0% 98%;
+    --primary-dark: 270 75% 60%;
+    --primary-dark-foreground: 0 0% 98%;
+    --secondary-dark: 240 3.7% 15.9%;
+    --secondary-dark-foreground: 0 0% 98%;
+    --muted-dark: 240 3.7% 15.9%;
+    --muted-dark-foreground: 240 5% 64.9%;
+    --accent-dark: 240 3.7% 15.9%;
+    --accent-dark-foreground: 0 0% 98%;
+    --destructive-dark: 0 62.8% 30.6%;
+    --destructive-dark-foreground: 0 0% 98%;
+    --border-dark: 240 3.7% 15.9%;
+    --input-dark: 240 3.7% 15.9%;
+    --ring-dark: 270 75% 60%;
+  }
+
+  .dark {
+    --background: 0 0% 0%;
+    --foreground: 0 0% 98%;
+    --card: 0 0% 5.5%; /* Updated to match #0E0E0E */
+    --card-foreground: 0 0% 98%;
+    --popover: 0 0% 5.5%; /* Updated to match #0E0E0E */
+    --popover-foreground: 0 0% 98%;
+    --primary: 270 75% 60%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 240 3.7% 15.9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 0 0% 5.5%; /* Updated to match #0E0E0E */
+    --muted-foreground: 0 0% 66.3%; /* Updated to match #A9A9A9 */
+    --accent: 240 3.7% 15.9%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 3.7% 15.9%;
+    --input: 240 3.7% 15.9%;
+    --ring: 270 75% 60%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+@layer components {
+  .mobile-nav-item {
+    @apply flex flex-col items-center justify-center text-xs text-muted-foreground;
+  }
+
+  .mobile-nav-item.active {
+    @apply text-primary;
+  }
+
+  .mobile-nav-icon {
+    @apply h-5 w-5 mb-1;
+  }
+
+  .mobile-card {
+    @apply bg-primary-light rounded-xl border-none shadow-none dark:bg-card-dark;
+  }
+
+  .mobile-card-value {
+    @apply text-xl font-bold text-foreground dark:text-foreground-dark;
+  }
+
+  .mobile-card-subtitle {
+    @apply text-xs text-muted-foreground dark:text-muted-dark-foreground;
+  }
+
+  .mobile-section-title {
+    @apply text-lg font-medium mb-3;
+  }
+
+  .mobile-action-button {
+    @apply flex flex-col items-center justify-center p-2 rounded-lg bg-white border border-border hover:bg-primary-light dark:bg-card-dark dark:border-border-dark dark:hover:bg-accent-dark;
+  }
+
+  .mobile-action-icon {
+    @apply h-5 w-5 text-primary mb-1;
+  }
+
+  .mobile-action-text {
+    @apply text-xs;
+  }
+
+  .gradient-button {
+    @apply bg-gradient-to-r from-[#E43EFC] to-[#B125F9] text-white hover:opacity-90 transition-opacity;
+  }
+
+  /* Dark mode specific styles */
+  .dark .dashboard-card {
+    @apply bg-card-dark border-border-dark text-foreground-dark;
+  }
+
+  .dark .mobile-card {
+    @apply bg-card-dark border-none;
+  }
+
+  .dark .status-badge-success {
+    @apply bg-status-success/20 text-status-success;
+  }
+
+  .dark .status-badge-pending {
+    @apply bg-status-pending/20 text-status-pending;
+  }
+
+  .dark .status-badge-failed {
+    @apply bg-status-failed/20 text-status-failed;
+  }
+
+  .dark .transaction-item {
+    @apply border-border-dark hover:bg-accent-dark;
+  }
+
+  .dark .chart-line {
+    @apply stroke-primary;
+  }
+
+  .dark .chart-grid {
+    @apply stroke-border-dark;
+  }
+
+  .dark .chart-dot {
+    @apply fill-primary stroke-background-dark;
+  }
+}

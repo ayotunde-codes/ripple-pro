@@ -1,0 +1,2811 @@
+{
+	"info": {
+		"_postman_id": "fc463fe6-406f-4054-9117-226e55f9ccc6",
+		"name": "Ripple pro",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "5260508",
+		"_collection_link": "https://interstellar-equinox-163754.postman.co/workspace/Ripple-Pro~658144a2-0b8e-4656-95bd-34a8d3b95a0a/collection/5260508-fc463fe6-406f-4054-9117-226e55f9ccc6?action=share&source=collection_link&creator=5260508"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Register",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"first_name\":\"Simon\",\n    \"last_name\":\"Jude\",\n    \"email\":\"simon@gmail.com\",\n    \"role\":\"brand\",\n    \"company_name\":\"RealJay\",\n    \"password\":\"password\",\n    \"password_confirmation\":\"password\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/v1/auth/register",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Signup",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"first_name\":\"Simon\",\n    \"last_name\":\"Jude\",\n    \"email\":\"simon@gmail.com\",\n    \"role\":\"creator\",\n    \"company_name\":\"\",\n    \"password\":\"password\",\n    \"password_confirmation\":\"password\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/api/v1/auth/register",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"auth",
+										"register"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.27.3"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 21 May 2025 15:40:41 GMT"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"success\": true,\n    \"message\": \"User registered. Kindly enter the verification code sent to your email to verify your email\",\n    \"data\": {\n        \"first_name\": \"Simon\",\n        \"last_name\": \"Jude\",\n        \"email\": \"simon@gmail.com\",\n        \"role\": \"creator\",\n        \"status\": \"active\",\n        \"is_email_verified\": false,\n        \"created_at\": \"2025-05-21T15:40:41.000000Z\",\n        \"updated_at\": \"2025-05-21T15:40:41.000000Z\"\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\":\"simon@gmail.com\",\n    \"password\":\"password\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/v1/auth/login",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Login",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"email\":\"nwachukwujames7@gmail.com\",\n    \"password\":\"password\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/api/v1/auth/login",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"auth",
+										"login"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.27.3"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 21 May 2025 16:08:01 GMT"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"success\": true,\n    \"message\": \"Login Successful\",\n    \"data\": {\n        \"message\": \"Login successful\",\n        \"access_token\": \"2|93sHigzcjYUAX2Cv0IOa1gpXKg4WvbklmUgec5WD080511f9\",\n        \"token_type\": \"Bearer\",\n        \"user\": {\n            \"first_name\": \"James\",\n            \"last_name\": \"Nwachukwu\",\n            \"email\": \"nwachukwujames7@gmail.com\",\n            \"role\": \"brand\",\n            \"status\": \"active\",\n            \"is_email_verified\": true,\n            \"created_at\": \"2025-05-21T15:35:53.000000Z\",\n            \"updated_at\": \"2025-05-21T16:02:55.000000Z\"\n        }\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Verify Email",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\":\"simon@gmail.com\",\n    \"code\":\"962447\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/v1/auth/verify-email",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"verify-email"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "verify email",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"email\":\"nwachukwujames7@gmail.com\",\n    \"code\":\"326884\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/api/v1/auth/verify-email",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"auth",
+										"verify-email"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.27.3"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 21 May 2025 16:02:55 GMT"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"success\": true,\n    \"message\": \"Email verified successfully\",\n    \"data\": []\n}"
+						}
+					]
+				},
+				{
+					"name": "Logout",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/api/v1/auth/logout",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"logout"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Logout",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{url}}/api/v1/auth/logout",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"auth",
+										"logout"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.27.3"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 21 May 2025 16:22:20 GMT"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"success\": true,\n    \"message\": \"Logged out successfully\",\n    \"data\": []\n}"
+						}
+					]
+				},
+				{
+					"name": "Resend email verification",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\":\"peter-3@gmail.com\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/v1/auth/resend-code",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"resend-code"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Resend",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"email\":\"peter-3@gmail.com\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/api/v1/auth/resend-code",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"auth",
+										"resend-code"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.27.3"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 21 May 2025 16:24:10 GMT"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"success\": true,\n    \"message\": \"Verification code resent\",\n    \"data\": []\n}"
+						}
+					]
+				},
+				{
+					"name": "Forgot password",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\":\"nwachukwujames7@gmail.com\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/v1/auth/forgot-password",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"forgot-password"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Forgot password",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"email\":\"nwachukwujames7@gmail.com\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/api/v1/auth/forgot-password",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"auth",
+										"forgot-password"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.27.3"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 24 May 2025 08:08:29 GMT"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"success\": true,\n    \"message\": \"if your account exists with us, we have sent an email to the email address, kindly use the token to verifiy your account\",\n    \"data\": []\n}"
+						}
+					]
+				},
+				{
+					"name": "Reset Password",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "2|93sHigzcjYUAX2Cv0IOa1gpXKg4WvbklmUgec5WD080511f9",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Profile",
+			"item": [
+				{
+					"name": "Personal Info",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"first_name\":\"Obinna\",\n    \"middle_name\" :\"Jude\",\n    \"last_name\":\"ben\",\n    \"phone_number\":\"07030408955\",\n    \"dob\":\"1987-09-09\",\n    \"country_id\":1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/v1/profile/personal",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"profile",
+								"personal"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "update profile",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"first_name\":\"Obinna\",\n    \"middle_name\" :\"Jude\",\n    \"last_name\":\"ben\",\n    \"phone_number\":\"07030408955\",\n    \"dob\":\"1987-09-09\",\n    \"country_id\":1\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/api/v1/profile/personal",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"profile",
+										"personal"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.27.3"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 24 May 2025 10:55:59 GMT"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"success\": true,\n    \"message\": \"Profile updated successfully\",\n    \"data\": {\n        \"dob\": \"1987-09-09 00:00:00\",\n        \"phone_number\": \"07030408955\",\n        \"bvn\": null,\n        \"country\": {\n            \"id\": 1,\n            \"name\": \"Afghanistan\",\n            \"code\": \"AF\"\n        },\n        \"bank\": null,\n        \"user\": {\n            \"first_name\": \"Obinna\",\n            \"last_name\": \"Ben\",\n            \"email\": \"nwachukwujames7@gmail.com\",\n            \"role\": \"brand\",\n            \"status\": \"active\",\n            \"is_email_verified\": true,\n            \"created_at\": \"2025-05-21T15:35:53.000000Z\",\n            \"updated_at\": \"2025-05-24T10:42:42.000000Z\"\n        }\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "bvn",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"bvn\":\"22222222222\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/v1/profile/bvn",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"profile",
+								"bvn"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "bvn",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"bvn\":\"22222222222\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/api/v1/profile/bvn",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"profile",
+										"bvn"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.27.3"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 24 May 2025 10:58:23 GMT"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"success\": true,\n    \"message\": \"Profile updated successfully\",\n    \"data\": {\n        \"dob\": \"1987-09-09 00:00:00\",\n        \"phone_number\": \"07030408955\",\n        \"bvn\": \"22222222222\",\n        \"country\": {\n            \"id\": 1,\n            \"name\": \"Afghanistan\",\n            \"code\": \"AF\"\n        },\n        \"bank\": null,\n        \"user\": {\n            \"first_name\": \"Obinna\",\n            \"last_name\": \"Ben\",\n            \"email\": \"nwachukwujames7@gmail.com\",\n            \"role\": \"brand\",\n            \"status\": \"active\",\n            \"is_email_verified\": true,\n            \"created_at\": \"2025-05-21T15:35:53.000000Z\",\n            \"updated_at\": \"2025-05-24T10:42:42.000000Z\"\n        }\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Account details",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"account_name\":\"Nwachukwu\",\n    \"account_number\":\"0001544571\",\n    \"bank_code\":\"044\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/v1/profile/account",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"profile",
+								"account"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "bank details",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"account_name\":\"Nwachukwu\",\n    \"account_number\":\"0001544571\",\n    \"bank_code\":\"044\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/api/v1/profile/account",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"profile",
+										"account"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.27.3"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 24 May 2025 11:07:28 GMT"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"success\": true,\n    \"message\": \"Profile updated successfully\",\n    \"data\": {\n        \"dob\": \"1987-09-09 00:00:00\",\n        \"phone_number\": \"07030408955\",\n        \"bvn\": \"22222222222\",\n        \"country\": {\n            \"id\": 1,\n            \"name\": \"Afghanistan\",\n            \"code\": \"AF\"\n        },\n        \"bankDetails\": {\n            \"account_name\": \"Nwachukwu\",\n            \"account_number\": \"0001544571\",\n            \"bank\": {\n                \"code\": \"044\",\n                \"name\": \"Access Bank\"\n            }\n        },\n        \"user\": {\n            \"first_name\": \"Obinna\",\n            \"last_name\": \"Ben\",\n            \"email\": \"nwachukwujames7@gmail.com\",\n            \"role\": \"brand\",\n            \"status\": \"active\",\n            \"is_email_verified\": true,\n            \"created_at\": \"2025-05-21T15:35:53.000000Z\",\n            \"updated_at\": \"2025-05-24T10:42:42.000000Z\"\n        }\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Upload documents",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "nin",
+									"value": "abc1234567",
+									"type": "text"
+								},
+								{
+									"key": "id_file",
+									"type": "file",
+									"src": "/Users/james/Documents/ai.jpg"
+								},
+								{
+									"key": "address_file",
+									"type": "file",
+									"src": "/Users/james/Documents/price.jpg"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}/api/v1/profile/upload",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"profile",
+								"upload"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Upload documents",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "nin",
+											"value": "abc1234567",
+											"type": "text"
+										},
+										{
+											"key": "id_file",
+											"type": "file",
+											"src": "/Users/james/Documents/ai.jpg"
+										},
+										{
+											"key": "address_file",
+											"type": "file",
+											"src": "/Users/james/Documents/price.jpg"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{url}}/api/v1/profile/upload",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"profile",
+										"upload"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "Host",
+									"value": "127.0.0.1:8020"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.29"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 03 Dec 2025 14:37:09 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Access-Control-Allow-Methods",
+									"value": "GET, POST, PUT, DELETE, OPTIONS"
+								},
+								{
+									"key": "Access-Control-Allow-Headers",
+									"value": "Origin, Content-Type, Accept, Authorization, X-Requested-With"
+								},
+								{
+									"key": "Access-Control-Allow-Credentials",
+									"value": "true"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"success\": true,\n    \"message\": \"Profile files uploaded successfully\",\n    \"data\": {\n        \"dob\": \"1987-09-09 00:00:00\",\n        \"phone_number\": \"07030408955\",\n        \"bvn\": \"22222222222\",\n        \"country\": {\n            \"id\": 1,\n            \"name\": \"Afghanistan\",\n            \"code\": \"AF\"\n        },\n        \"bankDetails\": {\n            \"account_name\": \"Nwachukwu\",\n            \"account_number\": \"0001544571\",\n            \"bank\": {\n                \"code\": \"044\",\n                \"name\": \"Access Bank\"\n            }\n        },\n        \"user\": {\n            \"id\": 13,\n            \"first_name\": \"Obinna\",\n            \"last_name\": \"Ben\",\n            \"email\": \"simon@gmail.com\",\n            \"role\": \"brand\",\n            \"status\": \"active\",\n            \"kyc_status\": \"pending\",\n            \"is_email_verified\": true,\n            \"rejection_reason\": null,\n            \"created_at\": \"2025-12-03T14:29:38.000000Z\",\n            \"updated_at\": \"2025-12-03T14:33:47.000000Z\"\n        },\n        \"documents\": [\n            {\n                \"id\": 5,\n                \"type\": \"nin\",\n                \"url\": \"http://localhost:8020/storage/uploads/FLcTdelv6xXgjpcSKK3FeBdK3bslnSrjVOWwRsVJ.jpg\",\n                \"created_at\": \"2025-12-03T14:37:09.000000Z\"\n            },\n            {\n                \"id\": 6,\n                \"type\": \"address\",\n                \"url\": \"http://localhost:8020/storage/uploads/TdKSAlgGuNkc5YSLz4nL3CR4tkFHZGiIkeO4R8gY.jpg\",\n                \"created_at\": \"2025-12-03T14:37:09.000000Z\"\n            }\n        ]\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Submit KYC",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/api/v1/kyc/submit",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"kyc",
+								"submit"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "submit",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{url}}/api/v1/kyc/submit",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"kyc",
+										"submit"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.27.3"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 06 Jun 2025 16:08:07 GMT"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"success\": true,\n    \"message\": \"KYC submitted for approval\",\n    \"data\": []\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Admin",
+			"item": [
+				{
+					"name": "Approve KYC",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/v1/kyc/approve/:userId",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"kyc",
+								"approve",
+								":userId"
+							],
+							"variable": [
+								{
+									"key": "userId",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "approve",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/api/v1/kyc/approve/:userId",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"kyc",
+										"approve",
+										":userId"
+									],
+									"variable": [
+										{
+											"key": "userId",
+											"value": "2"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.27.3"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 06 Jun 2025 16:55:36 GMT"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"success\": true,\n    \"message\": \"Kyc approved successfully\",\n    \"data\": []\n}"
+						}
+					]
+				},
+				{
+					"name": "Reject KYC",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"user_id\" : 1,\n    \"reason\" : \"Not qualified\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/v1/kyc/reject",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"kyc",
+								"reject"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "reject",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"user_id\" : 2,\n    \"reason\" : \"Not qualified\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/api/v1/kyc/reject",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"kyc",
+										"reject"
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.27.3"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 06 Jun 2025 16:18:29 GMT"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"success\": false,\n    \"message\": \"KYC not submitted for approval\",\n    \"data\": []\n}"
+						}
+					]
+				},
+				{
+					"name": "View KYC submissions",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/api/v1/kyc/submissions",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"kyc",
+								"submissions"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "submissions",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{url}}/api/v1/kyc/submissions",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"kyc",
+										"submissions"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.27.3"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 06 Jun 2025 16:22:23 GMT"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"success\": true,\n    \"message\": \"KYC submissions fetched successfully\",\n    \"data\": [\n        {\n            \"dob\": \"1987-09-09 00:00:00\",\n            \"phone_number\": \"07030408955\",\n            \"bvn\": \"22222222222\",\n            \"country\": {\n                \"id\": 1,\n                \"name\": \"Afghanistan\",\n                \"code\": \"AF\"\n            },\n            \"bankDetails\": {\n                \"account_name\": \"Nwachukwu\",\n                \"account_number\": \"0001544571\",\n                \"bank\": {\n                    \"code\": \"044\",\n                    \"name\": \"Access Bank\"\n                }\n            },\n            \"user\": {\n                \"id\": 2,\n                \"first_name\": \"Obinna\",\n                \"last_name\": \"Ben\",\n                \"email\": \"nwachukwujames7@gmail.com\",\n                \"role\": \"brand\",\n                \"status\": \"active\",\n                \"kyc_status\": \"approved\",\n                \"is_email_verified\": true,\n                \"rejection_reason\": null,\n                \"created_at\": \"2025-05-21T15:35:53.000000Z\",\n                \"updated_at\": \"2025-06-06T16:16:32.000000Z\"\n            },\n            \"documents\": [\n                {\n                    \"id\": 1,\n                    \"type\": \"nin\",\n                    \"url\": \"/storage/uploads/BAHshjer8v63lJc3GmnQ3EBoARB7H0tfOdvlH4aA.jpg\",\n                    \"created_at\": \"2025-05-28T19:56:24.000000Z\"\n                },\n                {\n                    \"id\": 2,\n                    \"type\": \"address\",\n                    \"url\": \"/storage/uploads/2Q5KJcFhpT6QntFBgKdDLzigWQKuSlYufTISVjPh.pdf\",\n                    \"created_at\": \"2025-05-28T19:56:24.000000Z\"\n                },\n                {\n                    \"id\": 3,\n                    \"type\": \"nin\",\n                    \"url\": \"http://localhost:8000/storage/uploads/G5RUemO7zU1ez2kHb0URkEdKOnXCgkhaui9kkV3C.jpg\",\n                    \"created_at\": \"2025-05-28T20:06:50.000000Z\"\n                },\n                {\n                    \"id\": 4,\n                    \"type\": \"address\",\n                    \"url\": \"http://localhost:8000/storage/uploads/R5aiHL12kqYln6HoaY99SnHTAIwK4CK61WlCSZ5t.pdf\",\n                    \"created_at\": \"2025-05-28T20:06:50.000000Z\"\n                },\n                {\n                    \"id\": 5,\n                    \"type\": \"nin\",\n                    \"url\": \"http://localhost:8000/storage/uploads/dpuSQ7ysnGShCnjbwUstUq3UzuRqWxcxvjvDyqr9.jpg\",\n                    \"created_at\": \"2025-05-28T20:10:25.000000Z\"\n                },\n                {\n                    \"id\": 6,\n                    \"type\": \"address\",\n                    \"url\": \"http://localhost:8000/storage/uploads/klFqgwt1Hiedn2DpiZ1qbILPCIwl0Ket7uZuLxFL.pdf\",\n                    \"created_at\": \"2025-05-28T20:10:25.000000Z\"\n                },\n                {\n                    \"id\": 7,\n                    \"type\": \"nin\",\n                    \"url\": \"http://localhost:8000/storage/uploads/b1lUysornhoWDqMe7qHRjXeqwKppT9o7Mm8rJvVS.jpg\",\n                    \"created_at\": \"2025-05-28T20:11:46.000000Z\"\n                },\n                {\n                    \"id\": 8,\n                    \"type\": \"address\",\n                    \"url\": \"http://localhost:8000/storage/uploads/MREetsilA1qTZUuXUbNtOFqAZH5oChveqFgS32q2.pdf\",\n                    \"created_at\": \"2025-05-28T20:11:46.000000Z\"\n                },\n                {\n                    \"id\": 9,\n                    \"type\": \"nin\",\n                    \"url\": \"http://localhost:8000/storage/uploads/pR3QHffxiReEjegfNhjMxTyRVfbtYBi6L8Gra6NK.jpg\",\n                    \"created_at\": \"2025-05-28T20:12:17.000000Z\"\n                },\n                {\n                    \"id\": 10,\n                    \"type\": \"address\",\n                    \"url\": \"http://localhost:8000/storage/uploads/kAmjWNzz4MDd5U0MH80bzR9CRmBvEySXxbZAoItb.pdf\",\n                    \"created_at\": \"2025-05-28T20:12:17.000000Z\"\n                },\n                {\n                    \"id\": 11,\n                    \"type\": \"nin\",\n                    \"url\": \"http://localhost:8000/storage/uploads/wFr49JG4cj2p50mhy1L6JmsGKss2isx07MMmJRRC.jpg\",\n                    \"created_at\": \"2025-05-28T20:13:42.000000Z\"\n                },\n                {\n                    \"id\": 12,\n                    \"type\": \"address\",\n                    \"url\": \"http://localhost:8000/storage/uploads/Pu0Hwq6Pk2j81OS7TXNbQoDi5abtJBY4RurvrvFZ.pdf\",\n                    \"created_at\": \"2025-05-28T20:13:42.000000Z\"\n                }\n            ]\n        }\n    ]\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Wallets",
+			"item": [
+				{
+					"name": "Getsingle wallet",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/ecmascript",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/api/v1/wallets/:userId",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"wallets",
+								":userId"
+							],
+							"variable": [
+								{
+									"key": "userId",
+									"value": "2"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "wallet",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/ecmascript",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{url}}/api/v1/wallets/:userId",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"wallets",
+										":userId"
+									],
+									"variable": [
+										{
+											"key": "userId",
+											"value": "2"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.27.3"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 06 Jun 2025 16:59:34 GMT"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"success\": true,\n    \"message\": \"Wallet fetched successfully\",\n    \"data\": {\n        \"id\": 1,\n        \"currency\": \"NGN\",\n        \"balance\": \"0.00\",\n        \"virtual_accounts\": [\n            {\n                \"account_number\": \"7076355795\",\n                \"account_name\": \"Obinna Ben\",\n                \"bank\": \"Access\",\n                \"user_id\": 2\n            }\n        ],\n        \"user\": {\n            \"id\": 2,\n            \"first_name\": \"Obinna\",\n            \"last_name\": \"Ben\",\n            \"email\": \"nwachukwujames7@gmail.com\",\n            \"role\": \"brand\",\n            \"status\": \"active\",\n            \"kyc_status\": \"approved\",\n            \"is_email_verified\": true,\n            \"rejection_reason\": null,\n            \"created_at\": \"2025-05-21T15:35:53.000000Z\",\n            \"updated_at\": \"2025-06-06T16:55:36.000000Z\"\n        }\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Initialize Funding",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/ecmascript",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"amount\" : 50000\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/v1/wallets/credit/initialize",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"wallets",
+								"credit",
+								"initialize"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "New Request",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/ecmascript",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"amount\" : 50000\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/api/v1/wallets/credit/initialize",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"wallets",
+										"credit",
+										"initialize"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "Host",
+									"value": "127.0.0.1:8020"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.29"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 03 Dec 2025 14:46:04 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Access-Control-Allow-Methods",
+									"value": "GET, POST, PUT, DELETE, OPTIONS"
+								},
+								{
+									"key": "Access-Control-Allow-Headers",
+									"value": "Origin, Content-Type, Accept, Authorization, X-Requested-With"
+								},
+								{
+									"key": "Access-Control-Allow-Credentials",
+									"value": "true"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"success\": true,\n    \"message\": \"Wallet credit initialized successfully\",\n    \"data\": {\n        \"status\": true,\n        \"message\": \"Authorization URL created\",\n        \"data\": {\n            \"authorization_url\": \"https://checkout.paystack.com/bgit1k3st8fpc8y\",\n            \"access_code\": \"bgit1k3st8fpc8y\",\n            \"reference\": \"hu4icu6ll0\"\n        }\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Complete Credit",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/ecmascript",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"reference\" : \"bw1c80u0c3\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/v1/wallets/credit",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"wallets",
+								"credit"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Withdraw",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"amount\":\"50\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/v1/wallets/withdraw",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"wallets",
+								"withdraw"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Campaigns",
+			"item": [
+				{
+					"name": "Create campaign",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"campaign_name\": \"testing\",\n    \"category\": \"fashion\",\n    \"content_type\": \"video\",\n    \"social_media_platforms\": [\"instagram\"],\n    \"challenge_pool\": \"10000\",\n    \"end_date\": \"2025-06-10\",\n    \"reward_rate_amount\": \"2\",\n    \"reward_rate_views\": \"500\",\n    \"max_payout\": \"2000\",\n    \"asset_links\": [\"https://google.com\"],\n    \"content_requirement\": \"just testing\",\n    \"additional_notes\": \"never mind\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/v1/campaigns",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"campaigns"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Create campaign",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"campaign_name\": \"testing\",\n    \"category\": \"fashion\",\n    \"content_type\": \"video\",\n    \"social_media_platforms\": [\"instagram\"],\n    \"challenge_pool\": \"10000\",\n    \"end_date\": \"2025-06-10\",\n    \"reward_rate_amount\": \"2\",\n    \"reward_rate_views\": \"500\",\n    \"max_payout\": \"2000\",\n    \"asset_links\": [\"https://google.com\"],\n    \"content_requirement\": \"just testing\",\n    \"additional_notes\": \"never mind\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/api/v1/campaigns",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"campaigns"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.27.3"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 07 Jun 2025 17:37:38 GMT"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"success\": true,\n    \"message\": \"Campaign created successfully\",\n    \"data\": {\n        \"id\": 7,\n        \"campaign_name\": \"testing\",\n        \"category\": \"fashion\",\n        \"content_type\": \"video\",\n        \"challenge_pool\": \"10000\",\n        \"end_date\": \"2025-06-10T00:00:00.000000Z\",\n        \"reward_rate_amount\": \"2\",\n        \"reward_rate_views\": \"500\",\n        \"max_payout\": \"2000\",\n        \"asset_links\": [\n            \"https://google.com\"\n        ],\n        \"content_requirement\": \"just testing\",\n        \"additional_notes\": \"never mind\",\n        \"social_media_platforms\": [\n            \"Instagram\"\n        ]\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Get campaigns",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/api/v1/campaigns?length=5&search=fashion&status=open",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"campaigns"
+							],
+							"query": [
+								{
+									"key": "length",
+									"value": "5"
+								},
+								{
+									"key": "search",
+									"value": "fashion"
+								},
+								{
+									"key": "status",
+									"value": "open"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "campaign",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{url}}/api/v1/campaigns?length=5&search=fashion&status=open",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"campaigns"
+									],
+									"query": [
+										{
+											"key": "length",
+											"value": "5"
+										},
+										{
+											"key": "search",
+											"value": "fashion"
+										},
+										{
+											"key": "status",
+											"value": "open"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.27.3"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Sun, 08 Jun 2025 14:50:02 GMT"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"data\": [\n        {\n            \"id\": 13,\n            \"campaign_name\": \"testing\",\n            \"category\": \"fashion\",\n            \"content_type\": \"video\",\n            \"challenge_pool\": \"10000.00\",\n            \"end_date\": \"2025-06-10T00:00:00.000000Z\",\n            \"created_at\": \"2025-06-08T09:19:15.000000Z\",\n            \"status\": \"open\",\n            \"reward_rate_amount\": \"2.00\",\n            \"reward_rate_views\": 500,\n            \"max_payout\": \"2000.00\",\n            \"paid_out\": \"30.00\",\n            \"balance\": 9970,\n            \"views\": 7718,\n            \"asset_links\": [\n                \"https://google.com\"\n            ],\n            \"content_requirement\": \"just testing\",\n            \"additional_notes\": \"never mind\",\n            \"social_media_platforms\": [\n                \"Instagram\"\n            ]\n        },\n        {\n            \"id\": 12,\n            \"campaign_name\": \"testing\",\n            \"category\": \"fashion\",\n            \"content_type\": \"video\",\n            \"challenge_pool\": \"10000.00\",\n            \"end_date\": \"2025-06-10T00:00:00.000000Z\",\n            \"created_at\": \"2025-06-08T09:17:54.000000Z\",\n            \"status\": \"open\",\n            \"reward_rate_amount\": \"5.00\",\n            \"reward_rate_views\": 400,\n            \"max_payout\": \"2000.00\",\n            \"paid_out\": \"95.00\",\n            \"balance\": 9905,\n            \"views\": 7718,\n            \"asset_links\": [\n                \"https://google.com\"\n            ],\n            \"content_requirement\": \"just testing\",\n            \"additional_notes\": \"never mind\",\n            \"social_media_platforms\": [\n                \"Instagram\"\n            ]\n        },\n        {\n            \"id\": 11,\n            \"campaign_name\": \"testing\",\n            \"category\": \"fashion\",\n            \"content_type\": \"video\",\n            \"challenge_pool\": \"10000.00\",\n            \"end_date\": \"2025-06-10T00:00:00.000000Z\",\n            \"created_at\": \"2025-06-08T09:11:42.000000Z\",\n            \"status\": \"open\",\n            \"reward_rate_amount\": \"2.00\",\n            \"reward_rate_views\": 500,\n            \"max_payout\": \"2000.00\",\n            \"paid_out\": \"0.00\",\n            \"balance\": 10000,\n            \"views\": 0,\n            \"asset_links\": [\n                \"https://google.com\"\n            ],\n            \"content_requirement\": \"just testing\",\n            \"additional_notes\": \"never mind\",\n            \"social_media_platforms\": [\n                \"Instagram\"\n            ]\n        },\n        {\n            \"id\": 10,\n            \"campaign_name\": \"testing\",\n            \"category\": \"fashion\",\n            \"content_type\": \"video\",\n            \"challenge_pool\": \"10000.00\",\n            \"end_date\": \"2025-06-10T00:00:00.000000Z\",\n            \"created_at\": \"2025-06-07T17:44:28.000000Z\",\n            \"status\": \"open\",\n            \"reward_rate_amount\": \"2.00\",\n            \"reward_rate_views\": 500,\n            \"max_payout\": \"2000.00\",\n            \"paid_out\": \"0.00\",\n            \"balance\": 10000,\n            \"views\": 0,\n            \"asset_links\": [\n                \"https://google.com\"\n            ],\n            \"content_requirement\": \"just testing\",\n            \"additional_notes\": \"never mind\",\n            \"social_media_platforms\": [\n                \"Instagram\"\n            ]\n        },\n        {\n            \"id\": 9,\n            \"campaign_name\": \"testing\",\n            \"category\": \"fashion\",\n            \"content_type\": \"video\",\n            \"challenge_pool\": \"10000.00\",\n            \"end_date\": \"2025-06-10T00:00:00.000000Z\",\n            \"created_at\": \"2025-06-07T17:42:53.000000Z\",\n            \"status\": \"open\",\n            \"reward_rate_amount\": \"2.00\",\n            \"reward_rate_views\": 500,\n            \"max_payout\": \"2000.00\",\n            \"paid_out\": \"0.00\",\n            \"balance\": 10000,\n            \"views\": 0,\n            \"asset_links\": [\n                \"https://google.com\"\n            ],\n            \"content_requirement\": \"just testing\",\n            \"additional_notes\": \"never mind\",\n            \"social_media_platforms\": [\n                \"Instagram\"\n            ]\n        }\n    ],\n    \"links\": {\n        \"first\": \"http://localhost:8000/api/v1/campaigns?page=1\",\n        \"last\": \"http://localhost:8000/api/v1/campaigns?page=2\",\n        \"prev\": null,\n        \"next\": \"http://localhost:8000/api/v1/campaigns?page=2\"\n    },\n    \"meta\": {\n        \"current_page\": 1,\n        \"from\": 1,\n        \"last_page\": 2,\n        \"links\": [\n            {\n                \"url\": null,\n                \"label\": \"&laquo; Previous\",\n                \"active\": false\n            },\n            {\n                \"url\": \"http://localhost:8000/api/v1/campaigns?page=1\",\n                \"label\": \"1\",\n                \"active\": true\n            },\n            {\n                \"url\": \"http://localhost:8000/api/v1/campaigns?page=2\",\n                \"label\": \"2\",\n                \"active\": false\n            },\n            {\n                \"url\": \"http://localhost:8000/api/v1/campaigns?page=2\",\n                \"label\": \"Next &raquo;\",\n                \"active\": false\n            }\n        ],\n        \"path\": \"http://localhost:8000/api/v1/campaigns\",\n        \"per_page\": 5,\n        \"to\": 5,\n        \"total\": 9\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Summary",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": [
+						{
+							"name": "summary",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{url}}/api/v1/campaigns/summary",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"campaigns",
+										"summary"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.27.3"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Sun, 08 Jun 2025 11:31:00 GMT"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"success\": true,\n    \"message\": \"Summary fetched successfully\",\n    \"data\": {\n        \"total_campaigns\": 9,\n        \"active_campaigns\": 9,\n        \"total_spend\": 90000,\n        \"total_views\": \"\"\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Close",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/ecmascript",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/api/v1/campaigns/close/:campainId",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"campaigns",
+								"close",
+								":campainId"
+							],
+							"variable": [
+								{
+									"key": "campainId",
+									"value": "2"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Close",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/ecmascript",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{url}}/api/v1/campaigns/close/:campainId",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"campaigns",
+										"close",
+										":campainId"
+									],
+									"variable": [
+										{
+											"key": "campainId",
+											"value": "2"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "Host",
+									"value": "127.0.0.1:8020"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.29"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 05 Dec 2025 14:06:54 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Access-Control-Allow-Methods",
+									"value": "GET, POST, PUT, DELETE, OPTIONS"
+								},
+								{
+									"key": "Access-Control-Allow-Headers",
+									"value": "Origin, Content-Type, Accept, Authorization, X-Requested-With"
+								},
+								{
+									"key": "Access-Control-Allow-Credentials",
+									"value": "true"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"success\": true,\n    \"message\": \"Campaign closed successfully\",\n    \"data\": {\n        \"id\": 2,\n        \"campaign_name\": \"testing\",\n        \"category\": \"fashion\",\n        \"content_type\": \"video\",\n        \"challenge_pool\": \"10000.00\",\n        \"end_date\": \"2025-12-10T00:00:00.000000Z\",\n        \"created_at\": \"2025-12-05T11:33:17.000000Z\",\n        \"status\": \"closed\",\n        \"reward_rate_amount\": \"2.00\",\n        \"reward_rate_views\": 500,\n        \"max_payout\": \"2000.00\",\n        \"paid_out\": \"6.00\",\n        \"balance\": 9994,\n        \"views\": 1547,\n        \"asset_links\": [\n            \"https://google.com\"\n        ],\n        \"content_requirement\": \"just testing\",\n        \"additional_notes\": \"never mind\",\n        \"social_media_platforms\": [\n            \"Instagram\"\n        ]\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Redemption Requests",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/api/v1/campaigns/:campaign/redemption-requests",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"campaigns",
+								":campaign",
+								"redemption-requests"
+							],
+							"variable": [
+								{
+									"key": "campaign",
+									"value": "2"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "redemption requests",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{url}}/api/v1/campaigns/:campaign/redemption-requests",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"campaigns",
+										":campaign",
+										"redemption-requests"
+									],
+									"variable": [
+										{
+											"key": "campaign",
+											"value": "2"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "Host",
+									"value": "127.0.0.1:8020"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.29"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 05 Dec 2025 14:46:31 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Access-Control-Allow-Methods",
+									"value": "GET, POST, PUT, DELETE, OPTIONS"
+								},
+								{
+									"key": "Access-Control-Allow-Headers",
+									"value": "Origin, Content-Type, Accept, Authorization, X-Requested-With"
+								},
+								{
+									"key": "Access-Control-Allow-Credentials",
+									"value": "true"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"success\": true,\n    \"message\": \"Redemption requests fetched successfully\",\n    \"data\": [\n        {\n            \"id\": 3,\n            \"amount\": \"6.00\",\n            \"status\": \"pending\",\n            \"created_at\": \"2025-12-05T14:32:57.000000Z\",\n            \"challenge\": {\n                \"id\": 2,\n                \"challange_name\": \"testing\",\n                \"earnings\": 6,\n                \"views\": 1547,\n                \"date_entered\": \"2025-12-05T12:06:09.000000Z\",\n                \"status\": \"closed\",\n                \"social_media_links\": [\n                    \"https://www.youtube.com/watch?v=Hc9XfxqRfnY\"\n                ]\n            },\n            \"user\": {\n                \"id\": 13,\n                \"first_name\": \"Obinna\",\n                \"last_name\": \"Ben\",\n                \"email\": \"simon@gmail.com\",\n                \"role\": \"brand\",\n                \"status\": \"active\",\n                \"kyc_status\": \"approved\",\n                \"is_email_verified\": true,\n                \"rejection_reason\": null,\n                \"created_at\": \"2025-12-03T14:29:38.000000Z\",\n                \"updated_at\": \"2025-12-05T10:17:20.000000Z\"\n            }\n        }\n    ]\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Challenges",
+			"item": [
+				{
+					"name": "Join",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"social_media_links\":[\n        \"https://google.com\",\n        \"https://facebook.com\"\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/v1/challenges/12",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"challenges",
+								"12"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "join",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"social_media_links\":[\n        \"https://google.com\",\n        \"https://facebook.com\"\n    ]\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/api/v1/challenges/12",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"challenges",
+										"12"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.27.3"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Sun, 08 Jun 2025 12:23:41 GMT"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"success\": true,\n    \"message\": \"Successfully joined challenge\",\n    \"data\": {\n        \"challange_name\": \"testing\",\n        \"earnings\": null,\n        \"views\": null,\n        \"date_entered\": \"2025-06-08T12:23:41.000000Z\",\n        \"status\": \"open\",\n        \"social_media_links\": [\n            \"https://google.com\",\n            \"https://facebook.com\"\n        ]\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "My Submissions",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/api/v1/challenges/my-submissions?search&length&status",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"challenges",
+								"my-submissions"
+							],
+							"query": [
+								{
+									"key": "search",
+									"value": null
+								},
+								{
+									"key": "length",
+									"value": null
+								},
+								{
+									"key": "status",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "My Submissions",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{url}}/api/v1/challenges/my-submissions?search&length&status",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"challenges",
+										"my-submissions"
+									],
+									"query": [
+										{
+											"key": "search",
+											"value": null
+										},
+										{
+											"key": "length",
+											"value": null
+										},
+										{
+											"key": "status",
+											"value": null
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.27.3"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Sun, 08 Jun 2025 14:51:39 GMT"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"data\": [\n        {\n            \"id\": 2,\n            \"challange_name\": \"testing\",\n            \"earnings\": 95,\n            \"views\": 7718,\n            \"date_entered\": \"2025-06-08T12:23:41.000000Z\",\n            \"status\": \"open\",\n            \"social_media_links\": [\n                \"https://google.com\",\n                \"https://www.youtube.com/watch?v=v5tAdjf0o3E\"\n            ]\n        },\n        {\n            \"id\": 1,\n            \"challange_name\": \"testing\",\n            \"earnings\": 30,\n            \"views\": 7718,\n            \"date_entered\": \"2025-06-08T12:20:08.000000Z\",\n            \"status\": \"open\",\n            \"social_media_links\": [\n                \"https://www.youtube.com/watch?v=v5tAdjf0o3E\",\n                \"https://facebook.com\"\n            ]\n        }\n    ],\n    \"links\": {\n        \"first\": \"http://localhost:8000/api/v1/challenges/my-submissions?page=1\",\n        \"last\": \"http://localhost:8000/api/v1/challenges/my-submissions?page=1\",\n        \"prev\": null,\n        \"next\": null\n    },\n    \"meta\": {\n        \"current_page\": 1,\n        \"from\": 1,\n        \"last_page\": 1,\n        \"links\": [\n            {\n                \"url\": null,\n                \"label\": \"&laquo; Previous\",\n                \"active\": false\n            },\n            {\n                \"url\": \"http://localhost:8000/api/v1/challenges/my-submissions?page=1\",\n                \"label\": \"1\",\n                \"active\": true\n            },\n            {\n                \"url\": null,\n                \"label\": \"Next &raquo;\",\n                \"active\": false\n            }\n        ],\n        \"path\": \"http://localhost:8000/api/v1/challenges/my-submissions\",\n        \"per_page\": 15,\n        \"to\": 2,\n        \"total\": 2\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Redeem Reward",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/api/v1/challenges/redeem-reward/:challengeId",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"challenges",
+								"redeem-reward",
+								":challengeId"
+							],
+							"variable": [
+								{
+									"key": "challengeId",
+									"value": "2"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "challenge",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{url}}/api/v1/challenges/redeem-reward/:challengeId",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"challenges",
+										"redeem-reward",
+										":challengeId"
+									],
+									"variable": [
+										{
+											"key": "challengeId",
+											"value": "2"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "Host",
+									"value": "127.0.0.1:8020"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.29"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 05 Dec 2025 14:32:57 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Access-Control-Allow-Methods",
+									"value": "GET, POST, PUT, DELETE, OPTIONS"
+								},
+								{
+									"key": "Access-Control-Allow-Headers",
+									"value": "Origin, Content-Type, Accept, Authorization, X-Requested-With"
+								},
+								{
+									"key": "Access-Control-Allow-Credentials",
+									"value": "true"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"success\": true,\n    \"message\": \"Redemption request created successfully\",\n    \"data\": {\n        \"id\": 3,\n        \"amount\": 6,\n        \"status\": \"pending\",\n        \"created_at\": \"2025-12-05T14:32:57.000000Z\",\n        \"challenge\": {\n            \"id\": 2,\n            \"challange_name\": \"testing\",\n            \"earnings\": 6,\n            \"views\": 1547,\n            \"date_entered\": \"2025-12-05T12:06:09.000000Z\",\n            \"status\": \"closed\",\n            \"social_media_links\": [\n                \"https://www.youtube.com/watch?v=Hc9XfxqRfnY\"\n            ]\n        },\n        \"user\": {\n            \"id\": 13,\n            \"first_name\": \"Obinna\",\n            \"last_name\": \"Ben\",\n            \"email\": \"simon@gmail.com\",\n            \"role\": \"brand\",\n            \"status\": \"active\",\n            \"kyc_status\": \"approved\",\n            \"is_email_verified\": true,\n            \"rejection_reason\": null,\n            \"created_at\": \"2025-12-03T14:29:38.000000Z\",\n            \"updated_at\": \"2025-12-05T10:17:20.000000Z\"\n        }\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Approve Rejection",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/v1/challenges/approve-redemption/:redemptionId",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"challenges",
+								"approve-redemption",
+								":redemptionId"
+							],
+							"variable": [
+								{
+									"key": "redemptionId",
+									"value": "3"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "redemption approval",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/api/v1/challenges/approve-redemption/:redemptionId",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"challenges",
+										"approve-redemption",
+										":redemptionId"
+									],
+									"variable": [
+										{
+											"key": "redemptionId",
+											"value": "3"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "Host",
+									"value": "127.0.0.1:8020"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.29"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 05 Dec 2025 14:55:37 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Access-Control-Allow-Methods",
+									"value": "GET, POST, PUT, DELETE, OPTIONS"
+								},
+								{
+									"key": "Access-Control-Allow-Headers",
+									"value": "Origin, Content-Type, Accept, Authorization, X-Requested-With"
+								},
+								{
+									"key": "Access-Control-Allow-Credentials",
+									"value": "true"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"success\": true,\n    \"message\": \"Redemption request approved successfully\",\n    \"data\": {\n        \"id\": 3,\n        \"amount\": \"6.00\",\n        \"status\": \"approved\",\n        \"created_at\": \"2025-12-05T14:32:57.000000Z\",\n        \"challenge\": {\n            \"id\": 2,\n            \"challange_name\": \"testing\",\n            \"earnings\": 6,\n            \"views\": 1547,\n            \"date_entered\": \"2025-12-05T12:06:09.000000Z\",\n            \"status\": \"closed\",\n            \"social_media_links\": [\n                \"https://www.youtube.com/watch?v=Hc9XfxqRfnY\"\n            ]\n        },\n        \"user\": {\n            \"id\": 13,\n            \"first_name\": \"Obinna\",\n            \"last_name\": \"Ben\",\n            \"email\": \"simon@gmail.com\",\n            \"role\": \"brand\",\n            \"status\": \"active\",\n            \"kyc_status\": \"approved\",\n            \"is_email_verified\": true,\n            \"rejection_reason\": null,\n            \"created_at\": \"2025-12-03T14:29:38.000000Z\",\n            \"updated_at\": \"2025-12-05T10:17:20.000000Z\"\n        }\n    }\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Webhook",
+			"item": [
+				{
+					"name": "Paystack Deposit",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Paystack bank list",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "Verify account",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "4|GeyLvhSkml6uMbAXWoia34J5Jd3mLeiHWGH7XE2Gba6e3a25",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
