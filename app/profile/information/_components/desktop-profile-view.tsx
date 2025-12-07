@@ -16,6 +16,7 @@ interface DesktopProfileViewProps {
   onImageUpload: (e: React.ChangeEvent<HTMLInputElement>) => void
   onSaveChanges: () => void
   onCancel: () => void
+  onFieldChange: (field: keyof ProfileData, value: string) => void
 }
 
 export function DesktopProfileView({
@@ -26,6 +27,7 @@ export function DesktopProfileView({
   onImageUpload,
   onSaveChanges,
   onCancel,
+  onFieldChange,
 }: DesktopProfileViewProps) {
   return (
     <div className="space-y-6">
@@ -58,7 +60,7 @@ export function DesktopProfileView({
             isMobile={false}
           />
 
-          <PersonalInfoForm profileData={profileData} isMobile={false} />
+          <PersonalInfoForm profileData={profileData} isMobile={false} onChange={onFieldChange} />
         </CardContent>
       </Card>
 
@@ -67,7 +69,7 @@ export function DesktopProfileView({
           <CardTitle className="dark:text-foreground-dark">Social Media Accounts</CardTitle>
         </CardHeader>
         <CardContent>
-          <SocialMediaForm profileData={profileData} isMobile={false} />
+          <SocialMediaForm profileData={profileData} isMobile={false} onChange={onFieldChange} />
         </CardContent>
       </Card>
 
@@ -76,7 +78,7 @@ export function DesktopProfileView({
           <CardTitle className="dark:text-foreground-dark">Settlement Account</CardTitle>
         </CardHeader>
         <CardContent>
-          <BankInfoForm profileData={profileData} isMobile={false} />
+          <BankInfoForm profileData={profileData} isMobile={false} onChange={onFieldChange} />
         </CardContent>
       </Card>
 

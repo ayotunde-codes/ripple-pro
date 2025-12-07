@@ -1,6 +1,10 @@
+"use client"
+
 import { Button } from "@/components/ui/button"
 import { LogOut } from "lucide-react"
 import { ThemeToggle } from "@/components/theme-toggle"
+import { useLogout } from "@/services/auth"
+import { toast } from "@/components/ui/use-toast"
 import { ProfileAvatar } from "./profile-avatar"
 import { PersonalInfoForm } from "./personal-info-form"
 import { SocialMediaForm } from "./social-media-form"
@@ -13,7 +17,7 @@ interface MobileProfileViewProps {
   isLoadingSocial: boolean
   onImageUpload: (e: React.ChangeEvent<HTMLInputElement>) => void
   onSaveSocialMedia: () => void
-  onLogout: () => void
+  onFieldChange: (field: keyof ProfileData, value: string) => void
 }
 
 export function MobileProfileView({
@@ -22,8 +26,21 @@ export function MobileProfileView({
   isLoadingSocial,
   onImageUpload,
   onSaveSocialMedia,
-  onLogout,
+  onFieldChange,
 }: MobileProfileViewProps) {
+  const logout = useLogout()
+
+  const handleLogout = () => {
+    logout.mutate(undefined, {
+      onSuccess: () => {
+        toast({
+          title: "Logged out",
+          description: "You have been successfully logged out.",
+        })
+      },
+    })
+  }
+
   return (
     <div className="space-y-6 pb-36">
       <div>
@@ -40,19 +57,19 @@ export function MobileProfileView({
           isMobile={true}
         />
 
-        <PersonalInfoForm profileData={profileData} isMobile={true} />
+        <PersonalInfoForm profileData={profileData} isMobile={true} onChange={onFieldChange} />
       </div>
 
       {/* Social Media Accounts Section */}
       <div className="mt-8">
         <h2 className="text-xl font-semibold mb-4">Social Media Accounts</h2>
-        <SocialMediaForm profileData={profileData} isMobile={true} />
+        <SocialMediaForm profileData={profileData} isMobile={true} onChange={onFieldChange} />
       </div>
 
       {/* Settlement Account Section */}
       <div className="mt-8">
         <h2 className="text-xl font-semibold mb-4">Settlement Account</h2>
-        <BankInfoForm profileData={profileData} isMobile={true} />
+        <BankInfoForm profileData={profileData} isMobile={true} onChange={onFieldChange} />
       </div>
 
       {/* Mobile Logout and Save Changes Buttons */}
@@ -60,10 +77,11 @@ export function MobileProfileView({
         <Button
           variant="destructive"
           className="w-full flex items-center justify-center gap-2 py-6"
-          onClick={onLogout}
+          onClick={handleLogout}
+          disabled={logout.isPending}
         >
           <LogOut className="h-4 w-4" />
-          <span>Log out</span>
+          <span>{logout.isPending ? "Logging out..." : "Log out"}</span>
         </Button>
 
         <Button

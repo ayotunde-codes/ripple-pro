@@ -1,6 +1,7 @@
 import apiClient from "../core/apiClient"
 import {
   ApiResponse,
+  User,
   RegisterRequest,
   RegisterResponse,
   LoginRequest,
@@ -112,6 +113,7 @@ export const authApi = {
   /**
    * Get current user from localStorage
    * This is a helper function, not an API call
+   * Note: For SSR safety, this returns null on server
    */
   getCurrentUser: () => {
     if (typeof window === "undefined") return null
@@ -123,6 +125,20 @@ export const authApi = {
       return JSON.parse(userStr)
     } catch {
       return null
+    }
+  },
+
+  /**
+   * Update stored user data in localStorage
+   * Call this after profile updates to keep user data in sync
+   */
+  updateStoredUser: (userData: Partial<User>) => {
+    if (typeof window === "undefined") return
+    
+    const currentUser = authApi.getCurrentUser()
+    if (currentUser) {
+      const updatedUser = { ...currentUser, ...userData }
+      localStorage.setItem("user", JSON.stringify(updatedUser))
     }
   },
 

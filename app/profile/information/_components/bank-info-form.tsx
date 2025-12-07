@@ -6,9 +6,10 @@ import { ProfileData, nigerianBanks } from "./profile-data"
 interface BankInfoFormProps {
   profileData: ProfileData
   isMobile?: boolean
+  onChange?: (field: keyof ProfileData, value: string) => void
 }
 
-export function BankInfoForm({ profileData, isMobile = false }: BankInfoFormProps) {
+export function BankInfoForm({ profileData, isMobile = false, onChange }: BankInfoFormProps) {
   const suffix = isMobile ? "-mobile" : ""
   const inputClass = isMobile
     ? "rounded-full border-gray-200 h-14 px-5 bg-gray-50 dark:bg-[#0E0E0E] dark:text-white dark:border-gray-700"
@@ -23,7 +24,9 @@ export function BankInfoForm({ profileData, isMobile = false }: BankInfoFormProp
         <Input
           id={`bvn${suffix}`}
           value={profileData.bvn}
-          readOnly
+          onChange={(e) => onChange?.("bvn", e.target.value)}
+          maxLength={11}
+          placeholder="Enter 11-digit BVN"
           className={inputClass}
         />
       </div>
@@ -32,7 +35,10 @@ export function BankInfoForm({ profileData, isMobile = false }: BankInfoFormProp
         <Label htmlFor={`bankCode${suffix}`} className="text-gray-700 dark:text-[#A9A9A9]">
           Bank
         </Label>
-        <Select value={profileData.bankCode} disabled>
+        <Select 
+          value={profileData.bankCode}
+          onValueChange={(value) => onChange?.("bankCode", value)}
+        >
           <SelectTrigger id={`bankCode${suffix}`} className={inputClass}>
             <SelectValue placeholder="Select bank" />
           </SelectTrigger>
@@ -53,8 +59,9 @@ export function BankInfoForm({ profileData, isMobile = false }: BankInfoFormProp
         <Input
           id={`accountNumber${suffix}`}
           value={profileData.accountNumber}
-          readOnly
+          onChange={(e) => onChange?.("accountNumber", e.target.value)}
           maxLength={10}
+          placeholder="Enter 10-digit account number"
           className={inputClass}
         />
       </div>
@@ -66,7 +73,8 @@ export function BankInfoForm({ profileData, isMobile = false }: BankInfoFormProp
         <Input
           id={`accountName${suffix}`}
           value={profileData.accountName}
-          readOnly
+          onChange={(e) => onChange?.("accountName", e.target.value)}
+          placeholder="Enter account name"
           className={inputClass}
         />
       </div>

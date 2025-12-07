@@ -5,9 +5,10 @@ import { ProfileData } from "./profile-data"
 interface SocialMediaFormProps {
   profileData: ProfileData
   isMobile?: boolean
+  onChange?: (field: keyof ProfileData, value: string) => void
 }
 
-export function SocialMediaForm({ profileData, isMobile = false }: SocialMediaFormProps) {
+export function SocialMediaForm({ profileData, isMobile = false, onChange }: SocialMediaFormProps) {
   const suffix = isMobile ? "-mobile" : ""
   const inputClass = isMobile
     ? "rounded-full border-gray-200 h-14 px-5 flex-1 dark:bg-[#0E0E0E] dark:text-white dark:border-gray-700"
@@ -36,7 +37,7 @@ export function SocialMediaForm({ profileData, isMobile = false }: SocialMediaFo
             <Input
               id={`${platform.id}${suffix}`}
               value={profileData[platform.id as keyof ProfileData] as string}
-              readOnly
+              onChange={(e) => onChange?.(platform.id as keyof ProfileData, e.target.value)}
               placeholder={`Enter ${platform.label} username`}
               className={inputClass}
             />

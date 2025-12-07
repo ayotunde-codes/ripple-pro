@@ -15,8 +15,29 @@ import {
 // Query keys
 export const profileKeys = {
   all: ["profile"] as const,
+  detail: () => [...profileKeys.all, "detail"] as const,
   kyc: () => [...profileKeys.all, "kyc"] as const,
   kycSubmissions: () => [...profileKeys.all, "kyc", "submissions"] as const,
+}
+
+/**
+ * Get profile data query
+ * Note: API doesn't have GET /profile endpoint yet
+ * This is a placeholder that returns null for now
+ * TODO: Implement once backend adds GET /profile endpoint
+ */
+export const useProfile = () => {
+  return useQuery({
+    queryKey: profileKeys.detail(),
+    queryFn: async () => {
+      // TODO: Replace with actual API call when endpoint is available
+      // return profileApi.getProfile()
+      return null
+    },
+    staleTime: 1000 * 60 * 5, // 5 minutes
+    gcTime: 1000 * 60 * 10, // 10 minutes
+    enabled: false, // Disabled until endpoint is available
+  })
 }
 
 /**
@@ -29,8 +50,9 @@ export const useUpdatePersonalInfo = () => {
     mutationFn: (data: UpdatePersonalInfoRequest) =>
       profileApi.updatePersonalInfo(data),
     onSuccess: (response) => {
+      // Invalidate profile and auth queries to refetch
       queryClient.invalidateQueries({ queryKey: profileKeys.all })
-      console.log("Profile updated:", response.message)
+      queryClient.invalidateQueries({ queryKey: ["auth", "user"] })
     },
     onError: (error: any) => {
       console.error("Failed to update profile:", error)
@@ -66,10 +88,41 @@ export const useUpdateAccount = () => {
     mutationFn: (data: UpdateAccountRequest) => profileApi.updateAccount(data),
     onSuccess: (response) => {
       queryClient.invalidateQueries({ queryKey: profileKeys.all })
-      console.log("Account details updated:", response.message)
     },
     onError: (error: any) => {
       console.error("Failed to update account:", error)
+    },
+  })
+}
+
+/**
+ * Combined update for bank info (BVN + Account)
+ * Updates both BVN and account details
+ */
+export const useUpdateBankInfo = () => {
+  const queryClient = useQueryClient()
+  const updateBVN = useUpdateBVN()
+  const updateAccount = useUpdateAccount()
+
+  return useMutation({
+    mutationFn: async ({
+      bvn,
+      account,
+    }: {
+      bvn: string
+      account: UpdateAccountRequest
+    }) => {
+      // Update BVN first
+      await profileApi.updateBVN({ bvn })
+      // Then update account details
+      const accountResponse = await profileApi.updateAccount(account)
+      return accountResponse
+    },
+    onSuccess: (response) => {
+      queryClient.invalidateQueries({ queryKey: profileKeys.all })
+    },
+    onError: (error: any) => {
+      console.error("Failed to update bank info:", error)
     },
   })
 }

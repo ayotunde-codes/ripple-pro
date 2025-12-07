@@ -6,9 +6,10 @@ import { ProfileData, countries, contentTypes, categories } from "./profile-data
 interface PersonalInfoFormProps {
   profileData: ProfileData
   isMobile?: boolean
+  onChange?: (field: keyof ProfileData, value: string) => void
 }
 
-export function PersonalInfoForm({ profileData, isMobile = false }: PersonalInfoFormProps) {
+export function PersonalInfoForm({ profileData, isMobile = false, onChange }: PersonalInfoFormProps) {
   const suffix = isMobile ? "-mobile" : ""
   const inputClass = isMobile
     ? "rounded-full border-gray-200 h-14 px-5 bg-gray-50 dark:bg-[#0E0E0E] dark:text-white dark:border-gray-700"
@@ -23,7 +24,7 @@ export function PersonalInfoForm({ profileData, isMobile = false }: PersonalInfo
         <Input
           id={`firstName${suffix}`}
           value={profileData.firstName}
-          readOnly
+          onChange={(e) => onChange?.("firstName", e.target.value)}
           placeholder="Enter first name"
           className={inputClass}
         />
@@ -36,7 +37,7 @@ export function PersonalInfoForm({ profileData, isMobile = false }: PersonalInfo
         <Input
           id={`middleName${suffix}`}
           value={profileData.middleName}
-          readOnly
+          onChange={(e) => onChange?.("middleName", e.target.value)}
           placeholder="Enter middle name"
           className={inputClass}
         />
@@ -49,7 +50,7 @@ export function PersonalInfoForm({ profileData, isMobile = false }: PersonalInfo
         <Input
           id={`lastName${suffix}`}
           value={profileData.lastName}
-          readOnly
+          onChange={(e) => onChange?.("lastName", e.target.value)}
           placeholder="Enter last name"
           className={inputClass}
         />
@@ -65,6 +66,7 @@ export function PersonalInfoForm({ profileData, isMobile = false }: PersonalInfo
           readOnly
           placeholder="Enter email"
           className={inputClass}
+          title="Email cannot be changed"
         />
       </div>
 
@@ -72,7 +74,10 @@ export function PersonalInfoForm({ profileData, isMobile = false }: PersonalInfo
         <Label htmlFor={`contentType${suffix}`} className="text-gray-700 dark:text-[#A9A9A9]">
           Content type
         </Label>
-        <Select value={profileData.contentType} disabled>
+        <Select 
+          value={profileData.contentType}
+          onValueChange={(value) => onChange?.("contentType", value)}
+        >
           <SelectTrigger id={`contentType${suffix}`} className={inputClass}>
             <SelectValue placeholder="Select content type" />
           </SelectTrigger>
@@ -90,7 +95,10 @@ export function PersonalInfoForm({ profileData, isMobile = false }: PersonalInfo
         <Label htmlFor={`category${suffix}`} className="text-gray-700 dark:text-[#A9A9A9]">
           Category
         </Label>
-        <Select value={profileData.category} disabled>
+        <Select 
+          value={profileData.category}
+          onValueChange={(value) => onChange?.("category", value)}
+        >
           <SelectTrigger id={`category${suffix}`} className={inputClass}>
             <SelectValue placeholder="Select category" />
           </SelectTrigger>
