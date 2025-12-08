@@ -76,5 +76,18 @@ export const campaignApi = {
     )
     return response.data
   },
+
+  /**
+   * Approve redemption request
+   * GET /challenges/approve-redemption/:redemptionId
+   */
+  approveRedemption: async (
+    redemptionId: number
+  ): Promise<ApiResponse<RedemptionRequest>> => {
+    const response = await apiClient.get<ApiResponse<RedemptionRequest>>(
+      `/challenges/approve-redemption/${redemptionId}`
+    )
+    return response.data
+  },
 }
 

@@ -10,21 +10,26 @@ import { StatCard } from "@/components/shared/stat-card"
 import { AutoPayoutModal, DeclineModal } from "./challenge-modals"
 import { getCreatorsTableColumns } from "./creators-table-columns"
 import { formatCurrency } from "@/lib/utils"
+import type { RedemptionRequest } from "@/services/campaign"
 
 interface DesktopChallengeManagementProps {
   challenge: any
   creators: any[]
-  onApprove: (creatorId: number) => void
+  isLoading: boolean
+  onApprove: (redemptionId: number) => void
   onDecline: (creator: any) => void
   onAutoPayout: () => void
+  isApproving: boolean
 }
 
 export function DesktopChallengeManagement({
   challenge,
   creators,
+  isLoading,
   onApprove,
   onDecline,
   onAutoPayout,
+  isApproving,
 }: DesktopChallengeManagementProps) {
   const [searchQuery, setSearchQuery] = useState("")
   const [showAutoPayoutModal, setShowAutoPayoutModal] = useState(false)

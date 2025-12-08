@@ -14,17 +14,21 @@ import { renderSocialMediaIcon } from "./social-media-icons"
 interface MobileChallengeManagementProps {
   challenge: any
   creators: any[]
-  onApprove: (creatorId: number) => void
+  isLoading: boolean
+  onApprove: (redemptionId: number) => void
   onDecline: (creator: any) => void
   onAutoPayout: () => void
+  isApproving: boolean
 }
 
 export function MobileChallengeManagement({
   challenge,
   creators,
+  isLoading,
   onApprove,
   onDecline,
   onAutoPayout,
+  isApproving,
 }: MobileChallengeManagementProps) {
   const [searchQuery, setSearchQuery] = useState("")
   const [currentPage, setCurrentPage] = useState(1)
@@ -152,32 +156,42 @@ export function MobileChallengeManagement({
             />
 
             <div className="space-y-4">
-              {paginatedCreators.map((creator) => (
-                <div key={creator.id}>
-                  <CreatorCard
-                    creator={creator}
-                    platforms={challenge.platforms}
-                    onApprove={onApprove}
-                    onDecline={handleDeclineClick}
-                    onClick={openCreatorModal}
-                    challengeStatus={challenge.status}
-                  />
+              {isLoading ? (
+                <div className="text-center py-8 text-gray-500">Loading redemptions...</div>
+              ) : paginatedCreators.length === 0 ? (
+                <div className="text-center py-8 text-gray-500">No redemption requests found</div>
+              ) : (
+                paginatedCreators.map((creator) => (
+                  <div key={creator.id}>
+                    <CreatorCard
+                      creator={creator}
+                      platforms={challenge.platforms}
+                      onApprove={onApprove}
+                      onDecline={handleDeclineClick}
+                      onClick={openCreatorModal}
+                      challengeStatus={challenge.status}
+                    />
+                  </div>
+                ))
+              )}
+            </div>
+
+            {!isLoading && paginatedCreators.length > 0 && (
+              <>
+                <PaginationControls
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  onPageChange={setCurrentPage}
+                  className="mt-6"
+                  isMobile={true}
+                />
+
+                <div className="text-center text-sm text-gray-500 mt-2">
+                  Showing {(currentPage - 1) * itemsPerPage + 1} to{" "}
+                  {Math.min(currentPage * itemsPerPage, filteredCreators.length)} of {filteredCreators.length} entries
                 </div>
-              ))}
-            </div>
-
-            <PaginationControls
-              currentPage={currentPage}
-              totalPages={totalPages}
-              onPageChange={setCurrentPage}
-              className="mt-6"
-              isMobile={true}
-            />
-
-            <div className="text-center text-sm text-gray-500 mt-2">
-              Showing {(currentPage - 1) * itemsPerPage + 1} to{" "}
-              {Math.min(currentPage * itemsPerPage, filteredCreators.length)} of {filteredCreators.length} entries
-            </div>
+              </>
+            )}
           </div>
         </div>
       </div>

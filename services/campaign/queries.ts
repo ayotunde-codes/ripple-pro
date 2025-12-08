@@ -102,3 +102,23 @@ export const useCloseCampaign = () => {
   })
 }
 
+/**
+ * Approve redemption request mutation
+ */
+export const useApproveRedemption = () => {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: (redemptionId: number) =>
+      campaignApi.approveRedemption(redemptionId),
+    onSuccess: (response) => {
+      // Invalidate redemption requests to refetch
+      queryClient.invalidateQueries({ queryKey: campaignKeys.all })
+      console.log("Redemption approved:", response.message)
+    },
+    onError: (error: any) => {
+      console.error("Failed to approve redemption:", error)
+    },
+  })
+}
+
