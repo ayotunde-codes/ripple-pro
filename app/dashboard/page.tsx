@@ -1,31 +1,41 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { toast } from "@/components/ui/use-toast"
 import { useCurrentUser } from "@/services/auth"
 import { useWallet, useWithdraw } from "@/services/wallet"
 import { useCampaigns } from "@/services/campaign"
 import { useMySubmissions } from "@/services/challenge"
+import { useModalStore, useDashboardStore } from "@/stores"
 import { DashboardShell } from "@/components/dashboard-shell"
 import { MobileDashboard } from "./_components/mobile-dashboard"
 import { DesktopDashboard } from "./_components/desktop-dashboard"
 
 export default function DashboardPage() {
   const router = useRouter()
-  const [showOnboarding, setShowOnboarding] = useState(false)
-  const [showBanner, setShowBanner] = useState(false)
-  const [showFundingModal, setShowFundingModal] = useState(false)
-  const [showWithdrawalModal, setShowWithdrawalModal] = useState(false)
-  const [withdrawalAmount, setWithdrawalAmount] = useState("")
-  const [showOtpModal, setShowOtpModal] = useState(false)
-  const [otp, setOtp] = useState("")
-  const [otpError, setOtpError] = useState("")
-  const [showSuccessModal, setShowSuccessModal] = useState(false)
-  const [copied, setCopied] = useState(false)
-  const [showVerificationPrompt, setShowVerificationPrompt] = useState(false)
-  const [initialStep, setInitialStep] = useState(0)
-  const [isMobileView, setIsMobileView] = useState(false)
+
+  // Zustand stores
+  const { 
+    setStats, 
+    setRecentChallenges, 
+    setVirtualAccount, 
+    setIsLoading, 
+    setIsMobileView,
+    setShowBanner,
+    isMobileView,
+  } = useDashboardStore()
+
+  const {
+    withdrawalAmount,
+    closeWithdrawalModal,
+    openSuccessModal,
+    setWithdrawalAmount,
+    setCopied,
+    closeOnboarding,
+    closeVerificationPrompt,
+    openOnboarding,
+  } = useModalStore()
 
   // API hooks
   const { data: currentUser, isLoading: isLoadingUser } = useCurrentUser()
@@ -37,19 +47,33 @@ export default function DashboardPage() {
   // Determine if user is verified
   const isVerified = currentUser?.kyc_status === "approved" || currentUser?.is_email_verified
 
-  // Calculate stats from real data
-  const stats = {
-    walletBalance: Number(walletData?.data?.balance || 0),
-    totalEarnings: submissionsData?.data?.reduce((sum, sub) => sum + (sub.earnings || 0), 0) || 0,
-    activeChallenges: campaignsData?.meta?.total || 0,
-    totalViews: submissionsData?.data?.reduce((sum, sub) => sum + (sub.views || 0), 0) || 0,
-  }
-
-  const recentChallenges = campaignsData?.data?.slice(0, 5) || []
-  const virtualAccount = walletData?.data?.virtual_accounts?.[0] || null
-
+  // Update store with API data
   useEffect(() => {
-    // Check screen size
+    const isLoading = isLoadingUser || isLoadingWallet || isLoadingCampaigns || isLoadingSubmissions
+    setIsLoading(isLoading)
+
+    if (!isLoading) {
+      // Calculate and set stats
+      const stats = {
+        walletBalance: Number(walletData?.data?.balance || 0),
+        totalEarnings: submissionsData?.data?.reduce((sum, sub) => sum + (sub.earnings || 0), 0) || 0,
+        activeChallenges: campaignsData?.meta?.total || 0,
+        totalViews: submissionsData?.data?.reduce((sum, sub) => sum + (sub.views || 0), 0) || 0,
+      }
+      setStats(stats)
+
+      // Set recent challenges
+      const recentChallenges = campaignsData?.data?.slice(0, 5) || []
+      setRecentChallenges(recentChallenges)
+
+      // Set virtual account
+      const virtualAccount = walletData?.data?.virtual_accounts?.[0] || null
+      setVirtualAccount(virtualAccount)
+    }
+  }, [walletData, campaignsData, submissionsData, isLoadingUser, isLoadingWallet, isLoadingCampaigns, isLoadingSubmissions, setStats, setRecentChallenges, setVirtualAccount, setIsLoading])
+
+  // Check screen size
+  useEffect(() => {
     const checkScreenSize = () => {
       setIsMobileView(window.innerWidth < 768)
     }
@@ -57,25 +81,28 @@ export default function DashboardPage() {
     checkScreenSize()
     window.addEventListener("resize", checkScreenSize)
 
-    // Show banner if user is not verified
+    return () => window.removeEventListener("resize", checkScreenSize)
+  }, [setIsMobileView])
+
+  // Show banner if user is not verified
+  useEffect(() => {
     if (currentUser && !isVerified) {
       setShowBanner(true)
     }
+  }, [currentUser, isVerified, setShowBanner])
 
-    return () => window.removeEventListener("resize", checkScreenSize)
-  }, [currentUser, isVerified])
-
-  const handleBannerDismiss = () => {
-    setShowBanner(false)
-    // Set a temporary dismissal in session storage
-    sessionStorage.setItem("bannerDismissed", "true")
+  // Handlers
+  const handleOnboardingComplete = () => {
+    closeOnboarding()
   }
 
-  const handleOnboardingComplete = () => {
-    setShowOnboarding(false)
+  const handleCompleteVerification = () => {
+    closeVerificationPrompt()
+    openOnboarding()
   }
 
   const handleCopyAccountNumber = () => {
+    const virtualAccount = useDashboardStore.getState().virtualAccount
     if (virtualAccount?.account_number) {
       navigator.clipboard.writeText(virtualAccount.account_number)
       setCopied(true)
@@ -113,15 +140,15 @@ export default function DashboardPage() {
       { amount: amount.toString() },
       {
         onSuccess: () => {
-          setShowWithdrawalModal(false)
-          setShowSuccessModal(true)
+          closeWithdrawalModal()
+          openSuccessModal("Withdrawal successful")
           setWithdrawalAmount("")
           toast({
             title: "Withdrawal successful",
             description: "Your withdrawal has been processed",
           })
           setTimeout(() => {
-            setShowSuccessModal(false)
+            useModalStore.getState().closeSuccessModal()
           }, 3000)
         },
         onError: (error: any) => {
@@ -135,18 +162,10 @@ export default function DashboardPage() {
     )
   }
 
-  const handleOtpSubmit = () => {
-    // OTP validation removed - withdrawal happens directly via API
-    setShowOtpModal(false)
-  }
-
   const handleQuickAction = (action: string) => {
     if (!isVerified) {
-      // Always start from step 1 (index 0) of the onboarding modal
-      setInitialStep(0)
-      setShowVerificationPrompt(true)
+      useModalStore.getState().openVerificationPrompt()
     } else {
-      // Execute the action for verified users
       switch (action) {
         case "newChallenge":
           router.push("/campaigns/new")
@@ -155,74 +174,36 @@ export default function DashboardPage() {
           router.push("/challenges?tab=my-challenges")
           break
         case "fundWallet":
-          setShowFundingModal(true)
+          useModalStore.getState().openFundingModal()
           break
         case "withdraw":
-          setShowWithdrawalModal(true)
+          useModalStore.getState().openWithdrawalModal()
           break
       }
     }
   }
 
-  const handleCompleteVerification = () => {
-    setShowVerificationPrompt(false)
-    setShowOnboarding(true)
-  }
-
   const handleViewAllChallenges = () => {
-    handleQuickAction("myChallenges")
+    router.push("/challenges?tab=my-challenges")
   }
-
-  const isLoading = isLoadingUser || isLoadingWallet || isLoadingCampaigns || isLoadingSubmissions
 
   return (
     <DashboardShell>
       <div className="pb-16 md:pb-0">
         {isMobileView ? (
-          <MobileDashboard
-            isVerified={isVerified}
-            stats={stats}
-            recentChallenges={recentChallenges}
-            virtualAccount={virtualAccount}
-            isLoading={isLoading}
-            onDismissBanner={handleBannerDismiss}
-            onViewAllChallenges={handleViewAllChallenges}
+          <MobileDashboard 
             onQuickAction={handleQuickAction}
+            onViewAllChallenges={handleViewAllChallenges}
           />
         ) : (
           <DesktopDashboard
-            showBanner={showBanner}
-            stats={stats}
-            recentChallenges={recentChallenges}
-            virtualAccount={virtualAccount}
-            isLoading={isLoading}
-            onDismissBanner={handleBannerDismiss}
-            showVerificationPrompt={showVerificationPrompt}
-            setShowVerificationPrompt={setShowVerificationPrompt}
-            showOnboarding={showOnboarding}
-            initialStep={initialStep}
             onCompleteVerification={handleCompleteVerification}
             onOnboardingComplete={handleOnboardingComplete}
-            showFundingModal={showFundingModal}
-            setShowFundingModal={setShowFundingModal}
-            showWithdrawalModal={showWithdrawalModal}
-            setShowWithdrawalModal={setShowWithdrawalModal}
-            showOtpModal={showOtpModal}
-            setShowOtpModal={setShowOtpModal}
-            showSuccessModal={showSuccessModal}
-            setShowSuccessModal={setShowSuccessModal}
-            withdrawalAmount={withdrawalAmount}
-            setWithdrawalAmount={setWithdrawalAmount}
-            otp={otp}
-            setOtp={setOtp}
-            otpError={otpError}
-            copied={copied}
-            isWithdrawing={withdrawMutation.isPending}
             onCopyAccountNumber={handleCopyAccountNumber}
             onWithdrawalSubmit={handleWithdrawalSubmit}
-            onOtpSubmit={handleOtpSubmit}
             onQuickAction={handleQuickAction}
             onViewAllChallenges={handleViewAllChallenges}
+            isWithdrawing={withdrawMutation.isPending}
           />
         )}
       </div>

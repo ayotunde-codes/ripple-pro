@@ -1,17 +1,10 @@
 import { Card, CardContent } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
+import { useDashboardStore } from "@/stores"
 
-interface DashboardStatsProps {
-  stats: {
-    walletBalance: number
-    totalEarnings: number
-    activeChallenges: number
-    totalViews: number
-  }
-  isLoading: boolean
-}
+export function DashboardStats() {
+  const { stats, isLoading } = useDashboardStore()
 
-export function DashboardStats({ stats, isLoading }: DashboardStatsProps) {
   const statsData = [
     {
       title: "Wallet Balance",
@@ -51,7 +44,9 @@ export function DashboardStats({ stats, isLoading }: DashboardStatsProps) {
   )
 }
 
-export function MobileDashboardStats({ stats, isLoading }: DashboardStatsProps) {
+export function MobileDashboardStats() {
+  const { stats, isLoading } = useDashboardStore()
+
   const statsData = [
     {
       title: "Wallet Balance",
@@ -90,4 +85,3 @@ export function MobileDashboardStats({ stats, isLoading }: DashboardStatsProps) 
     </div>
   )
 }
-

@@ -2,16 +2,17 @@ import { Check, Copy } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { useDashboardStore } from "@/stores"
 
 interface FundWalletModalProps {
   open: boolean
   onOpenChange: (open: boolean) => void
-  virtualAccount: any
   copied: boolean
   onCopyAccountNumber: () => void
 }
 
-export function FundWalletModal({ open, onOpenChange, virtualAccount, copied, onCopyAccountNumber }: FundWalletModalProps) {
+export function FundWalletModal({ open, onOpenChange, copied, onCopyAccountNumber }: FundWalletModalProps) {
+  const { virtualAccount } = useDashboardStore()
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md dark:bg-background-dark">

@@ -7,6 +7,7 @@ import { Overview } from "@/components/overview"
 import { OnboardingModal } from "@/components/onboarding-modal"
 import { VerificationPrompt } from "@/components/verification-prompt"
 import { ThemeToggle } from "@/components/theme-toggle"
+import { useModalStore, useDashboardStore } from "@/stores"
 import { DashboardStats } from "./dashboard-stats"
 import { QuickActions } from "./quick-actions"
 import { RecentChallenges } from "./recent-challenges"
@@ -18,82 +19,50 @@ import {
 } from "./dashboard-modals"
 
 interface DesktopDashboardProps {
-  showBanner: boolean
-  stats: {
-    walletBalance: number
-    totalEarnings: number
-    activeChallenges: number
-    totalViews: number
-  }
-  recentChallenges: any[]
-  virtualAccount: any
-  isLoading: boolean
-  onDismissBanner: () => void
-  showVerificationPrompt: boolean
-  setShowVerificationPrompt: (show: boolean) => void
-  showOnboarding: boolean
-  initialStep: number
   onCompleteVerification: () => void
   onOnboardingComplete: () => void
-  showFundingModal: boolean
-  setShowFundingModal: (show: boolean) => void
-  showWithdrawalModal: boolean
-  setShowWithdrawalModal: (show: boolean) => void
-  showOtpModal: boolean
-  setShowOtpModal: (show: boolean) => void
-  showSuccessModal: boolean
-  setShowSuccessModal: (show: boolean) => void
-  withdrawalAmount: string
-  setWithdrawalAmount: (amount: string) => void
-  otp: string
-  setOtp: (otp: string) => void
-  otpError: string
-  copied: boolean
-  isWithdrawing: boolean
   onCopyAccountNumber: () => void
   onWithdrawalSubmit: () => void
-  onOtpSubmit: () => void
   onQuickAction: (action: string) => void
   onViewAllChallenges: () => void
+  isWithdrawing: boolean
 }
 
 export function DesktopDashboard({
-  showBanner,
-  stats,
-  recentChallenges,
-  virtualAccount,
-  isLoading,
-  onDismissBanner,
-  showVerificationPrompt,
-  setShowVerificationPrompt,
-  showOnboarding,
-  initialStep,
   onCompleteVerification,
   onOnboardingComplete,
-  showFundingModal,
-  setShowFundingModal,
-  showWithdrawalModal,
-  setShowWithdrawalModal,
-  showOtpModal,
-  setShowOtpModal,
-  showSuccessModal,
-  setShowSuccessModal,
-  withdrawalAmount,
-  setWithdrawalAmount,
-  otp,
-  setOtp,
-  otpError,
-  copied,
-  isWithdrawing,
   onCopyAccountNumber,
   onWithdrawalSubmit,
-  onOtpSubmit,
   onQuickAction,
   onViewAllChallenges,
+  isWithdrawing,
 }: DesktopDashboardProps) {
+  // Get data from stores
+  const { showBanner, dismissBanner } = useDashboardStore()
+  const {
+    showVerificationPrompt,
+    closeVerificationPrompt,
+    showOnboarding,
+    onboardingInitialStep,
+    showFundingModal,
+    closeFundingModal,
+    showWithdrawalModal,
+    closeWithdrawalModal,
+    withdrawalAmount,
+    setWithdrawalAmount,
+    showOtpModal,
+    closeOtpModal,
+    otp,
+    setOtp,
+    otpError,
+    showSuccessModal,
+    closeSuccessModal,
+    copied,
+  } = useModalStore()
+
   return (
     <>
-      {showBanner && <ProfileBanner onDismiss={onDismissBanner} />}
+      {showBanner && <ProfileBanner onDismiss={dismissBanner} />}
 
       <DashboardHeader heading="Dashboard" text="Welcome back! Here's an overview of your account.">
         <div className="flex space-x-2">
@@ -108,7 +77,7 @@ export function DesktopDashboard({
         </div>
       </DashboardHeader>
 
-      <DashboardStats stats={stats} isLoading={isLoading} />
+      <DashboardStats />
 
       {/* Quick Actions Section */}
       <QuickActions onAction={onQuickAction} />
@@ -119,20 +88,31 @@ export function DesktopDashboard({
           <CardHeader>
             <CardTitle>Performance Overview</CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="pl-2">
             <Overview />
           </CardContent>
         </Card>
 
         {/* Recent Challenges */}
-        <RecentChallenges challenges={recentChallenges} isLoading={isLoading} onViewAll={onViewAllChallenges} />
+        <RecentChallenges onViewAll={onViewAllChallenges} />
       </div>
+
+      {/* Verification Prompt */}
+      <VerificationPrompt
+        open={showVerificationPrompt}
+        onOpenChange={closeVerificationPrompt}
+        onComplete={onCompleteVerification}
+      />
+
+      {/* Onboarding Modal */}
+      {showOnboarding && (
+        <OnboardingModal initialStep={onboardingInitialStep} onComplete={onOnboardingComplete} />
+      )}
 
       {/* Fund Wallet Modal */}
       <FundWalletModal
         open={showFundingModal}
-        onOpenChange={setShowFundingModal}
-        virtualAccount={virtualAccount}
+        onOpenChange={closeFundingModal}
         copied={copied}
         onCopyAccountNumber={onCopyAccountNumber}
       />
@@ -140,7 +120,7 @@ export function DesktopDashboard({
       {/* Withdrawal Modal */}
       <WithdrawalModal
         open={showWithdrawalModal}
-        onOpenChange={setShowWithdrawalModal}
+        onOpenChange={closeWithdrawalModal}
         amount={withdrawalAmount}
         onAmountChange={setWithdrawalAmount}
         onSubmit={onWithdrawalSubmit}
@@ -150,25 +130,15 @@ export function DesktopDashboard({
       {/* OTP Verification Modal */}
       <OtpVerificationModal
         open={showOtpModal}
-        onOpenChange={setShowOtpModal}
+        onOpenChange={closeOtpModal}
         otp={otp}
         setOtp={setOtp}
         otpError={otpError}
-        onSubmit={onOtpSubmit}
+        onSubmit={() => {}}
       />
 
       {/* Success Modal */}
-      <SuccessModal open={showSuccessModal} onOpenChange={setShowSuccessModal} />
-
-      {/* Verification Prompt Modal */}
-      <VerificationPrompt
-        open={showVerificationPrompt}
-        onOpenChange={setShowVerificationPrompt}
-        onComplete={onCompleteVerification}
-      />
-
-      {showOnboarding && <OnboardingModal initialStep={initialStep} onComplete={onOnboardingComplete} />}
+      <SuccessModal open={showSuccessModal} onOpenChange={closeSuccessModal} />
     </>
   )
 }
-

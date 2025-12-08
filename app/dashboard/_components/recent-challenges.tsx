@@ -2,16 +2,17 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
 import { Skeleton } from "@/components/ui/skeleton"
+import { useDashboardStore } from "@/stores"
 
 interface RecentChallengesProps {
-  challenges: any[]
-  isLoading: boolean
   onViewAll: () => void
   isMobile?: boolean
 }
 
-export function RecentChallenges({ challenges, isLoading, onViewAll, isMobile = false }: RecentChallengesProps) {
-  const displayChallenges = challenges.slice(0, 3)
+export function RecentChallenges({ onViewAll, isMobile = false }: RecentChallengesProps) {
+  const { recentChallenges, isLoading } = useDashboardStore()
+  const displayChallenges = recentChallenges.slice(0, 3)
+
   if (isMobile) {
     return (
       <div className="space-y-4">
@@ -111,4 +112,3 @@ export function RecentChallenges({ challenges, isLoading, onViewAll, isMobile = 
     </Card>
   )
 }
-
