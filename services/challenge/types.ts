@@ -30,12 +30,26 @@ export type ChallengeStatus = "open" | "closed"
 // User Challenge (Submission)
 export interface UserChallenge {
   id: number
+  challenge_id: number
   challange_name: string
   earnings: number | null
   views: number | null
   date_entered: string
+  created_at: string
   status: ChallengeStatus
+  redemption_status?: "pending" | "approved" | "rejected"
   social_media_links: string[]
+  challenge?: {
+    id: number
+    campaign_name: string
+    category: string
+    content_type: string
+    challenge_pool: string
+    end_date: string
+    status: string
+    views?: number
+    social_media_links?: string[]
+  }
 }
 
 // Join Challenge Request

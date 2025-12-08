@@ -7,9 +7,10 @@ import { VerificationPrompt } from "@/components/verification-prompt"
 import { OnboardingModal } from "@/components/onboarding-modal"
 import { MobileChallengesView } from "./_components/mobile-challenges-view"
 import { DesktopChallengesView } from "./_components/desktop-challenges-view"
+import { RedeemConfirmationModal } from "./_components/redeem-confirmation-modal"
 import { availableChallenges } from "./_components/challenges-data"
 import { useCampaigns } from "@/services/campaign"
-import { useMySubmissions } from "@/services/challenge"
+import { useMySubmissions, useRedeemReward } from "@/services/challenge"
 import { toast } from "@/components/ui/use-toast"
 
 export default function ChallengesPage() {
@@ -21,6 +22,8 @@ export default function ChallengesPage() {
   const [isMobileView, setIsMobileView] = useState(false)
   const [activeTab, setActiveTab] = useState("explore")
   const [selectedCategory, setSelectedCategory] = useState("all")
+  const [showRedeemModal, setShowRedeemModal] = useState(false)
+  const [selectedChallengeForRedeem, setSelectedChallengeForRedeem] = useState<any>(null)
   
   // API hooks - Note: campaigns API can be used for browsing available challenges
   const { data: campaignsData, isLoading: isLoadingCampaigns } = useCampaigns({
@@ -32,6 +35,7 @@ export default function ChallengesPage() {
     page: 1,
     limit: 50,
   })
+  const redeemReward = useRedeemReward()
 
   // Use API data if available, otherwise fallback to mock data
   const apiChallenges = campaignsData?.data || []
@@ -121,9 +125,10 @@ export default function ChallengesPage() {
           categories={categories}
           filteredAvailableChallenges={filteredAvailableChallenges}
           mySubmissions={mySubmissions}
-          isLoadingChallenges={isLoadingCampaigns}
           isLoadingSubmissions={isLoadingSubmissions}
           onJoinChallenge={handleJoinChallenge}
+          onRedeem={handleRedeemClick}
+          isRedeeming={redeemReward.isPending}
         />
       ) : (
         <DesktopChallengesView
@@ -134,9 +139,10 @@ export default function ChallengesPage() {
           categories={categories}
           filteredAvailableChallenges={filteredAvailableChallenges}
           mySubmissions={mySubmissions}
-          isLoadingChallenges={isLoadingCampaigns}
           isLoadingSubmissions={isLoadingSubmissions}
           onJoinChallenge={handleJoinChallenge}
+          onRedeem={handleRedeemClick}
+          isRedeeming={redeemReward.isPending}
         />
       )}
 
@@ -157,6 +163,16 @@ export default function ChallengesPage() {
           }}
         />
       )}
+
+      {/* Redeem Confirmation Modal */}
+      <RedeemConfirmationModal
+        open={showRedeemModal}
+        onOpenChange={setShowRedeemModal}
+        onConfirm={handleConfirmRedeem}
+        isLoading={redeemReward.isPending}
+        challengeName={selectedChallengeForRedeem?.challenge?.campaign_name || selectedChallengeForRedeem?.challange_name}
+        earnings={Number(selectedChallengeForRedeem?.earnings || 0)}
+      />
     </DashboardShell>
   )
 }

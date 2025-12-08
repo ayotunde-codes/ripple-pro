@@ -13,7 +13,11 @@ interface MobileChallengesViewProps {
   setSelectedCategory: (category: string) => void
   categories: string[]
   filteredAvailableChallenges: any[]
+  mySubmissions: any[]
+  isLoadingSubmissions: boolean
   onJoinChallenge: (challenge: any) => void
+  onRedeem: (challengeId: number) => void
+  isRedeeming: boolean
 }
 
 export function MobileChallengesView({
@@ -23,7 +27,11 @@ export function MobileChallengesView({
   setSelectedCategory,
   categories,
   filteredAvailableChallenges,
+  mySubmissions,
+  isLoadingSubmissions,
   onJoinChallenge,
+  onRedeem,
+  isRedeeming,
 }: MobileChallengesViewProps) {
   const [currentPage, setCurrentPage] = useState(1)
   const [itemsPerPage] = useState(4)
@@ -38,8 +46,8 @@ export function MobileChallengesView({
   )
 
   // Calculate pagination for user challenges
-  const userTotalPages = Math.ceil(userChallenges.length / userItemsPerPage)
-  const paginatedUserChallenges = userChallenges.slice(
+  const userTotalPages = Math.ceil(mySubmissions.length / userItemsPerPage)
+  const paginatedUserChallenges = mySubmissions.slice(
     (userCurrentPage - 1) * userItemsPerPage,
     userCurrentPage * userItemsPerPage,
   )
@@ -110,26 +118,74 @@ export function MobileChallengesView({
         </div>
       ) : (
         <div className="space-y-4">
-          {userChallenges.length > 0 ? (
+          {isLoadingSubmissions ? (
+            <div className="text-center py-8">
+              <p className="text-muted-foreground">Loading submissions...</p>
+            </div>
+          ) : mySubmissions.length > 0 ? (
             <>
-              {paginatedUserChallenges.map((challenge) => (
-                <div key={challenge.id} className="border-b pb-4">
-                  <div className="flex justify-between items-center mb-2">
-                    <h3 className="font-semibold text-lg">{challenge.title}</h3>
-                    <span
-                      className={`px-3 py-1 rounded-full text-sm ${
-                        challenge.status === "active" ? "bg-green-100 text-green-800" : "bg-gray-100 text-gray-800"
-                      }`}
-                    >
-                      {challenge.status === "active" ? "Active" : "Completed"}
-                    </span>
+              {paginatedUserChallenges.map((challenge) => {
+                const earnings = Number(challenge.earnings || 0)
+                const views = Number(challenge.views || 0)
+                const canRedeem = earnings > 0 && (!challenge.redemption_status || challenge.redemption_status === "rejected")
+                
+                return (
+                  <div key={challenge.id} className="border rounded-lg p-4 space-y-3">
+                    <div className="flex justify-between items-start">
+                      <h3 className="font-semibold text-lg">
+                        {challenge.challenge?.campaign_name || challenge.challange_name || "N/A"}
+                      </h3>
+                      {challenge.redemption_status ? (
+                        <span
+                          className={`px-3 py-1 rounded-full text-sm ${
+                            challenge.redemption_status === "pending"
+                              ? "bg-yellow-100 text-yellow-800"
+                              : challenge.redemption_status === "approved"
+                              ? "bg-green-100 text-green-800"
+                              : "bg-red-100 text-red-800"
+                          }`}
+                        >
+                          {challenge.redemption_status === "pending"
+                            ? "Pending"
+                            : challenge.redemption_status === "approved"
+                            ? "Approved"
+                            : "Rejected"}
+                        </span>
+                      ) : (
+                        <span className="px-3 py-1 rounded-full text-sm bg-gray-100 text-gray-800">
+                          Active
+                        </span>
+                      )}
+                    </div>
+                    <div className="grid grid-cols-2 gap-2">
+                      <div>
+                        <p className="text-sm text-gray-500">Earnings</p>
+                        <p className="text-lg font-medium">₦{earnings.toLocaleString()}</p>
+                      </div>
+                      <div>
+                        <p className="text-sm text-gray-500">Views</p>
+                        <p className="text-lg font-medium">{views.toLocaleString()}</p>
+                      </div>
+                    </div>
+                    {canRedeem && (
+                      <Button
+                        size="sm"
+                        onClick={() => onRedeem(challenge.challenge_id)}
+                        disabled={isRedeeming}
+                        className="w-full"
+                      >
+                        {isRedeeming ? "Processing..." : "Redeem Reward"}
+                      </Button>
+                    )}
+                    {challenge.redemption_status === "pending" && (
+                      <p className="text-sm text-gray-500 text-center">Awaiting brand approval</p>
+                    )}
+                    {challenge.redemption_status === "approved" && (
+                      <p className="text-sm text-green-600 text-center">Reward paid out</p>
+                    )}
                   </div>
-                  <div className="flex justify-between items-center">
-                    <p className="text-gray-700 font-medium">₦{challenge.earnings.toLocaleString()}</p>
-                    <p className="text-gray-500">{challenge.views.toLocaleString()} Views</p>
-                  </div>
-                </div>
-              ))}
+                )
+              })}
 
               {/* Pagination Controls for My Challenges */}
               {userTotalPages > 1 && (

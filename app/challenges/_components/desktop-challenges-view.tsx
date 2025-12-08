@@ -13,7 +13,11 @@ interface DesktopChallengesViewProps {
   setSelectedCategory: (category: string) => void
   categories: string[]
   filteredAvailableChallenges: any[]
+  mySubmissions: any[]
+  isLoadingSubmissions: boolean
   onJoinChallenge: (challenge: any) => void
+  onRedeem: (challengeId: number) => void
+  isRedeeming: boolean
 }
 
 export function DesktopChallengesView({
@@ -23,7 +27,11 @@ export function DesktopChallengesView({
   setSelectedCategory,
   categories,
   filteredAvailableChallenges,
+  mySubmissions,
+  isLoadingSubmissions,
   onJoinChallenge,
+  onRedeem,
+  isRedeeming,
 }: DesktopChallengesViewProps) {
   return (
     <>
@@ -64,7 +72,12 @@ export function DesktopChallengesView({
             />
           </div>
         ) : (
-          <UserChallengesTable />
+          <UserChallengesTable
+            challenges={mySubmissions}
+            isLoading={isLoadingSubmissions}
+            onRedeem={onRedeem}
+            isRedeeming={isRedeeming}
+          />
         )}
       </div>
     </>
