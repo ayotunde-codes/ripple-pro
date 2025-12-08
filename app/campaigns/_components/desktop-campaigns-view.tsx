@@ -11,46 +11,58 @@ import { CampaignsStats } from "./campaigns-stats"
 import { getCampaignsTableColumns } from "./campaigns-table-columns"
 import { CloseChallengeDialog } from "./close-challenge-dialog"
 
+import type { Campaign, CampaignSummary } from "@/services/campaign"
+
 interface DesktopCampaignsViewProps {
   isVerified: boolean
+  campaigns: Campaign[]
+  summary?: CampaignSummary
+  isLoadingCampaigns: boolean
+  isLoadingSummary: boolean
   showVerificationPrompt: boolean
   setShowVerificationPrompt: (show: boolean) => void
   showOnboarding: boolean
   setShowOnboarding: (show: boolean) => void
-  setIsVerified: (verified: boolean) => void
   initialStep: number
   setInitialStep: (step: number) => void
   showCloseConfirmation: boolean
   setShowCloseConfirmation: (show: boolean) => void
   searchQuery: string
   setSearchQuery: (query: string) => void
-  filteredChallenges: any[]
+  statusFilter?: "open" | "closed"
+  setStatusFilter: (filter?: "open" | "closed") => void
   navigateToChallengeManagement: (id: number) => void
   handleCloseChallenge: (challenge: any) => void
   handleCompleteVerification: () => void
   confirmCloseChallenge: () => void
   onCreateCampaign: () => void
+  isClosing: boolean
 }
 
 export function DesktopCampaignsView({
   isVerified,
+  campaigns,
+  summary,
+  isLoadingCampaigns,
+  isLoadingSummary,
   showVerificationPrompt,
   setShowVerificationPrompt,
   showOnboarding,
   setShowOnboarding,
-  setIsVerified,
   initialStep,
   setInitialStep,
   showCloseConfirmation,
   setShowCloseConfirmation,
   searchQuery,
   setSearchQuery,
-  filteredChallenges,
+  statusFilter,
+  setStatusFilter,
   navigateToChallengeManagement,
   handleCloseChallenge,
   handleCompleteVerification,
   confirmCloseChallenge,
   onCreateCampaign,
+  isClosing,
 }: DesktopCampaignsViewProps) {
   const columns = getCampaignsTableColumns({ navigateToChallengeManagement, handleCloseChallenge })
 
@@ -63,7 +75,7 @@ export function DesktopCampaignsView({
         </Button>
       </DashboardHeader>
 
-      <CampaignsStats />
+      <CampaignsStats summary={summary} isLoading={isLoadingSummary} />
 
       <Card className="bg-white border border-gray-200 shadow-sm mt-6">
         <CardHeader className="bg-gradient-to-r from-[#F9F0FC] to-[#F9F0FC]/50 dark:from-[#0E0E0E] dark:to-[#0E0E0E]/50 rounded-t-lg flex flex-row justify-between items-center">
@@ -82,7 +94,7 @@ export function DesktopCampaignsView({
         </CardHeader>
 
         <CardContent>
-          <DataTable columns={columns} data={filteredChallenges} searchKey="name" searchValue={searchQuery} />
+          <DataTable columns={columns} data={campaigns} searchKey="campaign_name" searchValue={searchQuery} isLoading={isLoadingCampaigns} />
         </CardContent>
       </Card>
 
@@ -106,6 +118,7 @@ export function DesktopCampaignsView({
         open={showCloseConfirmation}
         onOpenChange={setShowCloseConfirmation}
         onConfirm={confirmCloseChallenge}
+        isLoading={isClosing}
       />
     </DashboardShell>
   )

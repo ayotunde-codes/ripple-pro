@@ -7,45 +7,56 @@ import { VerificationPrompt } from "@/components/verification-prompt"
 import { OnboardingModal } from "@/components/onboarding-modal"
 import { MobileCampaignsStats } from "./campaigns-stats"
 import { CloseChallengeDialog } from "./close-challenge-dialog"
+import type { Campaign, CampaignSummary } from "@/services/campaign"
 
 interface MobileCampaignsViewProps {
   isVerified: boolean
+  campaigns: Campaign[]
+  summary?: CampaignSummary
+  isLoadingCampaigns: boolean
+  isLoadingSummary: boolean
   showVerificationPrompt: boolean
   setShowVerificationPrompt: (show: boolean) => void
   showOnboarding: boolean
   setShowOnboarding: (show: boolean) => void
-  setIsVerified: (verified: boolean) => void
   initialStep: number
   setInitialStep: (step: number) => void
   showCloseConfirmation: boolean
   setShowCloseConfirmation: (show: boolean) => void
   searchQuery: string
   setSearchQuery: (query: string) => void
-  filteredChallenges: any[]
+  statusFilter?: "open" | "closed"
+  setStatusFilter: (filter?: "open" | "closed") => void
   navigateToChallengeManagement: (id: number) => void
   handleCompleteVerification: () => void
   confirmCloseChallenge: () => void
   onCreateCampaign: () => void
+  isClosing: boolean
 }
 
 export function MobileCampaignsView({
   isVerified,
+  campaigns,
+  summary,
+  isLoadingCampaigns,
+  isLoadingSummary,
   showVerificationPrompt,
   setShowVerificationPrompt,
   showOnboarding,
   setShowOnboarding,
-  setIsVerified,
   initialStep,
   setInitialStep,
   showCloseConfirmation,
   setShowCloseConfirmation,
   searchQuery,
   setSearchQuery,
-  filteredChallenges,
+  statusFilter,
+  setStatusFilter,
   navigateToChallengeManagement,
   handleCompleteVerification,
   confirmCloseChallenge,
   onCreateCampaign,
+  isClosing,
 }: MobileCampaignsViewProps) {
   return (
     <div className="pb-20">
@@ -63,7 +74,7 @@ export function MobileCampaignsView({
           Create campaign
         </Button>
 
-        <MobileCampaignsStats />
+        <MobileCampaignsStats summary={summary} isLoading={isLoadingSummary} />
 
         <h2 className="text-xl font-bold mt-8 mb-4">All campaigns</h2>
 
@@ -78,22 +89,28 @@ export function MobileCampaignsView({
         </div>
 
         <div className="space-y-4">
-          {filteredChallenges.map((challenge) => (
-            <div
-              key={challenge.id}
-              className="border-b pb-4"
-              onClick={() => navigateToChallengeManagement(challenge.id)}
-            >
-              <div className="flex justify-between">
-                <h3 className="font-semibold">{challenge.name}</h3>
-                <p className="font-bold">₦{challenge.pool.toLocaleString()}</p>
+          {isLoadingCampaigns ? (
+            <div className="text-center py-8 text-gray-500">Loading campaigns...</div>
+          ) : campaigns.length === 0 ? (
+            <div className="text-center py-8 text-gray-500">No campaigns found</div>
+          ) : (
+            campaigns.map((campaign) => (
+              <div
+                key={campaign.id}
+                className="border-b pb-4"
+                onClick={() => navigateToChallengeManagement(campaign.id)}
+              >
+                <div className="flex justify-between">
+                  <h3 className="font-semibold">{campaign.campaign_name}</h3>
+                  <p className="font-bold">₦{parseFloat(campaign.challenge_pool).toLocaleString()}</p>
+                </div>
+                <div className="flex justify-between text-sm text-gray-500 mt-1">
+                  <p>{campaign.views.toLocaleString()} views generated</p>
+                  <p className="capitalize">{campaign.status}</p>
+                </div>
               </div>
-              <div className="flex justify-between text-sm text-gray-500 mt-1">
-                <p>{challenge.views.toLocaleString()} views generated</p>
-                <p>{challenge.participants} participants</p>
-              </div>
-            </div>
-          ))}
+            ))
+          )}
         </div>
       </div>
 
@@ -122,6 +139,7 @@ export function MobileCampaignsView({
         open={showCloseConfirmation}
         onOpenChange={setShowCloseConfirmation}
         onConfirm={confirmCloseChallenge}
+        isLoading={isClosing}
         isMobile
       />
     </div>

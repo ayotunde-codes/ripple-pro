@@ -1,7 +1,50 @@
 import { Card, CardContent } from "@/components/ui/card"
-import { statsData } from "./campaigns-data"
+import { Skeleton } from "@/components/ui/skeleton"
+import type { CampaignSummary } from "@/services/campaign"
 
-export function CampaignsStats() {
+interface StatsProps {
+  summary?: CampaignSummary
+  isLoading: boolean
+}
+
+export function CampaignsStats({ summary, isLoading }: StatsProps) {
+  const formatCurrency = (value: number) => {
+    return new Intl.NumberFormat("en-NG", {
+      style: "currency",
+      currency: "NGN",
+      minimumFractionDigits: 0,
+    }).format(value)
+  }
+
+  const statsData = [
+    {
+      title: "Total Campaigns",
+      value: summary?.total_campaigns?.toString() || "0",
+    },
+    {
+      title: "Active Campaigns",
+      value: summary?.active_campaigns?.toString() || "0",
+    },
+    {
+      title: "Total Spend",
+      value: formatCurrency(summary?.total_spend || 0),
+    },
+    {
+      title: "Total Views",
+      value: summary?.total_views?.toString() || "0",
+    },
+  ]
+
+  if (isLoading) {
+    return (
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        {[1, 2, 3, 4].map((i) => (
+          <Skeleton key={i} className="h-28 rounded-lg" />
+        ))}
+      </div>
+    )
+  }
+
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
       {statsData.map((stat, index) => (
@@ -18,7 +61,44 @@ export function CampaignsStats() {
   )
 }
 
-export function MobileCampaignsStats() {
+export function MobileCampaignsStats({ summary, isLoading }: StatsProps) {
+  const formatCurrency = (value: number) => {
+    return new Intl.NumberFormat("en-NG", {
+      style: "currency",
+      currency: "NGN",
+      minimumFractionDigits: 0,
+    }).format(value)
+  }
+
+  const statsData = [
+    {
+      title: "Total Campaigns",
+      value: summary?.total_campaigns?.toString() || "0",
+    },
+    {
+      title: "Active Campaigns",
+      value: summary?.active_campaigns?.toString() || "0",
+    },
+    {
+      title: "Total Spend",
+      value: formatCurrency(summary?.total_spend || 0),
+    },
+    {
+      title: "Total Views",
+      value: summary?.total_views?.toString() || "0",
+    },
+  ]
+
+  if (isLoading) {
+    return (
+      <div className="grid grid-cols-2 gap-4 mt-6">
+        {[1, 2, 3, 4].map((i) => (
+          <Skeleton key={i} className="h-20 rounded-lg" />
+        ))}
+      </div>
+    )
+  }
+
   return (
     <div className="grid grid-cols-2 gap-4 mt-6">
       {statsData.map((stat, index) => (

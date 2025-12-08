@@ -3,20 +3,33 @@
 import { useRouter } from "next/navigation"
 import { useState, useEffect } from "react"
 import { toast } from "@/components/ui/use-toast"
+import { useCurrentUser } from "@/services/auth"
+import { useCampaigns, useCampaignSummary, useCloseCampaign } from "@/services/campaign"
 import { MobileCampaignsView } from "./_components/mobile-campaigns-view"
 import { DesktopCampaignsView } from "./_components/desktop-campaigns-view"
-import { challenges } from "./_components/campaigns-data"
 
 export default function CampaignsPage() {
   const router = useRouter()
-  const [isVerified, setIsVerified] = useState(true)
+  const { data: currentUser } = useCurrentUser()
+  
   const [showVerificationPrompt, setShowVerificationPrompt] = useState(false)
   const [showOnboarding, setShowOnboarding] = useState(false)
   const [initialStep, setInitialStep] = useState(0)
   const [showCloseConfirmation, setShowCloseConfirmation] = useState(false)
-  const [selectedChallenge, setSelectedChallenge] = useState(null)
+  const [selectedChallenge, setSelectedChallenge] = useState<any>(null)
   const [isMobile, setIsMobile] = useState(false)
   const [searchQuery, setSearchQuery] = useState("")
+  const [statusFilter, setStatusFilter] = useState<"open" | "closed" | undefined>(undefined)
+
+  // API hooks
+  const { data: campaignsData, isLoading: isLoadingCampaigns } = useCampaigns({
+    search: searchQuery || undefined,
+    status: statusFilter,
+  })
+  const { data: summaryData, isLoading: isLoadingSummary } = useCampaignSummary()
+  const closeCampaign = useCloseCampaign()
+
+  const isVerified = currentUser?.kyc_status === "approved" || currentUser?.status === "active"
 
   // Check if we're on mobile
   useEffect(() => {
@@ -34,27 +47,30 @@ export default function CampaignsPage() {
   }
 
   const handleCloseChallenge = (challenge: any) => {
-    // Check if all creators have been paid out or declined
-    const allCreatorsHandled = true // This should be a real check in your actual implementation
-    if (allCreatorsHandled) {
-      setSelectedChallenge(challenge)
-      setShowCloseConfirmation(true)
-    } else {
-      toast({
-        title: "Error",
-        description: "Please approve or decline rewards for all users before closing the challenge.",
-        variant: "destructive",
-      })
-    }
+    setSelectedChallenge(challenge)
+    setShowCloseConfirmation(true)
   }
 
   const confirmCloseChallenge = () => {
-    // Implement the logic to close the challenge and refund the balance
-    toast({
-      title: "Challenge Closed",
-      description: "The challenge has been closed and any remaining balance has been refunded to your wallet.",
+    if (!selectedChallenge) return
+
+    closeCampaign.mutate(selectedChallenge.id, {
+      onSuccess: () => {
+        toast({
+          title: "Campaign Closed",
+          description: "The campaign has been closed and any remaining balance has been refunded to your wallet.",
+        })
+        setShowCloseConfirmation(false)
+        setSelectedChallenge(null)
+      },
+      onError: (error: any) => {
+        toast({
+          title: "Failed to close campaign",
+          description: error?.response?.data?.message || "An error occurred",
+          variant: "destructive",
+        })
+      },
     })
-    setShowCloseConfirmation(false)
   }
 
   // Navigate to challenge management page
@@ -62,10 +78,10 @@ export default function CampaignsPage() {
     router.push(`/campaigns/challengemanagement/${challengeId}`)
   }
 
-  // Filter challenges based on search query
-  const filteredChallenges = challenges.filter((challenge) =>
-    challenge.name.toLowerCase().includes(searchQuery.toLowerCase()),
-  )
+  // Extract campaigns from API response (PaginatedResponse structure)
+  const campaigns = campaignsData?.data || []
+  const campaignsMeta = campaignsData?.meta
+  const summary = summaryData?.data
 
   const handleCreateCampaign = () => {
     if (!isVerified) {
@@ -81,22 +97,27 @@ export default function CampaignsPage() {
     return (
       <MobileCampaignsView
         isVerified={isVerified}
+        campaigns={campaigns}
+        summary={summary}
+        isLoadingCampaigns={isLoadingCampaigns}
+        isLoadingSummary={isLoadingSummary}
         showVerificationPrompt={showVerificationPrompt}
         setShowVerificationPrompt={setShowVerificationPrompt}
         showOnboarding={showOnboarding}
         setShowOnboarding={setShowOnboarding}
-        setIsVerified={setIsVerified}
         initialStep={initialStep}
         setInitialStep={setInitialStep}
         showCloseConfirmation={showCloseConfirmation}
         setShowCloseConfirmation={setShowCloseConfirmation}
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
-        filteredChallenges={filteredChallenges}
+        statusFilter={statusFilter}
+        setStatusFilter={setStatusFilter}
         navigateToChallengeManagement={navigateToChallengeManagement}
         handleCompleteVerification={handleCompleteVerification}
         confirmCloseChallenge={confirmCloseChallenge}
         onCreateCampaign={handleCreateCampaign}
+        isClosing={closeCampaign.isPending}
       />
     )
   }
@@ -105,23 +126,28 @@ export default function CampaignsPage() {
   return (
     <DesktopCampaignsView
       isVerified={isVerified}
+      campaigns={campaigns}
+      summary={summary}
+      isLoadingCampaigns={isLoadingCampaigns}
+      isLoadingSummary={isLoadingSummary}
       showVerificationPrompt={showVerificationPrompt}
       setShowVerificationPrompt={setShowVerificationPrompt}
       showOnboarding={showOnboarding}
       setShowOnboarding={setShowOnboarding}
-      setIsVerified={setIsVerified}
       initialStep={initialStep}
       setInitialStep={setInitialStep}
       showCloseConfirmation={showCloseConfirmation}
       setShowCloseConfirmation={setShowCloseConfirmation}
       searchQuery={searchQuery}
       setSearchQuery={setSearchQuery}
-      filteredChallenges={filteredChallenges}
+      statusFilter={statusFilter}
+      setStatusFilter={setStatusFilter}
       navigateToChallengeManagement={navigateToChallengeManagement}
       handleCloseChallenge={handleCloseChallenge}
       handleCompleteVerification={handleCompleteVerification}
       confirmCloseChallenge={confirmCloseChallenge}
       onCreateCampaign={handleCreateCampaign}
+      isClosing={closeCampaign.isPending}
     />
   )
 }
