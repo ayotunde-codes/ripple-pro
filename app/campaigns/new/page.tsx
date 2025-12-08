@@ -4,19 +4,29 @@ import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { toast } from "@/components/ui/use-toast"
+import { useCurrentUser } from "@/services/auth"
+import { useWallet } from "@/services/wallet"
+import { useCreateCampaign } from "@/services/campaign"
 import { MobileCampaignCreation } from "./_components/mobile-campaign-creation"
 import { DesktopCampaignCreation } from "./_components/desktop-campaign-creation"
 import { steps } from "./_components/campaign-data"
 import { campaignSchema, initialFormData, type CampaignFormData } from "./_components/campaign-schema"
+import { transformCampaignToAPI } from "./_components/campaign-utils"
 
 export default function NewChallengePage() {
   const router = useRouter()
+  const { data: currentUser } = useCurrentUser()
+  const { data: walletData } = useWallet(currentUser?.id || 0)
+  const createCampaign = useCreateCampaign()
+  
   const [currentStep, setCurrentStep] = useState(1)
   const [showConfirmation, setShowConfirmation] = useState(false)
   const [paymentStatus, setPaymentStatus] = useState<"loading" | "success" | "error" | null>(null)
   const [isMobile, setIsMobile] = useState(false)
-  const [walletBalance] = useState(750000) // Mock wallet balance (₦750,000)
   const [budgetError, setBudgetError] = useState("")
+
+  const walletBalance = parseFloat(walletData?.data?.balance || "0")
 
   const form = useForm<CampaignFormData>({
     resolver: zodResolver(campaignSchema),
@@ -93,19 +103,33 @@ export default function NewChallengePage() {
   }
 
   const handleSubmit = async () => {
-    // Simulate payment processing
+    const formData = form.getValues()
+    
+    // Transform and submit to API
     setShowConfirmation(false)
     setPaymentStatus("loading")
 
     try {
-      // Mock payment API call
-      await new Promise((resolve) => setTimeout(resolve, 2000))
+      const campaignData = transformCampaignToAPI(formData)
+      
+      await createCampaign.mutateAsync(campaignData)
+      
       setPaymentStatus("success")
+      toast({
+        title: "Campaign Created",
+        description: "Your campaign has been created successfully and is now live!",
+      })
+      
       setTimeout(() => {
         router.push("/campaigns")
-      }, 3000)
-    } catch (error) {
+      }, 2000)
+    } catch (error: any) {
       setPaymentStatus("error")
+      toast({
+        title: "Campaign Creation Failed",
+        description: error?.response?.data?.message || "An error occurred while creating your campaign",
+        variant: "destructive",
+      })
     }
   }
 
