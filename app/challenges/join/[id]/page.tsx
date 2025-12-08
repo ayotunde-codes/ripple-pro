@@ -9,6 +9,8 @@ import { ChallengeDetailsView } from "./_components/challenge-details-view"
 import { SubmissionFormView } from "./_components/submission-form-view"
 import { SuccessModal } from "./_components/success-modal"
 import { availableChallenges } from "./_components/challenge-data"
+import { useJoinChallenge } from "@/services/challenge"
+import { toast } from "@/components/ui/use-toast"
 import type { SubmissionFormData } from "./_components/submission-schema"
 
 export default function JoinChallengePage() {
@@ -24,6 +26,9 @@ export default function JoinChallengePage() {
   const [showOnboarding, setShowOnboarding] = useState(false)
   const [initialStep, setInitialStep] = useState(0)
   const [mounted, setMounted] = useState(false)
+  
+  // API hook
+  const joinChallenge = useJoinChallenge()
 
   useEffect(() => {
     setMounted(true)
@@ -49,13 +54,56 @@ export default function JoinChallengePage() {
   }
 
   const handleSubmitLinks = async (data: SubmissionFormData) => {
-    console.log("Submission data:", data)
-    setShowSuccess(true)
+    // Transform form data to API format
+    const socialMediaLinks: string[] = []
+    
+    // Add links in order based on platform selection
+    if (data.platform === "instagram" || data.platform === "all") {
+      socialMediaLinks.push(data.instagramLink || "")
+    }
+    if (data.platform === "facebook" || data.platform === "all") {
+      socialMediaLinks.push(data.facebookLink || "")
+    }
+    if (data.platform === "twitter" || data.platform === "all") {
+      socialMediaLinks.push(data.twitterLink || "")
+    }
+    if (data.platform === "youtube" || data.platform === "all") {
+      socialMediaLinks.push(data.youtubeLink || "")
+    }
+    if (data.platform === "tiktok" || data.platform === "all") {
+      socialMediaLinks.push(data.tiktokLink || "")
+    }
 
-    setTimeout(() => {
-      setShowSuccess(false)
-      router.push("/challenges")
-    }, 3000)
+    // Call API
+    joinChallenge.mutate(
+      {
+        challengeId,
+        data: {
+          social_media_links: socialMediaLinks.filter(link => link !== ""),
+        },
+      },
+      {
+        onSuccess: () => {
+          setShowSuccess(true)
+          toast({
+            title: "Success!",
+            description: "You've successfully joined the challenge.",
+          })
+
+          setTimeout(() => {
+            setShowSuccess(false)
+            router.push("/challenges")
+          }, 3000)
+        },
+        onError: (error: any) => {
+          toast({
+            title: "Submission failed",
+            description: error?.response?.data?.message || "Failed to join challenge",
+            variant: "destructive",
+          })
+        },
+      }
+    )
   }
 
   const handleCompleteVerification = () => {

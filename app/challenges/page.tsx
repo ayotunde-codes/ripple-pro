@@ -8,6 +8,9 @@ import { OnboardingModal } from "@/components/onboarding-modal"
 import { MobileChallengesView } from "./_components/mobile-challenges-view"
 import { DesktopChallengesView } from "./_components/desktop-challenges-view"
 import { availableChallenges } from "./_components/challenges-data"
+import { useCampaigns } from "@/services/campaign"
+import { useMySubmissions } from "@/services/challenge"
+import { toast } from "@/components/ui/use-toast"
 
 export default function ChallengesPage() {
   const router = useRouter()
@@ -18,12 +21,46 @@ export default function ChallengesPage() {
   const [isMobileView, setIsMobileView] = useState(false)
   const [activeTab, setActiveTab] = useState("explore")
   const [selectedCategory, setSelectedCategory] = useState("all")
+  
+  // API hooks - Note: campaigns API can be used for browsing available challenges
+  const { data: campaignsData, isLoading: isLoadingCampaigns } = useCampaigns({
+    page: 1,
+    limit: 50,
+    status: "active", // Only show active campaigns/challenges
+  })
+  const { data: mySubmissionsData, isLoading: isLoadingSubmissions } = useMySubmissions({
+    page: 1,
+    limit: 50,
+  })
+
+  // Use API data if available, otherwise fallback to mock data
+  const apiChallenges = campaignsData?.data || []
+  const mySubmissions = mySubmissionsData?.data || []
+
+  // Transform API campaigns to challenge format for UI compatibility
+  const transformedChallenges = apiChallenges.map((campaign) => ({
+    id: campaign.id,
+    title: campaign.campaign_name,
+    brand: "Brand", // Not available in API
+    category: campaign.category,
+    description: campaign.content_requirement || "No description available",
+    reward: `₦${campaign.reward_rate_amount} per ${campaign.reward_rate_views} views`,
+    maxPayout: campaign.max_payout,
+    endDate: campaign.end_date,
+    platforms: campaign.social_media_platforms,
+    participants: 0, // Not available in API
+    totalPool: campaign.challenge_pool,
+    status: campaign.status,
+  }))
+
+  // Use API data if available, otherwise use mock data
+  const allChallenges = transformedChallenges.length > 0 ? transformedChallenges : availableChallenges
 
   // Extract unique categories for filtering
-  const categories = ["all", ...new Set(availableChallenges.map((challenge) => challenge.category))]
+  const categories = ["all", ...new Set(allChallenges.map((challenge) => challenge.category))]
 
   // Filter challenges based on category
-  const filteredAvailableChallenges = availableChallenges.filter((challenge) => {
+  const filteredAvailableChallenges = allChallenges.filter((challenge) => {
     return selectedCategory === "all" || challenge.category === selectedCategory
   })
 
@@ -83,6 +120,9 @@ export default function ChallengesPage() {
           setSelectedCategory={setSelectedCategory}
           categories={categories}
           filteredAvailableChallenges={filteredAvailableChallenges}
+          mySubmissions={mySubmissions}
+          isLoadingChallenges={isLoadingCampaigns}
+          isLoadingSubmissions={isLoadingSubmissions}
           onJoinChallenge={handleJoinChallenge}
         />
       ) : (
@@ -93,6 +133,9 @@ export default function ChallengesPage() {
           setSelectedCategory={setSelectedCategory}
           categories={categories}
           filteredAvailableChallenges={filteredAvailableChallenges}
+          mySubmissions={mySubmissions}
+          isLoadingChallenges={isLoadingCampaigns}
+          isLoadingSubmissions={isLoadingSubmissions}
           onJoinChallenge={handleJoinChallenge}
         />
       )}

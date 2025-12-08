@@ -9,18 +9,19 @@ import { submissionSchema, type SubmissionFormData, getInitialSubmissionData } f
 
 interface SubmissionFormViewProps {
   challenge: Challenge
-  onClose: () => void
+  onBack: () => void
   onSubmit: (data: SubmissionFormData) => Promise<void>
+  isSubmitting?: boolean
 }
 
-export function SubmissionFormView({ challenge, onClose, onSubmit }: SubmissionFormViewProps) {
+export function SubmissionFormView({ challenge, onBack, onSubmit, isSubmitting = false }: SubmissionFormViewProps) {
   const { theme } = useTheme()
   const isDarkMode = theme === "dark"
 
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm<SubmissionFormData>({
     resolver: zodResolver(submissionSchema),
     defaultValues: getInitialSubmissionData(challenge.platforms),
@@ -32,7 +33,7 @@ export function SubmissionFormView({ challenge, onClose, onSubmit }: SubmissionF
         className={`${isDarkMode ? "bg-black text-white" : "bg-[#FDF4FF] text-[#1F1F1F]"} rounded-xl p-6 relative mb-20`}
       >
         {/* Close button */}
-        <button onClick={onClose} className={`absolute top-6 right-6 ${isDarkMode ? "text-white" : "text-black"}`}>
+        <button onClick={onBack} className={`absolute top-6 right-6 ${isDarkMode ? "text-white" : "text-black"}`}>
           <X size={20} />
         </button>
 
