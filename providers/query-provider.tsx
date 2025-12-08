@@ -1,19 +1,8 @@
 "use client"
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools"
 import { useState } from "react"
-
-// Lazy load devtools only in development
-let ReactQueryDevtools: any = null
-if (process.env.NODE_ENV === "development") {
-  try {
-    const devtools = require("@tanstack/react-query-devtools")
-    ReactQueryDevtools = devtools.ReactQueryDevtools
-  } catch (e) {
-    // Devtools not installed yet
-    console.log("React Query Devtools not installed. Run: npm install")
-  }
-}
 
 /**
  * React Query Provider Component
@@ -48,7 +37,7 @@ export function QueryProvider({ children }: { children: React.ReactNode }) {
     <QueryClientProvider client={queryClient}>
       {children}
       {/* React Query Devtools - only in development */}
-      {process.env.NODE_ENV === "development" && ReactQueryDevtools && (
+      {process.env.NODE_ENV === "development" && (
         <ReactQueryDevtools initialIsOpen={false} position="bottom" />
       )}
     </QueryClientProvider>
