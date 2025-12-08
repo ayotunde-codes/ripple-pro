@@ -1,13 +1,10 @@
 import { Card, CardContent } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
-import type { CampaignSummary } from "@/services/campaign"
+import { useCampaignStore } from "@/stores"
 
-interface StatsProps {
-  summary?: CampaignSummary
-  isLoading: boolean
-}
+export function CampaignsStats() {
+  const { summary, isLoadingSummary } = useCampaignStore()
 
-export function CampaignsStats({ summary, isLoading }: StatsProps) {
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat("en-NG", {
       style: "currency",
@@ -35,7 +32,7 @@ export function CampaignsStats({ summary, isLoading }: StatsProps) {
     },
   ]
 
-  if (isLoading) {
+  if (isLoadingSummary) {
     return (
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         {[1, 2, 3, 4].map((i) => (
@@ -61,7 +58,9 @@ export function CampaignsStats({ summary, isLoading }: StatsProps) {
   )
 }
 
-export function MobileCampaignsStats({ summary, isLoading }: StatsProps) {
+export function MobileCampaignsStats() {
+  const { summary, isLoadingSummary } = useCampaignStore()
+
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat("en-NG", {
       style: "currency",
@@ -89,7 +88,7 @@ export function MobileCampaignsStats({ summary, isLoading }: StatsProps) {
     },
   ]
 
-  if (isLoading) {
+  if (isLoadingSummary) {
     return (
       <div className="grid grid-cols-2 gap-4 mt-6">
         {[1, 2, 3, 4].map((i) => (
@@ -110,4 +109,3 @@ export function MobileCampaignsStats({ summary, isLoading }: StatsProps) {
     </div>
   )
 }
-

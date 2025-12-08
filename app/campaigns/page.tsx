@@ -1,10 +1,11 @@
 "use client"
 
 import { useRouter } from "next/navigation"
-import { useState, useEffect } from "react"
+import { useEffect } from "react"
 import { toast } from "@/components/ui/use-toast"
 import { useCurrentUser } from "@/services/auth"
 import { useCampaigns, useCampaignSummary, useCloseCampaign } from "@/services/campaign"
+import { useModalStore, useCampaignStore } from "@/stores"
 import { MobileCampaignsView } from "./_components/mobile-campaigns-view"
 import { DesktopCampaignsView } from "./_components/desktop-campaigns-view"
 
@@ -12,14 +13,19 @@ export default function CampaignsPage() {
   const router = useRouter()
   const { data: currentUser } = useCurrentUser()
   
-  const [showVerificationPrompt, setShowVerificationPrompt] = useState(false)
-  const [showOnboarding, setShowOnboarding] = useState(false)
-  const [initialStep, setInitialStep] = useState(0)
-  const [showCloseConfirmation, setShowCloseConfirmation] = useState(false)
-  const [selectedChallenge, setSelectedChallenge] = useState<any>(null)
-  const [isMobile, setIsMobile] = useState(false)
-  const [searchQuery, setSearchQuery] = useState("")
-  const [statusFilter, setStatusFilter] = useState<"open" | "closed" | undefined>(undefined)
+  // Zustand stores
+  const { 
+    searchQuery, 
+    statusFilter,
+    setCampaigns,
+    setSummary,
+    setIsLoadingCampaigns,
+    setIsLoadingSummary,
+    setIsMobile,
+    selectedChallenge,
+    closeCloseConfirmation,
+    isMobile,
+  } = useCampaignStore()
 
   // API hooks
   const { data: campaignsData, isLoading: isLoadingCampaigns } = useCampaigns({
@@ -31,6 +37,17 @@ export default function CampaignsPage() {
 
   const isVerified = currentUser?.kyc_status === "approved" || currentUser?.status === "active"
 
+  // Update store with API data
+  useEffect(() => {
+    setCampaigns(campaignsData?.data || [])
+    setIsLoadingCampaigns(isLoadingCampaigns)
+  }, [campaignsData, isLoadingCampaigns, setCampaigns, setIsLoadingCampaigns])
+
+  useEffect(() => {
+    setSummary(summaryData?.data)
+    setIsLoadingSummary(isLoadingSummary)
+  }, [summaryData, isLoadingSummary, setSummary, setIsLoadingSummary])
+
   // Check if we're on mobile
   useEffect(() => {
     const checkMobile = () => {
@@ -39,16 +56,11 @@ export default function CampaignsPage() {
     checkMobile()
     window.addEventListener("resize", checkMobile)
     return () => window.removeEventListener("resize", checkMobile)
-  }, [])
+  }, [setIsMobile])
 
   const handleCompleteVerification = () => {
-    setShowVerificationPrompt(false)
-    setShowOnboarding(true)
-  }
-
-  const handleCloseChallenge = (challenge: any) => {
-    setSelectedChallenge(challenge)
-    setShowCloseConfirmation(true)
+    useModalStore.getState().closeVerificationPrompt()
+    useModalStore.getState().openOnboarding()
   }
 
   const confirmCloseChallenge = () => {
@@ -60,8 +72,7 @@ export default function CampaignsPage() {
           title: "Campaign Closed",
           description: "The campaign has been closed and any remaining balance has been refunded to your wallet.",
         })
-        setShowCloseConfirmation(false)
-        setSelectedChallenge(null)
+        closeCloseConfirmation()
       },
       onError: (error: any) => {
         toast({
@@ -73,79 +84,32 @@ export default function CampaignsPage() {
     })
   }
 
-  // Navigate to challenge management page
   const navigateToChallengeManagement = (challengeId: number) => {
     router.push(`/campaigns/challengemanagement/${challengeId}`)
   }
 
-  // Extract campaigns from API response (PaginatedResponse structure)
-  const campaigns = campaignsData?.data || []
-  const campaignsMeta = campaignsData?.meta
-  const summary = summaryData?.data
-
   const handleCreateCampaign = () => {
     if (!isVerified) {
-      setInitialStep(0)
-      setShowVerificationPrompt(true)
+      useModalStore.getState().openVerificationPrompt()
     } else {
       router.push("/campaigns/new")
     }
   }
 
-  // Mobile view
-  if (isMobile) {
-    return (
-      <MobileCampaignsView
-        isVerified={isVerified}
-        campaigns={campaigns}
-        summary={summary}
-        isLoadingCampaigns={isLoadingCampaigns}
-        isLoadingSummary={isLoadingSummary}
-        showVerificationPrompt={showVerificationPrompt}
-        setShowVerificationPrompt={setShowVerificationPrompt}
-        showOnboarding={showOnboarding}
-        setShowOnboarding={setShowOnboarding}
-        initialStep={initialStep}
-        setInitialStep={setInitialStep}
-        showCloseConfirmation={showCloseConfirmation}
-        setShowCloseConfirmation={setShowCloseConfirmation}
-        searchQuery={searchQuery}
-        setSearchQuery={setSearchQuery}
-        statusFilter={statusFilter}
-        setStatusFilter={setStatusFilter}
-        navigateToChallengeManagement={navigateToChallengeManagement}
-        handleCompleteVerification={handleCompleteVerification}
-        confirmCloseChallenge={confirmCloseChallenge}
-        onCreateCampaign={handleCreateCampaign}
-        isClosing={closeCampaign.isPending}
-      />
-    )
-  }
-
-  // Desktop view
-  return (
-    <DesktopCampaignsView
-      isVerified={isVerified}
-      campaigns={campaigns}
-      summary={summary}
-      isLoadingCampaigns={isLoadingCampaigns}
-      isLoadingSummary={isLoadingSummary}
-      showVerificationPrompt={showVerificationPrompt}
-      setShowVerificationPrompt={setShowVerificationPrompt}
-      showOnboarding={showOnboarding}
-      setShowOnboarding={setShowOnboarding}
-      initialStep={initialStep}
-      setInitialStep={setInitialStep}
-      showCloseConfirmation={showCloseConfirmation}
-      setShowCloseConfirmation={setShowCloseConfirmation}
-      searchQuery={searchQuery}
-      setSearchQuery={setSearchQuery}
-      statusFilter={statusFilter}
-      setStatusFilter={setStatusFilter}
-      navigateToChallengeManagement={navigateToChallengeManagement}
-      handleCloseChallenge={handleCloseChallenge}
-      handleCompleteVerification={handleCompleteVerification}
+  // Render based on screen size
+  return isMobile ? (
+    <MobileCampaignsView
+      onCompleteVerification={handleCompleteVerification}
       confirmCloseChallenge={confirmCloseChallenge}
+      navigateToChallengeManagement={navigateToChallengeManagement}
+      onCreateCampaign={handleCreateCampaign}
+      isClosing={closeCampaign.isPending}
+    />
+  ) : (
+    <DesktopCampaignsView
+      onCompleteVerification={handleCompleteVerification}
+      confirmCloseChallenge={confirmCloseChallenge}
+      navigateToChallengeManagement={navigateToChallengeManagement}
       onCreateCampaign={handleCreateCampaign}
       isClosing={closeCampaign.isPending}
     />

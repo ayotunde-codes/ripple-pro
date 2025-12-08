@@ -7,120 +7,126 @@ import { DashboardShell } from "@/components/dashboard-shell"
 import { VerificationPrompt } from "@/components/verification-prompt"
 import { OnboardingModal } from "@/components/onboarding-modal"
 import { DataTable } from "@/components/ui/data-table"
+import { useModalStore, useCampaignStore } from "@/stores"
 import { CampaignsStats } from "./campaigns-stats"
 import { getCampaignsTableColumns } from "./campaigns-table-columns"
 import { CloseChallengeDialog } from "./close-challenge-dialog"
 
-import type { Campaign, CampaignSummary } from "@/services/campaign"
-
 interface DesktopCampaignsViewProps {
-  isVerified: boolean
-  campaigns: Campaign[]
-  summary?: CampaignSummary
-  isLoadingCampaigns: boolean
-  isLoadingSummary: boolean
-  showVerificationPrompt: boolean
-  setShowVerificationPrompt: (show: boolean) => void
-  showOnboarding: boolean
-  setShowOnboarding: (show: boolean) => void
-  initialStep: number
-  setInitialStep: (step: number) => void
-  showCloseConfirmation: boolean
-  setShowCloseConfirmation: (show: boolean) => void
-  searchQuery: string
-  setSearchQuery: (query: string) => void
-  statusFilter?: "open" | "closed"
-  setStatusFilter: (filter?: "open" | "closed") => void
-  navigateToChallengeManagement: (id: number) => void
-  handleCloseChallenge: (challenge: any) => void
-  handleCompleteVerification: () => void
+  onCompleteVerification: () => void
   confirmCloseChallenge: () => void
+  navigateToChallengeManagement: (id: number) => void
   onCreateCampaign: () => void
   isClosing: boolean
 }
 
 export function DesktopCampaignsView({
-  isVerified,
-  campaigns,
-  summary,
-  isLoadingCampaigns,
-  isLoadingSummary,
-  showVerificationPrompt,
-  setShowVerificationPrompt,
-  showOnboarding,
-  setShowOnboarding,
-  initialStep,
-  setInitialStep,
-  showCloseConfirmation,
-  setShowCloseConfirmation,
-  searchQuery,
-  setSearchQuery,
-  statusFilter,
-  setStatusFilter,
-  navigateToChallengeManagement,
-  handleCloseChallenge,
-  handleCompleteVerification,
+  onCompleteVerification,
   confirmCloseChallenge,
+  navigateToChallengeManagement,
   onCreateCampaign,
   isClosing,
 }: DesktopCampaignsViewProps) {
-  const columns = getCampaignsTableColumns({ navigateToChallengeManagement, handleCloseChallenge })
+  // Get state from stores
+  const {
+    campaigns,
+    isLoadingCampaigns,
+    searchQuery,
+    setSearchQuery,
+    statusFilter,
+    setStatusFilter,
+    showCloseConfirmation,
+    closeCloseConfirmation,
+    openCloseConfirmation,
+  } = useCampaignStore()
+
+  const {
+    showVerificationPrompt,
+    closeVerificationPrompt,
+    showOnboarding,
+    closeOnboarding,
+    onboardingInitialStep,
+  } = useModalStore()
+
+  const columns = getCampaignsTableColumns({
+    onManage: navigateToChallengeManagement,
+    onClose: openCloseConfirmation,
+  })
 
   return (
     <DashboardShell>
-      <DashboardHeader heading="My Campaigns" text="Manage and track your campaign performance.">
-        <Button onClick={onCreateCampaign} className="bg-[#B125F9] hover:bg-[#B125F9]/90 rounded-full">
+      <DashboardHeader heading="Campaigns" text="Manage your campaigns and track performance.">
+        <Button onClick={onCreateCampaign}>
           <Plus className="mr-2 h-4 w-4" />
-          Create campaign
+          Create Campaign
         </Button>
       </DashboardHeader>
 
-      <CampaignsStats summary={summary} isLoading={isLoadingSummary} />
+      <CampaignsStats />
 
-      <Card className="bg-white border border-gray-200 shadow-sm mt-6">
-        <CardHeader className="bg-gradient-to-r from-[#F9F0FC] to-[#F9F0FC]/50 dark:from-[#0E0E0E] dark:to-[#0E0E0E]/50 rounded-t-lg flex flex-row justify-between items-center">
-          <CardTitle className="flex items-center">
-            <span className="mr-2">📊</span> All Campaigns
-          </CardTitle>
-          <div className="relative w-64">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-            <Input
-              placeholder="Search campaigns"
-              className="pl-10 rounded-full"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-          </div>
+      <Card>
+        <CardHeader>
+          <CardTitle>All Campaigns</CardTitle>
         </CardHeader>
-
         <CardContent>
-          <DataTable columns={columns} data={campaigns} searchKey="campaign_name" searchValue={searchQuery} isLoading={isLoadingCampaigns} />
+          <div className="flex items-center gap-4 mb-6">
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+              <Input
+                placeholder="Search campaigns..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-10"
+              />
+            </div>
+            <div className="flex gap-2">
+              <Button
+                variant={statusFilter === undefined ? "default" : "outline"}
+                onClick={() => setStatusFilter(undefined)}
+                size="sm"
+              >
+                All
+              </Button>
+              <Button
+                variant={statusFilter === "open" ? "default" : "outline"}
+                onClick={() => setStatusFilter("open")}
+                size="sm"
+              >
+                Active
+              </Button>
+              <Button
+                variant={statusFilter === "closed" ? "default" : "outline"}
+                onClick={() => setStatusFilter("closed")}
+                size="sm"
+              >
+                Closed
+              </Button>
+            </div>
+          </div>
+
+          <DataTable columns={columns} data={campaigns} isLoading={isLoadingCampaigns} />
         </CardContent>
       </Card>
 
+      {/* Verification Prompt Modal */}
       <VerificationPrompt
         open={showVerificationPrompt}
-        onOpenChange={setShowVerificationPrompt}
-        onComplete={handleCompleteVerification}
+        onOpenChange={closeVerificationPrompt}
+        onComplete={onCompleteVerification}
       />
 
+      {/* Onboarding Modal */}
       {showOnboarding && (
-        <OnboardingModal
-          initialStep={initialStep}
-          onComplete={() => {
-            setShowOnboarding(false)
-            setIsVerified(true)
-          }}
-        />
+        <OnboardingModal initialStep={onboardingInitialStep} onComplete={closeOnboarding} />
       )}
 
+      {/* Close Challenge Dialog */}
       <CloseChallengeDialog
         open={showCloseConfirmation}
-        onOpenChange={setShowCloseConfirmation}
+        onOpenChange={closeCloseConfirmation}
         onConfirm={confirmCloseChallenge}
         isLoading={isClosing}
       />
     </DashboardShell>
   )
 }
-
