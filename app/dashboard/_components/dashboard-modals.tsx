@@ -2,16 +2,16 @@ import { Check, Copy } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import { virtualAccount } from "./dashboard-data"
 
 interface FundWalletModalProps {
   open: boolean
   onOpenChange: (open: boolean) => void
+  virtualAccount: any
   copied: boolean
   onCopyAccountNumber: () => void
 }
 
-export function FundWalletModal({ open, onOpenChange, copied, onCopyAccountNumber }: FundWalletModalProps) {
+export function FundWalletModal({ open, onOpenChange, virtualAccount, copied, onCopyAccountNumber }: FundWalletModalProps) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md dark:bg-background-dark">
@@ -22,32 +22,40 @@ export function FundWalletModal({ open, onOpenChange, copied, onCopyAccountNumbe
           </DialogDescription>
         </DialogHeader>
         <div className="space-y-4 py-4">
-          <div className="space-y-2">
-            <label className="text-sm font-medium dark:text-[#FAFAFA]">Bank Name</label>
-            <div className="flex h-10 w-full rounded-md border border-input bg-background dark:bg-background-dark dark:border-gray-700 px-3 py-2 text-sm dark:text-[#FAFAFA]">
-              {virtualAccount.bankName}
-            </div>
-          </div>
-          <div className="space-y-2">
-            <label className="text-sm font-medium dark:text-[#FAFAFA]">Account Number</label>
-            <div className="flex h-10 w-full rounded-md border border-input bg-background dark:bg-background-dark dark:border-gray-700 px-3 py-2 text-sm relative dark:text-[#FAFAFA]">
-              {virtualAccount.accountNumber}
-              <Button
-                variant="ghost"
-                size="sm"
-                className="absolute right-1 top-1 h-8 px-2 dark:text-[#FAFAFA]"
-                onClick={onCopyAccountNumber}
-              >
-                {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
-              </Button>
-            </div>
-          </div>
-          <div className="space-y-2">
-            <label className="text-sm font-medium dark:text-[#FAFAFA]">Account Name</label>
-            <div className="flex h-10 w-full rounded-md border border-input bg-background dark:bg-background-dark dark:border-gray-700 px-3 py-2 text-sm dark:text-[#FAFAFA]">
-              {virtualAccount.accountName}
-            </div>
-          </div>
+          {virtualAccount ? (
+            <>
+              <div className="space-y-2">
+                <label className="text-sm font-medium dark:text-[#FAFAFA]">Bank Name</label>
+                <div className="flex h-10 w-full rounded-md border border-input bg-background dark:bg-background-dark dark:border-gray-700 px-3 py-2 text-sm dark:text-[#FAFAFA]">
+                  {virtualAccount.bank_name || "N/A"}
+                </div>
+              </div>
+              <div className="space-y-2">
+                <label className="text-sm font-medium dark:text-[#FAFAFA]">Account Number</label>
+                <div className="flex h-10 w-full rounded-md border border-input bg-background dark:bg-background-dark dark:border-gray-700 px-3 py-2 text-sm relative dark:text-[#FAFAFA]">
+                  {virtualAccount.account_number || "N/A"}
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="absolute right-1 top-1 h-8 px-2 dark:text-[#FAFAFA]"
+                    onClick={onCopyAccountNumber}
+                  >
+                    {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                  </Button>
+                </div>
+              </div>
+              <div className="space-y-2">
+                <label className="text-sm font-medium dark:text-[#FAFAFA]">Account Name</label>
+                <div className="flex h-10 w-full rounded-md border border-input bg-background dark:bg-background-dark dark:border-gray-700 px-3 py-2 text-sm dark:text-[#FAFAFA]">
+                  {virtualAccount.account_name || "N/A"}
+                </div>
+              </div>
+            </>
+          ) : (
+            <p className="text-sm text-muted-foreground text-center py-4">
+              No virtual account available. Please complete your profile setup.
+            </p>
+          )}
         </div>
         <div className="flex justify-end">
           <Button
@@ -67,17 +75,19 @@ export function FundWalletModal({ open, onOpenChange, copied, onCopyAccountNumbe
 interface WithdrawalModalProps {
   open: boolean
   onOpenChange: (open: boolean) => void
-  withdrawalAmount: string
-  setWithdrawalAmount: (amount: string) => void
+  amount: string
+  onAmountChange: (amount: string) => void
   onSubmit: () => void
+  isLoading?: boolean
 }
 
 export function WithdrawalModal({
   open,
   onOpenChange,
-  withdrawalAmount,
-  setWithdrawalAmount,
+  amount,
+  onAmountChange,
   onSubmit,
+  isLoading = false,
 }: WithdrawalModalProps) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>

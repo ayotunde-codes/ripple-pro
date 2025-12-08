@@ -2,11 +2,17 @@
 
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
+import { toast } from "@/components/ui/use-toast"
+import { useCurrentUser } from "@/services/auth"
+import { useWallet, useWithdraw } from "@/services/wallet"
+import { useCampaigns } from "@/services/campaign"
+import { useMySubmissions } from "@/services/challenge"
 import { DashboardShell } from "@/components/dashboard-shell"
 import { MobileDashboard } from "./_components/mobile-dashboard"
 import { DesktopDashboard } from "./_components/desktop-dashboard"
 
 export default function DashboardPage() {
+  const router = useRouter()
   const [showOnboarding, setShowOnboarding] = useState(false)
   const [showBanner, setShowBanner] = useState(false)
   const [showFundingModal, setShowFundingModal] = useState(false)
@@ -18,11 +24,29 @@ export default function DashboardPage() {
   const [showSuccessModal, setShowSuccessModal] = useState(false)
   const [copied, setCopied] = useState(false)
   const [showVerificationPrompt, setShowVerificationPrompt] = useState(false)
-  const [isVerified, setIsVerified] = useState(true)
   const [initialStep, setInitialStep] = useState(0)
   const [isMobileView, setIsMobileView] = useState(false)
 
-  const router = useRouter()
+  // API hooks
+  const { data: currentUser, isLoading: isLoadingUser } = useCurrentUser()
+  const { data: walletData, isLoading: isLoadingWallet } = useWallet(currentUser?.id || 0)
+  const { data: campaignsData, isLoading: isLoadingCampaigns } = useCampaigns({ length: 5 })
+  const { data: submissionsData, isLoading: isLoadingSubmissions } = useMySubmissions({ length: 5 })
+  const withdrawMutation = useWithdraw()
+
+  // Determine if user is verified
+  const isVerified = currentUser?.kyc_status === "approved" || currentUser?.is_email_verified
+
+  // Calculate stats from real data
+  const stats = {
+    walletBalance: Number(walletData?.data?.balance || 0),
+    totalEarnings: submissionsData?.data?.reduce((sum, sub) => sum + (sub.earnings || 0), 0) || 0,
+    activeChallenges: campaignsData?.meta?.total || 0,
+    totalViews: submissionsData?.data?.reduce((sum, sub) => sum + (sub.views || 0), 0) || 0,
+  }
+
+  const recentChallenges = campaignsData?.data?.slice(0, 5) || []
+  const virtualAccount = walletData?.data?.virtual_accounts?.[0] || null
 
   useEffect(() => {
     // Check screen size
@@ -33,37 +57,13 @@ export default function DashboardPage() {
     checkScreenSize()
     window.addEventListener("resize", checkScreenSize)
 
-    // Check if the user is logged in
-    const isLoggedIn = localStorage.getItem("isLoggedIn")
-    if (!isLoggedIn) {
-      router.push("/login")
-    } else {
-      // Check if the logged-in user is the verified account or unverified test account
-      const loggedInEmail = localStorage.getItem("userEmail")
-
-      if (loggedInEmail === "joshuaolugbode12+1@gmail.com") {
-        // This is our test unverified user
-        setIsVerified(false)
-        setShowBanner(true)
-      } else if (loggedInEmail !== "joshuaolugbode12@gmail.com") {
-        // For any other user, check if they've completed onboarding
-        const hasCompletedOnboarding = localStorage.getItem("hasCompletedOnboarding")
-        if (!hasCompletedOnboarding) {
-          setShowOnboarding(true)
-        } else {
-          // Check if they've completed settlement account and KYB
-          const hasSettlementAccount = localStorage.getItem("hasSettlementAccount")
-          const hasCompletedKYB = localStorage.getItem("hasCompletedKYB")
-
-          if (!hasSettlementAccount || !hasCompletedKYB) {
-            setShowBanner(true)
-          }
-        }
-      }
+    // Show banner if user is not verified
+    if (currentUser && !isVerified) {
+      setShowBanner(true)
     }
 
     return () => window.removeEventListener("resize", checkScreenSize)
-  }, [router])
+  }, [currentUser, isVerified])
 
   const handleBannerDismiss = () => {
     setShowBanner(false)
@@ -73,30 +73,71 @@ export default function DashboardPage() {
 
   const handleOnboardingComplete = () => {
     setShowOnboarding(false)
-    setIsVerified(true)
   }
 
   const handleCopyAccountNumber = () => {
-    navigator.clipboard.writeText("9876543210")
-    setCopied(true)
-    setTimeout(() => setCopied(false), 2000)
+    if (virtualAccount?.account_number) {
+      navigator.clipboard.writeText(virtualAccount.account_number)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+      toast({
+        title: "Copied!",
+        description: "Account number copied to clipboard",
+      })
+    }
   }
 
   const handleWithdrawalSubmit = () => {
-    setShowWithdrawalModal(false)
-    setShowOtpModal(true)
+    if (!withdrawalAmount || Number(withdrawalAmount) <= 0) {
+      toast({
+        title: "Invalid amount",
+        description: "Please enter a valid withdrawal amount",
+        variant: "destructive",
+      })
+      return
+    }
+
+    const amount = Number(withdrawalAmount)
+    const balance = Number(walletData?.data?.balance || 0)
+
+    if (amount > balance) {
+      toast({
+        title: "Insufficient funds",
+        description: "You don't have enough balance for this withdrawal",
+        variant: "destructive",
+      })
+      return
+    }
+
+    withdrawMutation.mutate(
+      { amount: amount.toString() },
+      {
+        onSuccess: () => {
+          setShowWithdrawalModal(false)
+          setShowSuccessModal(true)
+          setWithdrawalAmount("")
+          toast({
+            title: "Withdrawal successful",
+            description: "Your withdrawal has been processed",
+          })
+          setTimeout(() => {
+            setShowSuccessModal(false)
+          }, 3000)
+        },
+        onError: (error: any) => {
+          toast({
+            title: "Withdrawal failed",
+            description: error?.response?.data?.message || "Failed to process withdrawal",
+            variant: "destructive",
+          })
+        },
+      }
+    )
   }
 
   const handleOtpSubmit = () => {
-    if (otp === "123456") {
-      setShowOtpModal(false)
-      setShowSuccessModal(true)
-      setTimeout(() => {
-        setShowSuccessModal(false)
-      }, 3000)
-    } else {
-      setOtpError("Invalid OTP. Please try again.")
-    }
+    // OTP validation removed - withdrawal happens directly via API
+    setShowOtpModal(false)
   }
 
   const handleQuickAction = (action: string) => {
@@ -132,18 +173,29 @@ export default function DashboardPage() {
     handleQuickAction("myChallenges")
   }
 
+  const isLoading = isLoadingUser || isLoadingWallet || isLoadingCampaigns || isLoadingSubmissions
+
   return (
     <DashboardShell>
       <div className="pb-16 md:pb-0">
         {isMobileView ? (
           <MobileDashboard
             isVerified={isVerified}
+            stats={stats}
+            recentChallenges={recentChallenges}
+            virtualAccount={virtualAccount}
+            isLoading={isLoading}
             onDismissBanner={handleBannerDismiss}
             onViewAllChallenges={handleViewAllChallenges}
+            onQuickAction={handleQuickAction}
           />
         ) : (
           <DesktopDashboard
             showBanner={showBanner}
+            stats={stats}
+            recentChallenges={recentChallenges}
+            virtualAccount={virtualAccount}
+            isLoading={isLoading}
             onDismissBanner={handleBannerDismiss}
             showVerificationPrompt={showVerificationPrompt}
             setShowVerificationPrompt={setShowVerificationPrompt}
@@ -165,6 +217,7 @@ export default function DashboardPage() {
             setOtp={setOtp}
             otpError={otpError}
             copied={copied}
+            isWithdrawing={withdrawMutation.isPending}
             onCopyAccountNumber={handleCopyAccountNumber}
             onWithdrawalSubmit={handleWithdrawalSubmit}
             onOtpSubmit={handleOtpSubmit}

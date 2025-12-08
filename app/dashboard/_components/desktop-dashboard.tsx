@@ -19,6 +19,15 @@ import {
 
 interface DesktopDashboardProps {
   showBanner: boolean
+  stats: {
+    walletBalance: number
+    totalEarnings: number
+    activeChallenges: number
+    totalViews: number
+  }
+  recentChallenges: any[]
+  virtualAccount: any
+  isLoading: boolean
   onDismissBanner: () => void
   showVerificationPrompt: boolean
   setShowVerificationPrompt: (show: boolean) => void
@@ -40,6 +49,7 @@ interface DesktopDashboardProps {
   setOtp: (otp: string) => void
   otpError: string
   copied: boolean
+  isWithdrawing: boolean
   onCopyAccountNumber: () => void
   onWithdrawalSubmit: () => void
   onOtpSubmit: () => void
@@ -49,6 +59,10 @@ interface DesktopDashboardProps {
 
 export function DesktopDashboard({
   showBanner,
+  stats,
+  recentChallenges,
+  virtualAccount,
+  isLoading,
   onDismissBanner,
   showVerificationPrompt,
   setShowVerificationPrompt,
@@ -70,6 +84,7 @@ export function DesktopDashboard({
   setOtp,
   otpError,
   copied,
+  isWithdrawing,
   onCopyAccountNumber,
   onWithdrawalSubmit,
   onOtpSubmit,
@@ -93,7 +108,7 @@ export function DesktopDashboard({
         </div>
       </DashboardHeader>
 
-      <DashboardStats />
+      <DashboardStats stats={stats} isLoading={isLoading} />
 
       {/* Quick Actions Section */}
       <QuickActions onAction={onQuickAction} />
@@ -110,13 +125,14 @@ export function DesktopDashboard({
         </Card>
 
         {/* Recent Challenges */}
-        <RecentChallenges onViewAll={onViewAllChallenges} />
+        <RecentChallenges challenges={recentChallenges} isLoading={isLoading} onViewAll={onViewAllChallenges} />
       </div>
 
       {/* Fund Wallet Modal */}
       <FundWalletModal
         open={showFundingModal}
         onOpenChange={setShowFundingModal}
+        virtualAccount={virtualAccount}
         copied={copied}
         onCopyAccountNumber={onCopyAccountNumber}
       />
@@ -125,9 +141,10 @@ export function DesktopDashboard({
       <WithdrawalModal
         open={showWithdrawalModal}
         onOpenChange={setShowWithdrawalModal}
-        withdrawalAmount={withdrawalAmount}
-        setWithdrawalAmount={setWithdrawalAmount}
+        amount={withdrawalAmount}
+        onAmountChange={setWithdrawalAmount}
         onSubmit={onWithdrawalSubmit}
+        isLoading={isWithdrawing}
       />
 
       {/* OTP Verification Modal */}

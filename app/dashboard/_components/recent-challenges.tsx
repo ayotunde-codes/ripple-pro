@@ -1,14 +1,17 @@
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
-import { recentChallenges } from "./dashboard-data"
+import { Skeleton } from "@/components/ui/skeleton"
 
 interface RecentChallengesProps {
+  challenges: any[]
+  isLoading: boolean
   onViewAll: () => void
   isMobile?: boolean
 }
 
-export function RecentChallenges({ onViewAll, isMobile = false }: RecentChallengesProps) {
+export function RecentChallenges({ challenges, isLoading, onViewAll, isMobile = false }: RecentChallengesProps) {
+  const displayChallenges = challenges.slice(0, 3)
   if (isMobile) {
     return (
       <div className="space-y-4">
@@ -20,27 +23,43 @@ export function RecentChallenges({ onViewAll, isMobile = false }: RecentChalleng
         </div>
 
         <div className="space-y-3">
-          {recentChallenges.slice(0, 3).map((challenge) => (
-            <Card key={challenge.name} className="border shadow-sm">
-              <CardContent className="p-3">
-                <div className="flex items-center">
-                  <Avatar className="h-8 w-8">
-                    {challenge.hasImage ? (
-                      <AvatarImage src={challenge.avatar || "/placeholder.svg"} alt={challenge.name} />
-                    ) : (
-                      <AvatarFallback className="bg-primary text-white">{challenge.name.charAt(0)}</AvatarFallback>
-                    )}
-                  </Avatar>
-                  <div className="ml-3 space-y-0.5 flex-1 min-w-0">
-                    <p className="text-sm font-medium leading-none truncate">{challenge.name}</p>
-                    <p className="text-xs text-muted-foreground">
-                      {challenge.budget} • {challenge.creators} creators
-                    </p>
+          {isLoading ? (
+            Array.from({ length: 3 }).map((_, index) => (
+              <Card key={index} className="border shadow-sm">
+                <CardContent className="p-3">
+                  <div className="flex items-center">
+                    <Skeleton className="h-8 w-8 rounded-full" />
+                    <div className="ml-3 space-y-1 flex-1">
+                      <Skeleton className="h-4 w-32" />
+                      <Skeleton className="h-3 w-24" />
+                    </div>
                   </div>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
+                </CardContent>
+              </Card>
+            ))
+          ) : displayChallenges.length === 0 ? (
+            <p className="text-sm text-muted-foreground text-center py-4">No recent challenges</p>
+          ) : (
+            displayChallenges.map((challenge) => (
+              <Card key={challenge.id} className="border shadow-sm">
+                <CardContent className="p-3">
+                  <div className="flex items-center">
+                    <Avatar className="h-8 w-8">
+                      <AvatarFallback className="bg-primary text-white">
+                        {challenge.campaign_name?.charAt(0) || "C"}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="ml-3 space-y-0.5 flex-1 min-w-0">
+                      <p className="text-sm font-medium leading-none truncate">{challenge.campaign_name}</p>
+                      <p className="text-xs text-muted-foreground">
+                        ₦{challenge.challenge_pool?.toLocaleString() || 0} • {challenge.status}
+                      </p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            ))
+          )}
         </div>
       </div>
     )
@@ -58,23 +77,35 @@ export function RecentChallenges({ onViewAll, isMobile = false }: RecentChalleng
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
-          {recentChallenges.slice(0, 3).map((challenge) => (
-            <div key={challenge.name} className="flex items-center">
-              <Avatar className="h-9 w-9">
-                {challenge.hasImage ? (
-                  <AvatarImage src={challenge.avatar || "/placeholder.svg"} alt={challenge.name} />
-                ) : (
-                  <AvatarFallback className="bg-primary text-white">{challenge.name.charAt(0)}</AvatarFallback>
-                )}
-              </Avatar>
-              <div className="ml-4 space-y-1 flex-1">
-                <p className="text-sm font-medium leading-none">{challenge.name}</p>
-                <p className="text-sm text-muted-foreground">
-                  {challenge.budget} • {challenge.creators} creators
-                </p>
+          {isLoading ? (
+            Array.from({ length: 3 }).map((_, index) => (
+              <div key={index} className="flex items-center">
+                <Skeleton className="h-9 w-9 rounded-full" />
+                <div className="ml-4 space-y-1 flex-1">
+                  <Skeleton className="h-4 w-40" />
+                  <Skeleton className="h-3 w-32" />
+                </div>
               </div>
-            </div>
-          ))}
+            ))
+          ) : displayChallenges.length === 0 ? (
+            <p className="text-sm text-muted-foreground text-center py-4">No recent challenges</p>
+          ) : (
+            displayChallenges.map((challenge) => (
+              <div key={challenge.id} className="flex items-center">
+                <Avatar className="h-9 w-9">
+                  <AvatarFallback className="bg-primary text-white">
+                    {challenge.campaign_name?.charAt(0) || "C"}
+                  </AvatarFallback>
+                </Avatar>
+                <div className="ml-4 space-y-1 flex-1">
+                  <p className="text-sm font-medium leading-none">{challenge.campaign_name}</p>
+                  <p className="text-sm text-muted-foreground">
+                    ₦{challenge.challenge_pool?.toLocaleString() || 0} • {challenge.status}
+                  </p>
+                </div>
+              </div>
+            ))
+          )}
         </div>
       </CardContent>
     </Card>
