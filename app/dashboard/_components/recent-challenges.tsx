@@ -10,7 +10,9 @@ interface RecentChallengesProps {
 }
 
 export function RecentChallenges({ onViewAll, isMobile = false }: RecentChallengesProps) {
-  const { recentChallenges, isLoading } = useDashboardStore()
+  const dashboardStoreData = useDashboardStore()
+  const recentChallenges = dashboardStoreData?.recentChallenges || []
+  const isLoading = dashboardStoreData?.isLoading || false
   const displayChallenges = recentChallenges.slice(0, 3)
 
   if (isMobile) {

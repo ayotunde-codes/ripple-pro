@@ -3,7 +3,9 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { useDashboardStore } from "@/stores"
 
 export function DashboardStats() {
-  const { stats, isLoading } = useDashboardStore()
+  const dashboardStoreData = useDashboardStore()
+  const stats = dashboardStoreData?.stats || { walletBalance: 0, totalEarnings: 0, activeChallenges: 0, totalViews: 0 }
+  const isLoading = dashboardStoreData?.isLoading || false
 
   const statsData = [
     {
@@ -45,7 +47,9 @@ export function DashboardStats() {
 }
 
 export function MobileDashboardStats() {
-  const { stats, isLoading } = useDashboardStore()
+  const dashboardStoreData = useDashboardStore()
+  const stats = dashboardStoreData?.stats || { walletBalance: 0, totalEarnings: 0, activeChallenges: 0, totalViews: 0 }
+  const isLoading = dashboardStoreData?.isLoading || false
 
   const statsData = [
     {

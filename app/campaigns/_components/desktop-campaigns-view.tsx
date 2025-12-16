@@ -28,25 +28,23 @@ export function DesktopCampaignsView({
   isClosing,
 }: DesktopCampaignsViewProps) {
   // Get state from stores
-  const {
-    campaigns,
-    isLoadingCampaigns,
-    searchQuery,
-    setSearchQuery,
-    statusFilter,
-    setStatusFilter,
-    showCloseConfirmation,
-    closeCloseConfirmation,
-    openCloseConfirmation,
-  } = useCampaignStore()
+  const campaignStoreData = useCampaignStore()
+  const campaigns = campaignStoreData?.campaigns || []
+  const isLoadingCampaigns = campaignStoreData?.isLoadingCampaigns || false
+  const searchQuery = campaignStoreData?.searchQuery || ''
+  const setSearchQuery = campaignStoreData?.setSearchQuery || (() => {})
+  const statusFilter = campaignStoreData?.statusFilter || 'all'
+  const setStatusFilter = campaignStoreData?.setStatusFilter || (() => {})
+  const showCloseConfirmation = campaignStoreData?.showCloseConfirmation || false
+  const closeCloseConfirmation = campaignStoreData?.closeCloseConfirmation || (() => {})
+  const openCloseConfirmation = campaignStoreData?.openCloseConfirmation || (() => {})
 
-  const {
-    showVerificationPrompt,
-    closeVerificationPrompt,
-    showOnboarding,
-    closeOnboarding,
-    onboardingInitialStep,
-  } = useModalStore()
+  const modalStoreData = useModalStore()
+  const showVerificationPrompt = modalStoreData?.showVerificationPrompt || false
+  const closeVerificationPrompt = modalStoreData?.closeVerificationPrompt || (() => {})
+  const showOnboarding = modalStoreData?.showOnboarding || false
+  const closeOnboarding = modalStoreData?.closeOnboarding || (() => {})
+  const onboardingInitialStep = modalStoreData?.onboardingInitialStep || 0
 
   const columns = getCampaignsTableColumns({
     onManage: navigateToChallengeManagement,

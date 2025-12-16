@@ -38,27 +38,29 @@ export function DesktopDashboard({
   isWithdrawing,
 }: DesktopDashboardProps) {
   // Get data from stores
-  const { showBanner, dismissBanner } = useDashboardStore()
-  const {
-    showVerificationPrompt,
-    closeVerificationPrompt,
-    showOnboarding,
-    onboardingInitialStep,
-    showFundingModal,
-    closeFundingModal,
-    showWithdrawalModal,
-    closeWithdrawalModal,
-    withdrawalAmount,
-    setWithdrawalAmount,
-    showOtpModal,
-    closeOtpModal,
-    otp,
-    setOtp,
-    otpError,
-    showSuccessModal,
-    closeSuccessModal,
-    copied,
-  } = useModalStore()
+  const dashboardStoreData = useDashboardStore()
+  const showBanner = dashboardStoreData?.showBanner || false
+  const dismissBanner = dashboardStoreData?.dismissBanner || (() => {})
+
+  const modalStoreData = useModalStore()
+  const showVerificationPrompt = modalStoreData?.showVerificationPrompt || false
+  const closeVerificationPrompt = modalStoreData?.closeVerificationPrompt || (() => {})
+  const showOnboarding = modalStoreData?.showOnboarding || false
+  const onboardingInitialStep = modalStoreData?.onboardingInitialStep || 0
+  const showFundingModal = modalStoreData?.showFundingModal || false
+  const closeFundingModal = modalStoreData?.closeFundingModal || (() => {})
+  const showWithdrawalModal = modalStoreData?.showWithdrawalModal || false
+  const closeWithdrawalModal = modalStoreData?.closeWithdrawalModal || (() => {})
+  const withdrawalAmount = modalStoreData?.withdrawalAmount || ''
+  const setWithdrawalAmount = modalStoreData?.setWithdrawalAmount || (() => {})
+  const showOtpModal = modalStoreData?.showOtpModal || false
+  const closeOtpModal = modalStoreData?.closeOtpModal || (() => {})
+  const otp = modalStoreData?.otp || ''
+  const setOtp = modalStoreData?.setOtp || (() => {})
+  const otpError = modalStoreData?.otpError || ''
+  const showSuccessModal = modalStoreData?.showSuccessModal || false
+  const closeSuccessModal = modalStoreData?.closeSuccessModal || (() => {})
+  const copied = modalStoreData?.copied || false
 
   return (
     <>

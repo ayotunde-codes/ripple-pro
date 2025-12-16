@@ -14,18 +14,17 @@ export default function CampaignsPage() {
   const { data: currentUser } = useCurrentUser()
   
   // Zustand stores
-  const { 
-    searchQuery, 
-    statusFilter,
-    setCampaigns,
-    setSummary,
-    setIsLoadingCampaigns,
-    setIsLoadingSummary,
-    setIsMobile,
-    selectedChallenge,
-    closeCloseConfirmation,
-    isMobile,
-  } = useCampaignStore()
+  const campaignStoreData = useCampaignStore()
+  const searchQuery = campaignStoreData?.searchQuery || ''
+  const statusFilter = campaignStoreData?.statusFilter || 'all'
+  const setCampaigns = campaignStoreData?.setCampaigns || (() => {})
+  const setSummary = campaignStoreData?.setSummary || (() => {})
+  const setIsLoadingCampaigns = campaignStoreData?.setIsLoadingCampaigns || (() => {})
+  const setIsLoadingSummary = campaignStoreData?.setIsLoadingSummary || (() => {})
+  const setIsMobile = campaignStoreData?.setIsMobile || (() => {})
+  const selectedChallenge = campaignStoreData?.selectedChallenge || null
+  const closeCloseConfirmation = campaignStoreData?.closeCloseConfirmation || (() => {})
+  const isMobile = campaignStoreData?.isMobile || false
 
   // API hooks
   const { data: campaignsData, isLoading: isLoadingCampaigns } = useCampaigns({

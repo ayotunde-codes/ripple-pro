@@ -114,6 +114,35 @@ export default function ChallengesPage() {
     setShowOnboarding(true)
   }
 
+  const handleRedeemClick = (challengeId: number) => {
+    // Find the challenge details
+    const challenge = mySubmissions.find((c) => c.challenge_id === challengeId)
+    setSelectedChallengeForRedeem(challenge)
+    setShowRedeemModal(true)
+  }
+
+  const handleConfirmRedeem = () => {
+    if (!selectedChallengeForRedeem) return
+
+    redeemReward.mutate(selectedChallengeForRedeem.challenge_id, {
+      onSuccess: (response) => {
+        toast({
+          title: "Redemption Request Submitted",
+          description: "Your redemption request has been sent to the brand for approval.",
+        })
+        setShowRedeemModal(false)
+        setSelectedChallengeForRedeem(null)
+      },
+      onError: (error: any) => {
+        toast({
+          title: "Redemption Failed",
+          description: error?.response?.data?.message || "Failed to submit redemption request",
+          variant: "destructive",
+        })
+      },
+    })
+  }
+
   return (
     <DashboardShell>
       {isMobileView ? (

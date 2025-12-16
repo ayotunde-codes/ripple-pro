@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation"
 import { toast } from "@/components/ui/use-toast"
 import { useMobile } from "@/hooks/use-mobile"
 import { useCurrentUser } from "@/services/auth"
-import { useUpdatePersonalInfo, useUpdateBankInfo, useUpdateSocialMedia } from "@/services/profile"
+import { useUpdatePersonalInfo, useUpdateBankInfo } from "@/services/profile"
 import { MobileProfileView } from "./_components/mobile-profile-view"
 import { DesktopProfileView } from "./_components/desktop-profile-view"
 import { initialProfileData, ProfileData } from "./_components/profile-data"
@@ -21,7 +21,6 @@ export default function ProfileInformationPage() {
   // API mutations
   const updatePersonalInfo = useUpdatePersonalInfo()
   const updateBankInfo = useUpdateBankInfo()
-  const updateSocialMedia = useUpdateSocialMedia()
   
   const [profileImage, setProfileImage] = useState<string | null>(null)
   const [profileData, setProfileData] = useState<ProfileData>(initialProfileData)
@@ -106,30 +105,13 @@ export default function ProfileInformationPage() {
   }
 
   const handleSaveSocialMedia = () => {
-    updateSocialMedia.mutate(
-      {
-        instagram: profileData.instagram,
-        facebook: profileData.facebook,
-        twitter: profileData.twitter,
-        tiktok: profileData.tiktok,
-        youtube: profileData.youtube,
-      },
-      {
-        onSuccess: () => {
-          toast({
-            title: "Social media updated",
-            description: "Your social media accounts have been updated successfully.",
-          })
-        },
-        onError: (error: any) => {
-          toast({
-            title: "Update failed",
-            description: error?.response?.data?.message || "Failed to update social media",
-            variant: "destructive",
-          })
-        },
-      }
-    )
+    // TODO: Backend endpoint for social media update not available yet
+    // Listed in BACKEND_MISSING_ENDPOINTS.md
+    toast({
+      title: "Feature not available",
+      description: "Social media update endpoint is not yet implemented by the backend.",
+      variant: "destructive",
+    })
   }
 
   const handleCancel = () => {

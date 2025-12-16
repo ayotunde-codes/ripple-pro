@@ -14,7 +14,9 @@ export function MobileDashboard({
   onViewAllChallenges,
   onQuickAction,
 }: MobileDashboardProps) {
-  const { showBanner, dismissBanner } = useDashboardStore()
+  const dashboardStoreData = useDashboardStore()
+  const showBanner = dashboardStoreData?.showBanner || false
+  const dismissBanner = dashboardStoreData?.dismissBanner || (() => {})
 
   return (
     <div className="space-y-6">

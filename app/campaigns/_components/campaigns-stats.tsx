@@ -3,7 +3,9 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { useCampaignStore } from "@/stores"
 
 export function CampaignsStats() {
-  const { summary, isLoadingSummary } = useCampaignStore()
+  const campaignStoreData = useCampaignStore()
+  const summary = campaignStoreData?.summary || null
+  const isLoadingSummary = campaignStoreData?.isLoadingSummary || false
 
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat("en-NG", {
@@ -59,7 +61,9 @@ export function CampaignsStats() {
 }
 
 export function MobileCampaignsStats() {
-  const { summary, isLoadingSummary } = useCampaignStore()
+  const campaignStoreData = useCampaignStore()
+  const summary = campaignStoreData?.summary || null
+  const isLoadingSummary = campaignStoreData?.isLoadingSummary || false
 
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat("en-NG", {

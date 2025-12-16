@@ -16,26 +16,24 @@ export default function DashboardPage() {
   const router = useRouter()
 
   // Zustand stores
-  const { 
-    setStats, 
-    setRecentChallenges, 
-    setVirtualAccount, 
-    setIsLoading, 
-    setIsMobileView,
-    setShowBanner,
-    isMobileView,
-  } = useDashboardStore()
+  const dashboardStore = useDashboardStore()
+  const setStats = dashboardStore?.setStats || (() => {})
+  const setRecentChallenges = dashboardStore?.setRecentChallenges || (() => {})
+  const setVirtualAccount = dashboardStore?.setVirtualAccount || (() => {})
+  const setIsLoading = dashboardStore?.setIsLoading || (() => {})
+  const setIsMobileView = dashboardStore?.setIsMobileView || (() => {})
+  const setShowBanner = dashboardStore?.setShowBanner || (() => {})
+  const isMobileView = dashboardStore?.isMobileView || false
 
-  const {
-    withdrawalAmount,
-    closeWithdrawalModal,
-    openSuccessModal,
-    setWithdrawalAmount,
-    setCopied,
-    closeOnboarding,
-    closeVerificationPrompt,
-    openOnboarding,
-  } = useModalStore()
+  const modalStore = useModalStore()
+  const withdrawalAmount = modalStore?.withdrawalAmount || ''
+  const closeWithdrawalModal = modalStore?.closeWithdrawalModal || (() => {})
+  const openSuccessModal = modalStore?.openSuccessModal || (() => {})
+  const setWithdrawalAmount = modalStore?.setWithdrawalAmount || (() => {})
+  const setCopied = modalStore?.setCopied || (() => {})
+  const closeOnboarding = modalStore?.closeOnboarding || (() => {})
+  const closeVerificationPrompt = modalStore?.closeVerificationPrompt || (() => {})
+  const openOnboarding = modalStore?.openOnboarding || (() => {})
 
   // API hooks
   const { data: currentUser, isLoading: isLoadingUser } = useCurrentUser()
