@@ -13,8 +13,6 @@ import {
 import { Copy, Check, X, Loader2 } from "lucide-react"
 import { useInitializeFunding } from "@/services/wallet"
 import { toast } from "@/components/ui/use-toast"
-// @ts-ignore - No types available for @paystack/inline-js
-import PaystackPop from "@paystack/inline-js"
 
 interface VirtualAccount {
   account_number: string
@@ -37,7 +35,7 @@ export function FundWalletModal({ open, onOpenChange, virtualAccount, onSuccess 
   const initializeFunding = useInitializeFunding()
 
   const handleCopyAccountNumber = () => {
-    if (virtualAccount?.account_number) {
+    if (virtualAccount?.account_number && typeof navigator !== "undefined" && navigator.clipboard) {
       navigator.clipboard.writeText(virtualAccount.account_number)
       setCopied(true)
       setTimeout(() => setCopied(false), 2000)
@@ -67,6 +65,10 @@ export function FundWalletModal({ open, onOpenChange, virtualAccount, onSuccess 
         const { access_code, reference, authorization_url } = response.data.data
 
         try {
+          // Dynamically import PaystackPop to avoid SSR issues
+          // @ts-ignore - No types available for @paystack/inline-js
+          const PaystackPop = (await import("@paystack/inline-js")).default
+          
           // Initialize Paystack popup using the official SDK
           const popup = new PaystackPop()
           
@@ -97,7 +99,9 @@ export function FundWalletModal({ open, onOpenChange, virtualAccount, onSuccess 
           })
           
           setTimeout(() => {
-            window.location.href = authorization_url
+            if (typeof window !== "undefined") {
+              window.location.href = authorization_url
+            }
           }, 1000)
         }
       } else {

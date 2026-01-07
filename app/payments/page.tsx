@@ -41,14 +41,16 @@ export default function PaymentsPage() {
   }, [])
 
   useEffect(() => {
-    if (!isMounted) return
+    if (!isMounted || typeof window === "undefined") return
 
     // Check screen size with debounce to prevent frequent re-renders
     let timeoutId: NodeJS.Timeout
     const checkScreenSize = () => {
       clearTimeout(timeoutId)
       timeoutId = setTimeout(() => {
-        setIsMobileView(window.innerWidth < 768)
+        if (typeof window !== "undefined") {
+          setIsMobileView(window.innerWidth < 768)
+        }
       }, 100)
     }
 
@@ -56,7 +58,9 @@ export default function PaymentsPage() {
     window.addEventListener("resize", checkScreenSize)
 
     return () => {
-      window.removeEventListener("resize", checkScreenSize)
+      if (typeof window !== "undefined") {
+        window.removeEventListener("resize", checkScreenSize)
+      }
       clearTimeout(timeoutId)
     }
   }, [isMounted])

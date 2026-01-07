@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, Suspense } from "react"
 import { useSearchParams } from "next/navigation"
 import Link from "next/link"
 import Image from "next/image"
@@ -10,7 +10,7 @@ import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp
 import { useVerifyEmail, useResendCode } from "@/services/auth"
 import { toast } from "sonner"
 
-export default function VerifyEmailPage() {
+function VerifyEmailContent() {
   const searchParams = useSearchParams()
   const email = searchParams.get("email") || ""
   
@@ -76,7 +76,8 @@ export default function VerifyEmailPage() {
     if (code.length === 6 && !isVerifying) {
       handleVerify()
     }
-  }, [code])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [code, isVerifying])
 
   return (
     <div className="flex min-h-screen">
@@ -208,6 +209,25 @@ export default function VerifyEmailPage() {
         </div>
       </div>
     </div>
+  )
+}
+
+export default function VerifyEmailPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex min-h-screen items-center justify-center">
+          <div className="text-center">
+            <div className="mb-4">
+              <div className="mx-auto h-8 w-8 animate-spin rounded-full border-4 border-dashboard-purple border-t-transparent"></div>
+            </div>
+            <p className="text-gray-600 dark:text-gray-400">Loading...</p>
+          </div>
+        </div>
+      }
+    >
+      <VerifyEmailContent />
+    </Suspense>
   )
 }
 
