@@ -1,7 +1,17 @@
 import { Card, CardContent } from "@/components/ui/card"
-import { availableChallenges, userChallenges } from "./challenges-data"
+// import { availableChallenges, userChallenges } from "./challenges-data" // COMMENTED OUT: Using API data now
 
-export function ChallengesStats() {
+interface ChallengesStatsProps {
+  availableChallenges?: any[]
+  mySubmissions?: any[]
+}
+
+export function ChallengesStats({ availableChallenges = [], mySubmissions = [] }: ChallengesStatsProps) {
+  // Calculate stats from API data
+  const totalEarnings = mySubmissions.reduce((sum, sub) => sum + (Number(sub.earnings) || 0), 0)
+  const totalViews = mySubmissions.reduce((sum, sub) => sum + (Number(sub.views) || 0), 0)
+  const activeSubmissions = mySubmissions.filter((c) => !c.redemption_status || c.redemption_status === "rejected").length
+  
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
       <Card className="bg-primary-light dark:bg-[#0E0E0E] border-none">
@@ -18,7 +28,7 @@ export function ChallengesStats() {
           <div className="space-y-1">
             <p className="text-gray-600 dark:text-[#A9A9A9]">Active submissions</p>
             <p className="text-3xl font-bold dark:text-white">
-              {userChallenges.filter((c) => c.status === "active").length}
+              {activeSubmissions}
             </p>
             <p className="text-sm text-[#B125F9]">Currently participating</p>
           </div>
@@ -28,7 +38,7 @@ export function ChallengesStats() {
         <CardContent className="pt-6 px-6 pb-4">
           <div className="space-y-1">
             <p className="text-gray-600 dark:text-[#A9A9A9]">Total earnings</p>
-            <p className="text-3xl font-bold dark:text-white">₦1,512,400</p>
+            <p className="text-3xl font-bold dark:text-white">₦{totalEarnings.toLocaleString()}</p>
             <p className="text-sm text-[#B125F9]">From all challenges</p>
           </div>
         </CardContent>
@@ -37,7 +47,7 @@ export function ChallengesStats() {
         <CardContent className="pt-6 px-6 pb-4">
           <div className="space-y-1">
             <p className="text-gray-600 dark:text-[#A9A9A9]">Total views</p>
-            <p className="text-3xl font-bold dark:text-white">117.5K</p>
+            <p className="text-3xl font-bold dark:text-white">{totalViews.toLocaleString()}</p>
             <p className="text-sm text-[#B125F9]">Across all submissions</p>
           </div>
         </CardContent>
@@ -46,7 +56,16 @@ export function ChallengesStats() {
   )
 }
 
-export function MobileChallengesStats() {
+interface MobileChallengesStatsProps {
+  availableChallenges?: any[]
+  mySubmissions?: any[]
+}
+
+export function MobileChallengesStats({ availableChallenges = [], mySubmissions = [] }: MobileChallengesStatsProps) {
+  // Calculate stats from API data
+  const totalEarnings = mySubmissions.reduce((sum, sub) => sum + (Number(sub.earnings) || 0), 0)
+  const activeSubmissions = mySubmissions.filter((c) => !c.redemption_status || c.redemption_status === "rejected").length
+  
   return (
     <>
       {/* Total Earnings Card */}
@@ -54,7 +73,7 @@ export function MobileChallengesStats() {
         <CardContent className="p-4">
           <div className="space-y-1">
             <p className="text-gray-600 dark:text-[#A9A9A9]">Total earnings</p>
-            <p className="text-3xl font-bold dark:text-white">₦1,512,400</p>
+            <p className="text-3xl font-bold dark:text-white">₦{totalEarnings.toLocaleString()}</p>
             <p className="text-sm text-[#B125F9]">From all challenges</p>
           </div>
         </CardContent>
@@ -77,7 +96,7 @@ export function MobileChallengesStats() {
             <div className="space-y-1">
               <p className="text-gray-600 dark:text-[#A9A9A9]">Active submissions</p>
               <p className="text-3xl font-bold dark:text-white">
-                {userChallenges.filter((c) => c.status === "active").length}
+                {activeSubmissions}
               </p>
               <p className="text-sm text-[#B125F9]">Currently participating</p>
             </div>

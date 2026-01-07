@@ -1,8 +1,11 @@
 "use client"
 
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { toast } from "@/components/ui/use-toast"
+import { Alert, AlertDescription } from "@/components/ui/alert"
+import { Button } from "@/components/ui/button"
+import { AlertCircle } from "lucide-react"
 import { useCurrentUser } from "@/services/auth"
 import { useWallet, useWithdraw } from "@/services/wallet"
 import { useCampaigns } from "@/services/campaign"
@@ -44,6 +47,16 @@ export default function DashboardPage() {
 
   // Determine if user is verified
   const isVerified = currentUser?.kyc_status === "approved" || currentUser?.is_email_verified
+  
+  // Check if profile is complete
+  // Since we don't have GET /profile, we use localStorage as a flag
+  // This gets set when user successfully saves profile
+  const [profileComplete, setProfileComplete] = useState<boolean | null>(null)
+  
+  useEffect(() => {
+    const complete = localStorage.getItem("profileComplete") === "true"
+    setProfileComplete(complete)
+  }, [])
 
   // Update store with API data
   useEffect(() => {
@@ -188,6 +201,25 @@ export default function DashboardPage() {
   return (
     <DashboardShell>
       <div className="pb-16 md:pb-0">
+        {/* Profile Completion Prompt - Show if profile is not complete */}
+        {profileComplete === false && (
+          <Alert className="border-orange-500 bg-orange-50 dark:bg-orange-950 mb-6">
+            <AlertCircle className="h-4 w-4 text-orange-600" />
+            <AlertDescription className="flex items-center justify-between">
+              <span className="text-orange-600 dark:text-orange-400">
+                <strong>Complete your profile</strong> to continue. This is required before you can access all features.
+              </span>
+              <Button
+                onClick={() => router.push("/profile/information")}
+                className="ml-4 bg-orange-600 hover:bg-orange-700 text-white"
+                size="sm"
+              >
+                Complete Profile
+              </Button>
+            </AlertDescription>
+          </Alert>
+        )}
+        
         {isMobileView ? (
           <MobileDashboard 
             onQuickAction={handleQuickAction}

@@ -11,10 +11,17 @@ import { SocialMediaForm } from "./social-media-form"
 import { BankInfoForm } from "./bank-info-form"
 import { ProfileData } from "./profile-data"
 
+interface Country {
+  id: number
+  name: string
+}
+
 interface MobileProfileViewProps {
   profileData: ProfileData
   profileImage: string | null
   isLoadingSocial: boolean
+  countries?: Country[]
+  isLoadingCountries?: boolean
   onImageUpload: (e: React.ChangeEvent<HTMLInputElement>) => void
   onSaveSocialMedia: () => void
   onFieldChange: (field: keyof ProfileData, value: string) => void
@@ -24,6 +31,8 @@ export function MobileProfileView({
   profileData,
   profileImage,
   isLoadingSocial,
+  countries = [],
+  isLoadingCountries = false,
   onImageUpload,
   onSaveSocialMedia,
   onFieldChange,
@@ -57,7 +66,13 @@ export function MobileProfileView({
           isMobile={true}
         />
 
-        <PersonalInfoForm profileData={profileData} isMobile={true} onChange={onFieldChange} />
+        <PersonalInfoForm 
+          profileData={profileData} 
+          isMobile={true} 
+          countries={countries}
+          isLoadingCountries={isLoadingCountries}
+          onChange={onFieldChange} 
+        />
       </div>
 
       {/* Social Media Accounts Section */}
@@ -89,7 +104,7 @@ export function MobileProfileView({
           onClick={onSaveSocialMedia}
           disabled={isLoadingSocial}
         >
-          {isLoadingSocial ? "Saving..." : "Save Changes"}
+          {isLoadingSocial ? "Saving..." : "Save & Continue to KYC"}
         </Button>
       </div>
     </div>

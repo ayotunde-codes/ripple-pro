@@ -103,8 +103,8 @@ export function WithdrawalModal({
             <Input
               type="number"
               placeholder="Enter amount"
-              value={withdrawalAmount}
-              onChange={(e) => setWithdrawalAmount(e.target.value)}
+              value={amount}
+              onChange={(e) => onAmountChange(e.target.value)}
             />
           </div>
           <div className="space-y-2">
@@ -122,9 +122,9 @@ export function WithdrawalModal({
           <Button
             type="button"
             onClick={onSubmit}
-            disabled={!withdrawalAmount || Number.parseFloat(withdrawalAmount) <= 0}
+            disabled={!amount || Number.parseFloat(amount) <= 0 || isLoading}
           >
-            Withdraw
+            {isLoading ? "Processing..." : "Withdraw"}
           </Button>
         </div>
       </DialogContent>

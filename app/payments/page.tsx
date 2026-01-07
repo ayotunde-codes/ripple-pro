@@ -12,6 +12,7 @@ import { DesktopPaymentsView } from "./_components/desktop-payments-view"
 
 export default function PaymentsPage() {
   const router = useRouter()
+  const [isMounted, setIsMounted] = useState(false)
   const [isMobileView, setIsMobileView] = useState(false)
   const [showVerificationPrompt, setShowVerificationPrompt] = useState(false)
   const [showOnboarding, setShowOnboarding] = useState(false)
@@ -21,12 +22,27 @@ export default function PaymentsPage() {
 
   // Get current user and wallet data
   const { data: currentUser } = useCurrentUser()
-  const { data: walletData, isLoading: isLoadingWallet } = useWallet(currentUser?.id || 0)
+  const { data: walletData, isLoading: isLoadingWallet, refetch: refetchWallet } = useWallet(currentUser?.id || 0)
   const withdrawMutation = useWithdraw()
+  
+  // Handle wallet refetch after funding
+  const handleFundingSuccess = () => {
+    // Refetch wallet to get updated balance
+    setTimeout(() => {
+      refetchWallet()
+    }, 2000) // Wait a bit for webhook to process
+  }
 
   const isVerified = currentUser?.kyc_status === "approved" || currentUser?.status === "active"
 
+  // Handle mounting to prevent hydration mismatch
   useEffect(() => {
+    setIsMounted(true)
+  }, [])
+
+  useEffect(() => {
+    if (!isMounted) return
+
     // Check screen size with debounce to prevent frequent re-renders
     let timeoutId: NodeJS.Timeout
     const checkScreenSize = () => {
@@ -43,7 +59,7 @@ export default function PaymentsPage() {
       window.removeEventListener("resize", checkScreenSize)
       clearTimeout(timeoutId)
     }
-  }, [])
+  }, [isMounted])
 
   const handlePaymentAction = (action: string) => {
     if (!isVerified) {
@@ -122,6 +138,15 @@ export default function PaymentsPage() {
   const walletBalance = parseFloat(walletData?.data?.balance || "0")
   const virtualAccount = walletData?.data?.virtual_accounts?.[0]
 
+  // Show loading state during hydration
+  if (!isMounted) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#B125F9]"></div>
+      </div>
+    )
+  }
+
   // Mobile view
   if (isMobileView) {
     return (
@@ -139,6 +164,7 @@ export default function PaymentsPage() {
           showWithdrawModal={showWithdrawModal}
           onWithdrawModalChange={setShowWithdrawModal}
           isWithdrawing={withdrawMutation.isPending}
+          onFundingSuccess={handleFundingSuccess}
         />
 
         {/* Verification Prompt Modal */}
@@ -170,6 +196,7 @@ export default function PaymentsPage() {
         showWithdrawModal={showWithdrawModal}
         onWithdrawModalChange={setShowWithdrawModal}
         isWithdrawing={withdrawMutation.isPending}
+        onFundingSuccess={handleFundingSuccess}
       />
 
       {/* Verification Prompt Modal */}

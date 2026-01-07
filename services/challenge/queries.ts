@@ -2,6 +2,8 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { useRouter } from "next/navigation"
 import { challengeApi } from "./api"
 import { JoinChallengeRequest, GetMySubmissionsParams } from "./types"
+import { useCampaigns } from "../campaign"
+import type { GetCampaignsParams } from "../campaign/types"
 
 /**
  * React Query hooks for challenge operations (Creator side)
@@ -13,6 +15,27 @@ export const challengeKeys = {
   submissions: () => [...challengeKeys.all, "submissions"] as const,
   mySubmissions: (params?: GetMySubmissionsParams) =>
     [...challengeKeys.all, "submissions", "mine", params] as const,
+  available: (params?: GetCampaignsParams) =>
+    [...challengeKeys.all, "available", params] as const,
+}
+
+/**
+ * Get available challenges query
+ * 
+ * NOTE: Backend doesn't have a dedicated GET /challenges endpoint yet.
+ * This wraps the campaigns endpoint (GET /campaigns) since campaigns ARE challenges
+ * from the creator's perspective. See BACKEND_MISSING_ENDPOINTS.md line 145-196.
+ * 
+ * When backend adds GET /challenges/available, we can update this hook.
+ */
+export const useAvailableChallenges = (params?: GetCampaignsParams) => {
+  // Default to only showing open campaigns (available to join)
+  const queryParams: GetCampaignsParams = {
+    ...params,
+    status: params?.status || "open",
+  }
+  
+  return useCampaigns(queryParams)
 }
 
 /**

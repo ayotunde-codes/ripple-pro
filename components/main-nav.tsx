@@ -13,9 +13,16 @@ export function MainNav({ className, ...props }: React.HTMLAttributes<HTMLElemen
             alt="RipplePro Icon"
             width={40}
             height={40}
-            className="h-auto mr-2"
+            className="mr-2"
+            style={{ width: 'auto', height: '40px' }}
           />
-          <Image src="/images/ripple-pro-logo.png" alt="RipplePro" width={120} height={40} className="h-auto" />
+          <Image 
+            src="/images/ripple-pro-logo.png" 
+            alt="RipplePro" 
+            width={120} 
+            height={40} 
+            style={{ width: 'auto', height: '40px' }}
+          />
         </div>
       </Link>
       <Link href="/dashboard" className="text-sm font-medium transition-colors hover:text-primary">

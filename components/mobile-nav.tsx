@@ -24,7 +24,13 @@ export function MobileNav() {
       <SheetContent side="left" className="pr-0">
         <div className="flex items-center">
           <Link href="/" className="flex items-center" onClick={() => setOpen(false)}>
-            <Image src="/images/ripple-pro-logo.png" alt="RipplePro" width={120} height={40} className="h-auto" />
+            <Image 
+              src="/images/ripple-pro-logo.png" 
+              alt="RipplePro" 
+              width={120} 
+              height={40} 
+              style={{ width: 'auto', height: '40px' }}
+            />
           </Link>
         </div>
         <div className="mt-8 flex flex-col space-y-4">

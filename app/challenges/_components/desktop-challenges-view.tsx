@@ -4,7 +4,8 @@ import { ChallengesStats } from "./challenges-stats"
 import { ChallengesTabs, CategoryFilter } from "./challenges-tabs"
 import { DesktopChallengeCard } from "./challenge-card"
 import { UserChallengesTable } from "./user-challenges-table"
-import { availableChallenges, funEmojis } from "./challenges-data"
+// import { availableChallenges, funEmojis } from "./challenges-data" // COMMENTED OUT: Using API data now
+import { funEmojis } from "./challenges-data"
 
 interface DesktopChallengesViewProps {
   activeTab: string
@@ -37,7 +38,7 @@ export function DesktopChallengesView({
     <>
       <DashboardHeader heading="Challenges" text="Discover and participate in creator challenges." />
 
-      <ChallengesStats />
+      <ChallengesStats availableChallenges={filteredAvailableChallenges} mySubmissions={mySubmissions} />
 
       <div className="mt-6">
         <ChallengesTabs activeTab={activeTab} setActiveTab={setActiveTab} isMobile={false} />
@@ -59,13 +60,14 @@ export function DesktopChallengesView({
               pageSize={6}
               searchKey="title"
               renderItem={(challenge) => {
-                const index = availableChallenges.findIndex((c) => c.id === challenge.id)
+                // Using challenge ID to determine emoji instead of array index
+                const emojiIndex = typeof challenge.id === 'number' ? challenge.id : 0
                 return (
                   <DesktopChallengeCard
                     key={challenge.id}
                     challenge={challenge}
                     onJoinChallenge={onJoinChallenge}
-                    funEmoji={funEmojis[index % funEmojis.length]}
+                    funEmoji={funEmojis[emojiIndex % funEmojis.length]}
                   />
                 )
               }}

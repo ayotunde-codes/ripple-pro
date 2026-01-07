@@ -101,7 +101,13 @@ function ResetPasswordContent() {
       <div className="flex flex-1 flex-col justify-center px-4 py-12 sm:px-6 lg:flex-none lg:px-20 xl:px-24">
         <div className="mx-auto w-full max-w-sm lg:w-96">
           <div className="flex justify-center mb-8">
-            <Image src="/images/ripple-pro-logo.png" alt="RipplePro" width={200} height={70} className="h-auto" />
+            <Image 
+              src="/images/ripple-pro-logo.png" 
+              alt="RipplePro" 
+              width={200} 
+              height={70} 
+              style={{ width: 'auto', height: '70px' }}
+            />
           </div>
 
           <div>

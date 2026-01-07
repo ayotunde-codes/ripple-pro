@@ -6,6 +6,7 @@ import {
   UpdateAccountRequest,
   UploadDocumentsRequest,
   RejectKYCRequest,
+  UpdateSocialMediaRequest,
 } from "./types"
 
 /**
@@ -18,25 +19,21 @@ export const profileKeys = {
   detail: () => [...profileKeys.all, "detail"] as const,
   kyc: () => [...profileKeys.all, "kyc"] as const,
   kycSubmissions: () => [...profileKeys.all, "kyc", "submissions"] as const,
+  countries: () => [...profileKeys.all, "countries"] as const,
+  supportedPlatforms: () => [...profileKeys.all, "supported-platforms"] as const,
+  banks: () => [...profileKeys.all, "banks"] as const,
 }
 
 /**
- * Get profile data query
- * Note: API doesn't have GET /profile endpoint yet
- * This is a placeholder that returns null for now
- * TODO: Implement once backend adds GET /profile endpoint
+ * Get user profile with profile stages query
+ * GET /users/profile
  */
-export const useProfile = () => {
+export const useUserProfile = () => {
   return useQuery({
     queryKey: profileKeys.detail(),
-    queryFn: async () => {
-      // TODO: Replace with actual API call when endpoint is available
-      // return profileApi.getProfile()
-      return null
-    },
+    queryFn: () => profileApi.getUserProfile(),
     staleTime: 1000 * 60 * 5, // 5 minutes
     gcTime: 1000 * 60 * 10, // 10 minutes
-    enabled: false, // Disabled until endpoint is available
   })
 }
 
@@ -209,6 +206,61 @@ export const useKYCSubmissions = () => {
     queryFn: () => profileApi.getKYCSubmissions(),
     staleTime: 1000 * 60 * 5, // 5 minutes
     gcTime: 1000 * 60 * 10, // 10 minutes
+  })
+}
+
+/**
+ * Get countries list query
+ */
+export const useCountries = () => {
+  return useQuery({
+    queryKey: profileKeys.countries(),
+    queryFn: () => profileApi.getCountries(),
+    staleTime: 1000 * 60 * 60, // 1 hour (countries don't change often)
+    gcTime: 1000 * 60 * 60 * 24, // 24 hours
+  })
+}
+
+/**
+ * Get supported social media platforms query
+ */
+export const useSupportedPlatforms = () => {
+  return useQuery({
+    queryKey: profileKeys.supportedPlatforms(),
+    queryFn: () => profileApi.getSupportedPlatforms(),
+    staleTime: 1000 * 60 * 60, // 1 hour (platforms don't change often)
+    gcTime: 1000 * 60 * 60 * 24, // 24 hours
+  })
+}
+
+/**
+ * Get banks list query
+ */
+export const useBanks = () => {
+  return useQuery({
+    queryKey: profileKeys.banks(),
+    queryFn: () => profileApi.getBanks(),
+    staleTime: 1000 * 60 * 60, // 1 hour (banks don't change often)
+    gcTime: 1000 * 60 * 60 * 24, // 24 hours
+  })
+}
+
+/**
+ * Update social media links mutation
+ */
+export const useUpdateSocialMedia = () => {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: (data: UpdateSocialMediaRequest) =>
+      profileApi.updateSocialMedia(data),
+    onSuccess: (response) => {
+      queryClient.invalidateQueries({ queryKey: profileKeys.all })
+      console.log("Social media updated:", response.message)
+    },
+    onError: (error: any) => {
+      console.error("Failed to update social media:", error)
+    },
   })
 }
 

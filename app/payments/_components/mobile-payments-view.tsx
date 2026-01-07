@@ -54,6 +54,7 @@ export function MobilePaymentsView({
   showWithdrawModal,
   onWithdrawModalChange,
   isWithdrawing,
+  onFundingSuccess,
 }: MobilePaymentsViewProps) {
   const [searchQuery, setSearchQuery] = useState("")
   const [currentPage, setCurrentPage] = useState(1)
@@ -137,7 +138,12 @@ export function MobilePaymentsView({
 
       <MobileBottomNav />
 
-      <FundWalletModal open={showFundingModal} onOpenChange={setShowFundingModal} virtualAccount={virtualAccount} />
+      <FundWalletModal 
+        open={showFundingModal} 
+        onOpenChange={setShowFundingModal} 
+        virtualAccount={virtualAccount}
+        onSuccess={onFundingSuccess}
+      />
 
       <WithdrawalModal
         open={showWithdrawModal}

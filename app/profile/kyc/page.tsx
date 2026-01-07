@@ -9,13 +9,17 @@ import { Label } from "@/components/ui/label"
 import { Badge } from "@/components/ui/badge"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { toast } from "@/components/ui/use-toast"
-import { useCurrentUser } from "@/services/auth"
-import { useUploadDocuments, useSubmitKYC } from "@/services/profile"
-import { Upload, CheckCircle, XCircle, Clock, AlertCircle } from "lucide-react"
+import { useUploadDocuments, useSubmitKYC, useUserProfile } from "@/services/profile"
+import { Upload, CheckCircle, XCircle, Clock, AlertCircle, Loader2 } from "lucide-react"
 
 export default function KYCPage() {
   const router = useRouter()
-  const { data: currentUser } = useCurrentUser()
+  
+  // Fetch user profile with KYC status
+  const { data: userProfileData, isLoading: isLoadingProfile, refetch: refetchProfile } = useUserProfile()
+  const userProfile = userProfileData?.data
+  const kycStatus = userProfile?.kyc_status || "pending"
+  const rejectionReason = userProfile?.rejection_reason
   
   const uploadDocuments = useUploadDocuments()
   const submitKYC = useSubmitKYC()
@@ -24,9 +28,6 @@ export default function KYCPage() {
   const [idFile, setIdFile] = useState<File | null>(null)
   const [addressFile, setAddressFile] = useState<File | null>(null)
   const [isUploading, setIsUploading] = useState(false)
-
-  const kycStatus = currentUser?.kyc_status
-  const rejectionReason = currentUser?.rejection_reason
 
   // Status badge renderer
   const renderStatusBadge = () => {
@@ -38,11 +39,11 @@ export default function KYCPage() {
             Approved
           </Badge>
         )
-      case "pending":
+      case "in-review":
         return (
           <Badge className="bg-yellow-500 hover:bg-yellow-600">
             <Clock className="mr-1 h-3 w-3" />
-            Pending Review
+            In Review
           </Badge>
         )
       case "rejected":
@@ -52,9 +53,10 @@ export default function KYCPage() {
             Rejected
           </Badge>
         )
+      case "pending":
       default:
         return (
-          <Badge variant="outline">
+          <Badge variant="outline" className="bg-gray-100 dark:bg-gray-800">
             <AlertCircle className="mr-1 h-3 w-3" />
             Not Submitted
           </Badge>
@@ -147,6 +149,8 @@ export default function KYCPage() {
           title: "KYC submitted",
           description: "Your KYC has been submitted for approval. You will be notified once reviewed.",
         })
+        // Refresh profile to get updated KYC status
+        refetchProfile()
         // Clear form
         setNin("")
         setIdFile(null)
@@ -164,11 +168,28 @@ export default function KYCPage() {
   }
 
   const isApproved = kycStatus === "approved"
-  const isPending = kycStatus === "pending"
-  const isFormDisabled = isApproved || isPending || isUploading
+  const isInReview = kycStatus === "in-review"
+  const isRejected = kycStatus === "rejected"
+  const isPending = kycStatus === "pending" // pending = not submitted yet
+  
+  // Form is disabled if approved or in-review
+  // Allow submission if pending (not submitted) or rejected (can resubmit)
+  const isFormDisabled = (isApproved || isInReview) && !isRejected && !isUploading
+
+  // Show loading state while profile is being fetched
+  if (isLoadingProfile) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="flex flex-col items-center gap-4">
+          <Loader2 className="h-8 w-8 animate-spin text-[#B125F9]" />
+          <p className="text-gray-600 dark:text-gray-400">Loading KYC information...</p>
+        </div>
+      </div>
+    )
+  }
 
   return (
-    <div className="container mx-auto p-6 max-w-3xl">
+    <div className="container mx-auto p-6 max-w-3xl" suppressHydrationWarning>
       <Card className="border-gray-200 shadow-sm rounded-xl dark:bg-[#0E0E0E] dark:border-border-dark">
         <CardHeader>
           <div className="flex items-center justify-between">
@@ -183,11 +204,13 @@ export default function KYCPage() {
         </CardHeader>
         <CardContent className="space-y-6">
           {/* Rejection Alert */}
-          {kycStatus === "rejected" && rejectionReason && (
+          {isRejected && (
             <Alert variant="destructive">
               <XCircle className="h-4 w-4" />
               <AlertDescription>
-                <strong>Rejection Reason:</strong> {rejectionReason}
+                <strong>Rejection Reason:</strong> {rejectionReason || "Your KYC was rejected. Please review and resubmit with correct information."}
+                <br />
+                <span className="text-sm mt-2 block">You can update your information and resubmit below.</span>
               </AlertDescription>
             </Alert>
           )}
@@ -202,12 +225,22 @@ export default function KYCPage() {
             </Alert>
           )}
 
-          {/* Pending Message */}
-          {isPending && (
+          {/* In Review Message */}
+          {kycStatus === "in-review" && (
             <Alert className="border-yellow-500 bg-yellow-50 dark:bg-yellow-950">
               <Clock className="h-4 w-4 text-yellow-600" />
               <AlertDescription className="text-yellow-600 dark:text-yellow-400">
-                Your KYC is under review. We'll notify you once it's processed.
+                Your KYC is currently in review. We'll notify you once it's processed. This usually takes 24-48 hours.
+              </AlertDescription>
+            </Alert>
+          )}
+
+          {/* Pending (Not Submitted) Message */}
+          {kycStatus === "pending" && (
+            <Alert className="border-blue-500 bg-blue-50 dark:bg-blue-950">
+              <AlertCircle className="h-4 w-4 text-blue-600" />
+              <AlertDescription className="text-blue-600 dark:text-blue-400">
+                Please complete your KYC verification to access all features. Upload your documents below to get started.
               </AlertDescription>
             </Alert>
           )}
@@ -293,15 +326,17 @@ export default function KYCPage() {
             </Button>
             <Button
               onClick={handleUploadDocuments}
-              disabled={isFormDisabled}
-              className="bg-gradient-to-r from-[#E43EFC] to-[#B125F9] hover:from-[#E43EFC]/90 hover:to-[#B125F9]/90 text-white rounded-full"
+              disabled={isFormDisabled || isUploading}
+              className="bg-gradient-to-r from-[#E43EFC] to-[#B125F9] hover:from-[#E43EFC]/90 hover:to-[#B125F9]/90 text-white rounded-full disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isUploading
                 ? "Uploading..."
-                : isPending
-                ? "Already Submitted"
+                : isInReview
+                ? "In Review"
                 : isApproved
-                ? "Approved"
+                ? "Verified"
+                : isRejected
+                ? "Resubmit KYC"
                 : "Upload & Submit"}
             </Button>
           </div>

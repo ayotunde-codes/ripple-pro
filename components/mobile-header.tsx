@@ -19,7 +19,8 @@ export function MobileHeader() {
             alt="RipplePro Icon"
             width={30}
             height={30}
-            className="h-auto mr-2"
+            className="mr-2"
+            style={{ width: 'auto', height: '30px' }}
           />
           <span className="text-[#B125F9] text-xl font-bold">RipplePro</span>
         </div>

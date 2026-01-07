@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button"
 import { MobileChallengesStats } from "./challenges-stats"
 import { ChallengesTabs, CategoryFilter } from "./challenges-tabs"
 import { MobileChallengeCard } from "./challenge-card"
-import { availableChallenges, userChallenges } from "./challenges-data"
+// import { availableChallenges, userChallenges } from "./challenges-data" // COMMENTED OUT: Using API data now
 
 interface MobileChallengesViewProps {
   activeTab: string
@@ -61,7 +61,7 @@ export function MobileChallengesView({
         </p>
       </div>
 
-      <MobileChallengesStats />
+      <MobileChallengesStats availableChallenges={filteredAvailableChallenges} mySubmissions={mySubmissions} />
 
       {/* Tabs */}
       <ChallengesTabs activeTab={activeTab} setActiveTab={setActiveTab} isMobile={true} />

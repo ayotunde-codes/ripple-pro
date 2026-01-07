@@ -8,6 +8,9 @@ import {
   UploadDocumentsRequest,
   KYCSubmission,
   RejectKYCRequest,
+  UpdateSocialMediaRequest,
+  SocialMediaResponse,
+  UserProfile,
 } from "./types"
 
 /**
@@ -15,6 +18,15 @@ import {
  * All profile and KYC-related API calls
  */
 export const profileApi = {
+  /**
+   * Get user profile with profile stages
+   * GET /users/profile
+   */
+  getUserProfile: async (): Promise<ApiResponse<UserProfile>> => {
+    const response = await apiClient.get<ApiResponse<UserProfile>>("/users/profile")
+    return response.data
+  },
+
   /**
    * Update personal information
    * PUT /profile/personal
@@ -115,6 +127,53 @@ export const profileApi = {
   getKYCSubmissions: async (): Promise<ApiResponse<KYCSubmission[]>> => {
     const response = await apiClient.get<ApiResponse<KYCSubmission[]>>(
       "/kyc/submissions"
+    )
+    return response.data
+  },
+
+  /**
+   * Get countries list
+   * GET /countries
+   */
+  getCountries: async (): Promise<ApiResponse<Array<{ id: number; name: string }>>> => {
+    const response = await apiClient.get<ApiResponse<Array<{ id: number; name: string }>>>(
+      "/countries"
+    )
+    return response.data
+  },
+
+  /**
+   * Get supported social media platforms
+   * GET /supported-platforms
+   */
+  getSupportedPlatforms: async (): Promise<ApiResponse<Array<{ name: string }>>> => {
+    const response = await apiClient.get<ApiResponse<Array<{ name: string }>>>(
+      "/supported-platforms"
+    )
+    return response.data
+  },
+
+  /**
+   * Update social media links
+   * POST /profile/social-media
+   */
+  updateSocialMedia: async (
+    data: UpdateSocialMediaRequest
+  ): Promise<ApiResponse<SocialMediaResponse>> => {
+    const response = await apiClient.post<ApiResponse<SocialMediaResponse>>(
+      "/profile/social-media",
+      data
+    )
+    return response.data
+  },
+
+  /**
+   * Get banks list
+   * GET /banks
+   */
+  getBanks: async (): Promise<ApiResponse<Array<{ name: string; code: string }>>> => {
+    const response = await apiClient.get<ApiResponse<Array<{ name: string; code: string }>>>(
+      "/banks"
     )
     return response.data
   },

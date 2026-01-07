@@ -1,15 +1,28 @@
+import { memo } from "react"
+import { useFormContext } from "react-hook-form"
 import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { ProfileData, countries, contentTypes, categories } from "./profile-data"
+import { FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form"
+import { PersonalInfoFormData } from "./profile-schemas"
 
-interface PersonalInfoFormProps {
-  profileData: ProfileData
-  isMobile?: boolean
-  onChange?: (field: keyof ProfileData, value: string) => void
+interface Country {
+  id: number
+  name: string
 }
 
-export function PersonalInfoForm({ profileData, isMobile = false, onChange }: PersonalInfoFormProps) {
+interface PersonalInfoFormProps {
+  isMobile?: boolean
+  countries?: Country[]
+  isLoadingCountries?: boolean
+}
+
+export const PersonalInfoForm = memo(function PersonalInfoForm({ 
+  isMobile = false, 
+  countries = [],
+  isLoadingCountries = false,
+}: PersonalInfoFormProps) {
+  const { control } = useFormContext<PersonalInfoFormData>()
+  
   const suffix = isMobile ? "-mobile" : ""
   const inputClass = isMobile
     ? "rounded-full border-gray-200 h-14 px-5 bg-gray-50 dark:bg-[#0E0E0E] dark:text-white dark:border-gray-700"
@@ -17,101 +30,167 @@ export function PersonalInfoForm({ profileData, isMobile = false, onChange }: Pe
 
   return (
     <div className={isMobile ? "space-y-4" : "grid gap-4 md:grid-cols-2"}>
-      <div className="space-y-2">
-        <Label htmlFor={`firstName${suffix}`} className="text-gray-700 dark:text-[#A9A9A9]">
-          First Name
-        </Label>
-        <Input
-          id={`firstName${suffix}`}
-          value={profileData.firstName}
-          onChange={(e) => onChange?.("firstName", e.target.value)}
-          placeholder="Enter first name"
-          className={inputClass}
-        />
-      </div>
+      <FormField
+        control={control}
+        name="firstName"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel className="text-gray-700 dark:text-[#A9A9A9]">
+              First Name
+            </FormLabel>
+            <FormControl>
+              <Input
+                {...field}
+                id={`firstName${suffix}`}
+                placeholder="Enter first name"
+                className={inputClass}
+              />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
 
-      <div className="space-y-2">
-        <Label htmlFor={`middleName${suffix}`} className="text-gray-700 dark:text-[#A9A9A9]">
-          Middle Name (Optional)
-        </Label>
-        <Input
-          id={`middleName${suffix}`}
-          value={profileData.middleName}
-          onChange={(e) => onChange?.("middleName", e.target.value)}
-          placeholder="Enter middle name"
-          className={inputClass}
-        />
-      </div>
+      <FormField
+        control={control}
+        name="middleName"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel className="text-gray-700 dark:text-[#A9A9A9]">
+              Middle Name (Optional)
+            </FormLabel>
+            <FormControl>
+              <Input
+                {...field}
+                id={`middleName${suffix}`}
+                placeholder="Enter middle name"
+                className={inputClass}
+              />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
 
-      <div className="space-y-2">
-        <Label htmlFor={`lastName${suffix}`} className="text-gray-700 dark:text-[#A9A9A9]">
-          Last Name
-        </Label>
-        <Input
-          id={`lastName${suffix}`}
-          value={profileData.lastName}
-          onChange={(e) => onChange?.("lastName", e.target.value)}
-          placeholder="Enter last name"
-          className={inputClass}
-        />
-      </div>
+      <FormField
+        control={control}
+        name="lastName"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel className="text-gray-700 dark:text-[#A9A9A9]">
+              Last Name
+            </FormLabel>
+            <FormControl>
+              <Input
+                {...field}
+                id={`lastName${suffix}`}
+                placeholder="Enter last name"
+                className={inputClass}
+              />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
 
-      <div className="space-y-2">
-        <Label htmlFor={`email${suffix}`} className="text-gray-700 dark:text-[#A9A9A9]">
-          Email
-        </Label>
-        <Input
-          id={`email${suffix}`}
-          value={profileData.email}
-          readOnly
-          placeholder="Enter email"
-          className={inputClass}
-          title="Email cannot be changed"
-        />
-      </div>
+      <FormField
+        control={control}
+        name="email"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel className="text-gray-700 dark:text-[#A9A9A9]">
+              Email
+            </FormLabel>
+            <FormControl>
+              <Input
+                {...field}
+                id={`email${suffix}`}
+                readOnly
+                placeholder="Enter email"
+                className={inputClass}
+                title="Email cannot be changed"
+              />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
 
-      <div className="space-y-2">
-        <Label htmlFor={`contentType${suffix}`} className="text-gray-700 dark:text-[#A9A9A9]">
-          Content type
-        </Label>
-        <Select 
-          value={profileData.contentType}
-          onValueChange={(value) => onChange?.("contentType", value)}
-        >
-          <SelectTrigger id={`contentType${suffix}`} className={inputClass}>
-            <SelectValue placeholder="Select content type" />
-          </SelectTrigger>
-          <SelectContent>
-            {contentTypes.map((type) => (
-              <SelectItem key={type.value} value={type.value}>
-                {type.label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
+      <FormField
+        control={control}
+        name="phoneNumber"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel className="text-gray-700 dark:text-[#A9A9A9]">
+              Phone Number <span className="text-red-500">*</span>
+            </FormLabel>
+            <FormControl>
+              <Input
+                {...field}
+                id={`phoneNumber${suffix}`}
+                type="tel"
+                placeholder="Enter phone number"
+                className={inputClass}
+              />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
 
-      <div className="space-y-2">
-        <Label htmlFor={`category${suffix}`} className="text-gray-700 dark:text-[#A9A9A9]">
-          Category
-        </Label>
-        <Select 
-          value={profileData.category}
-          onValueChange={(value) => onChange?.("category", value)}
-        >
-          <SelectTrigger id={`category${suffix}`} className={inputClass}>
-            <SelectValue placeholder="Select category" />
-          </SelectTrigger>
-          <SelectContent>
-            {categories.map((category) => (
-              <SelectItem key={category.value} value={category.value}>
-                {category.label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
+      <FormField
+        control={control}
+        name="dateOfBirth"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel className="text-gray-700 dark:text-[#A9A9A9]">
+              Date of Birth <span className="text-red-500">*</span>
+            </FormLabel>
+            <FormControl>
+              <Input
+                {...field}
+                id={`dateOfBirth${suffix}`}
+                type="date"
+                max={new Date().toISOString().split('T')[0]}
+                className={inputClass}
+              />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+
+      <FormField
+        control={control}
+        name="countryId"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel className="text-gray-700 dark:text-[#A9A9A9]">
+              Country <span className="text-red-500">*</span>
+            </FormLabel>
+            <Select 
+              value={field.value?.toString() || ""}
+              onValueChange={(value) => field.onChange(Number(value))}
+              disabled={isLoadingCountries}
+            >
+              <FormControl>
+                <SelectTrigger id={`country${suffix}`} className={inputClass}>
+                  <SelectValue placeholder={isLoadingCountries ? "Loading countries..." : "Select country"} />
+                </SelectTrigger>
+              </FormControl>
+              <SelectContent>
+                {countries.map((country) => (
+                  <SelectItem key={country.id} value={country.id.toString()}>
+                    {country.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
     </div>
   )
-}
+})
 

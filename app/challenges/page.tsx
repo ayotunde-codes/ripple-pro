@@ -5,12 +5,14 @@ import { useRouter } from "next/navigation"
 import { DashboardShell } from "@/components/dashboard-shell"
 import { VerificationPrompt } from "@/components/verification-prompt"
 import { OnboardingModal } from "@/components/onboarding-modal"
+import { Alert, AlertDescription } from "@/components/ui/alert"
+import { Button } from "@/components/ui/button"
+import { AlertCircle } from "lucide-react"
 import { MobileChallengesView } from "./_components/mobile-challenges-view"
 import { DesktopChallengesView } from "./_components/desktop-challenges-view"
 import { RedeemConfirmationModal } from "./_components/redeem-confirmation-modal"
-import { availableChallenges } from "./_components/challenges-data"
-import { useCampaigns } from "@/services/campaign"
-import { useMySubmissions, useRedeemReward } from "@/services/challenge"
+// import { availableChallenges } from "./_components/challenges-data" // COMMENTED OUT: Using API data now
+import { useAvailableChallenges, useMySubmissions, useRedeemReward } from "@/services/challenge"
 import { toast } from "@/components/ui/use-toast"
 
 export default function ChallengesPage() {
@@ -25,20 +27,22 @@ export default function ChallengesPage() {
   const [showRedeemModal, setShowRedeemModal] = useState(false)
   const [selectedChallengeForRedeem, setSelectedChallengeForRedeem] = useState<any>(null)
   
-  // API hooks - Note: campaigns API can be used for browsing available challenges
-  const { data: campaignsData, isLoading: isLoadingCampaigns } = useCampaigns({
+  // API hooks
+  // NOTE: useAvailableChallenges wraps the campaigns API (GET /campaigns) 
+  // since there's no dedicated GET /challenges endpoint yet.
+  // See services/challenge/queries.ts for details.
+  const { data: challengesData, isLoading: isLoadingChallenges } = useAvailableChallenges({
     page: 1,
-    limit: 50,
-    status: "active", // Only show active campaigns/challenges
+    length: 50,
   })
   const { data: mySubmissionsData, isLoading: isLoadingSubmissions } = useMySubmissions({
     page: 1,
-    limit: 50,
+    length: 50,
   })
   const redeemReward = useRedeemReward()
 
-  // Use API data if available, otherwise fallback to mock data
-  const apiChallenges = campaignsData?.data || []
+  // Use API data
+  const apiChallenges = challengesData?.data || []
   const mySubmissions = mySubmissionsData?.data || []
 
   // Transform API campaigns to challenge format for UI compatibility
@@ -57,8 +61,9 @@ export default function ChallengesPage() {
     status: campaign.status,
   }))
 
-  // Use API data if available, otherwise use mock data
-  const allChallenges = transformedChallenges.length > 0 ? transformedChallenges : availableChallenges
+  // Use API data only - REMOVED FALLBACK TO MOCK DATA
+  const allChallenges = transformedChallenges
+  // const allChallenges = transformedChallenges.length > 0 ? transformedChallenges : availableChallenges
 
   // Extract unique categories for filtering
   const categories = ["all", ...new Set(allChallenges.map((challenge) => challenge.category))]
@@ -97,8 +102,27 @@ export default function ChallengesPage() {
     setSelectedCategory("all")
   }, [activeTab])
 
+  // Check if profile is complete
+  const [profileComplete, setProfileComplete] = useState<boolean | null>(null)
+  
+  useEffect(() => {
+    const complete = localStorage.getItem("profileComplete") === "true"
+    setProfileComplete(complete)
+  }, [])
+
   // Update the handleJoinChallenge function to navigate to the dedicated page
   const handleJoinChallenge = (challenge: any) => {
+    // Check profile completion first
+    if (profileComplete === false) {
+      toast({
+        title: "Profile incomplete",
+        description: "Please complete your profile before joining challenges.",
+        variant: "destructive",
+      })
+      router.push("/profile/information")
+      return
+    }
+    
     if (!isVerified) {
       // Always start from step 1 (index 0) of the onboarding modal
       setInitialStep(0)
@@ -145,6 +169,25 @@ export default function ChallengesPage() {
 
   return (
     <DashboardShell>
+      {/* Profile Completion Prompt */}
+      {profileComplete === false && (
+        <Alert className="border-orange-500 bg-orange-50 dark:bg-orange-950 mb-6">
+          <AlertCircle className="h-4 w-4 text-orange-600" />
+          <AlertDescription className="flex items-center justify-between">
+            <span className="text-orange-600 dark:text-orange-400">
+              <strong>Complete your profile</strong> to join challenges and start earning.
+            </span>
+            <Button
+              onClick={() => router.push("/profile/information")}
+              className="ml-4 bg-orange-600 hover:bg-orange-700 text-white"
+              size="sm"
+            >
+              Complete Profile
+            </Button>
+          </AlertDescription>
+        </Alert>
+      )}
+      
       {isMobileView ? (
         <MobileChallengesView
           activeTab={activeTab}

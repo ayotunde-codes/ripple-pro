@@ -1,8 +1,11 @@
 "use client"
 
 import { useRouter } from "next/navigation"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { toast } from "@/components/ui/use-toast"
+import { Alert, AlertDescription } from "@/components/ui/alert"
+import { Button } from "@/components/ui/button"
+import { AlertCircle } from "lucide-react"
 import { useCurrentUser } from "@/services/auth"
 import { useCampaigns, useCampaignSummary, useCloseCampaign } from "@/services/campaign"
 import { useModalStore, useCampaignStore } from "@/stores"
@@ -16,7 +19,7 @@ export default function CampaignsPage() {
   // Zustand stores
   const campaignStoreData = useCampaignStore()
   const searchQuery = campaignStoreData?.searchQuery || ''
-  const statusFilter = campaignStoreData?.statusFilter || 'all'
+  const statusFilter = campaignStoreData?.statusFilter || ""
   const setCampaigns = campaignStoreData?.setCampaigns || (() => {})
   const setSummary = campaignStoreData?.setSummary || (() => {})
   const setIsLoadingCampaigns = campaignStoreData?.setIsLoadingCampaigns || (() => {})
@@ -29,12 +32,20 @@ export default function CampaignsPage() {
   // API hooks
   const { data: campaignsData, isLoading: isLoadingCampaigns } = useCampaigns({
     search: searchQuery || undefined,
-    status: statusFilter,
+    status: statusFilter || undefined,
   })
   const { data: summaryData, isLoading: isLoadingSummary } = useCampaignSummary()
   const closeCampaign = useCloseCampaign()
 
   const isVerified = currentUser?.kyc_status === "approved" || currentUser?.status === "active"
+  
+  // Check if profile is complete
+  const [profileComplete, setProfileComplete] = useState<boolean | null>(null)
+  
+  useEffect(() => {
+    const complete = localStorage.getItem("profileComplete") === "true"
+    setProfileComplete(complete)
+  }, [])
 
   // Update store with API data
   useEffect(() => {
@@ -88,6 +99,17 @@ export default function CampaignsPage() {
   }
 
   const handleCreateCampaign = () => {
+    // Check profile completion first
+    if (profileComplete === false) {
+      toast({
+        title: "Profile incomplete",
+        description: "Please complete your profile before creating campaigns.",
+        variant: "destructive",
+      })
+      router.push("/profile/information")
+      return
+    }
+    
     if (!isVerified) {
       useModalStore.getState().openVerificationPrompt()
     } else {
@@ -96,7 +118,28 @@ export default function CampaignsPage() {
   }
 
   // Render based on screen size
-  return isMobile ? (
+  return (
+    <>
+      {/* Profile Completion Prompt */}
+      {profileComplete === false && (
+        <Alert className="border-orange-500 bg-orange-50 dark:bg-orange-950 mb-6">
+          <AlertCircle className="h-4 w-4 text-orange-600" />
+          <AlertDescription className="flex items-center justify-between">
+            <span className="text-orange-600 dark:text-orange-400">
+              <strong>Complete your profile</strong> to create and manage campaigns.
+            </span>
+            <Button
+              onClick={() => router.push("/profile/information")}
+              className="ml-4 bg-orange-600 hover:bg-orange-700 text-white"
+              size="sm"
+            >
+              Complete Profile
+            </Button>
+          </AlertDescription>
+        </Alert>
+      )}
+      
+      {isMobile ? (
     <MobileCampaignsView
       onCompleteVerification={handleCompleteVerification}
       confirmCloseChallenge={confirmCloseChallenge}
@@ -112,5 +155,7 @@ export default function CampaignsPage() {
       onCreateCampaign={handleCreateCampaign}
       isClosing={closeCampaign.isPending}
     />
+      )}
+    </>
   )
 }

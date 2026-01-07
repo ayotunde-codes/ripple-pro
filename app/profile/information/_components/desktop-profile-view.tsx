@@ -8,11 +8,18 @@ import { SocialMediaForm } from "./social-media-form"
 import { BankInfoForm } from "./bank-info-form"
 import { ProfileData } from "./profile-data"
 
+interface Country {
+  id: number
+  name: string
+}
+
 interface DesktopProfileViewProps {
   profileData: ProfileData
   profileImage: string | null
   isVerified: boolean
   isLoading: boolean
+  countries?: Country[]
+  isLoadingCountries?: boolean
   onImageUpload: (e: React.ChangeEvent<HTMLInputElement>) => void
   onSaveChanges: () => void
   onCancel: () => void
@@ -24,6 +31,8 @@ export function DesktopProfileView({
   profileImage,
   isVerified,
   isLoading,
+  countries = [],
+  isLoadingCountries = false,
   onImageUpload,
   onSaveChanges,
   onCancel,
@@ -60,7 +69,13 @@ export function DesktopProfileView({
             isMobile={false}
           />
 
-          <PersonalInfoForm profileData={profileData} isMobile={false} onChange={onFieldChange} />
+          <PersonalInfoForm 
+            profileData={profileData} 
+            isMobile={false} 
+            countries={countries}
+            isLoadingCountries={isLoadingCountries}
+            onChange={onFieldChange} 
+          />
         </CardContent>
       </Card>
 
@@ -83,7 +98,12 @@ export function DesktopProfileView({
       </Card>
 
       <div className="flex justify-end gap-4">
-        <Button variant="outline" onClick={onCancel} className="rounded-full">
+        <Button 
+          variant="outline" 
+          onClick={onCancel} 
+          className="rounded-full"
+          disabled={isLoading}
+        >
           Cancel
         </Button>
         <Button
@@ -91,7 +111,7 @@ export function DesktopProfileView({
           disabled={isLoading}
           className="bg-gradient-to-r from-[#E43EFC] to-[#B125F9] hover:from-[#E43EFC]/90 hover:to-[#B125F9]/90 text-white rounded-full"
         >
-          {isLoading ? "Saving..." : "Save Changes"}
+          {isLoading ? "Saving..." : "Save & Continue to KYC"}
         </Button>
       </div>
     </div>

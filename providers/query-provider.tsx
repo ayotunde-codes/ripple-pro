@@ -1,8 +1,14 @@
 "use client"
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools"
 import { useState } from "react"
+import dynamic from "next/dynamic"
+
+// Lazy load React Query DevTools to reduce bundle size
+const ReactQueryDevtools = dynamic(
+  () => import("@tanstack/react-query-devtools").then((mod) => mod.ReactQueryDevtools),
+  { ssr: false }
+)
 
 /**
  * React Query Provider Component

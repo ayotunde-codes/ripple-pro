@@ -33,6 +33,31 @@ export interface ProfileDocument {
   created_at: string
 }
 
+// Profile Stages
+export interface ProfileStages {
+  personal_info_completed: boolean
+  bvn_completed: boolean
+  account_details_completed: boolean
+  document_uploaded: boolean
+  social_media_linked: boolean
+}
+
+// User Profile Response
+export interface UserProfile {
+  id: number
+  first_name: string
+  last_name: string
+  email: string
+  role: string
+  status: string
+  profile_stages: ProfileStages
+  kyc_status: string
+  is_email_verified: boolean
+  rejection_reason: string | null
+  created_at: string
+  updated_at: string
+}
+
 // Profile Data
 export interface ProfileData {
   dob: string | null
@@ -99,7 +124,7 @@ export interface KYCSubmission {
     email: string
     role: string
     status: string
-    kyc_status: "pending" | "approved" | "rejected"
+    kyc_status: "pending" | "in-review" | "approved" | "rejected"
     is_email_verified: boolean
     rejection_reason: string | null
     created_at: string
@@ -112,5 +137,45 @@ export interface KYCSubmission {
 export interface RejectKYCRequest {
   user_id: number
   reason: string
+}
+
+// Update Social Media Request
+export interface SocialMediaLink {
+  platform: string
+  url: string
+}
+
+export interface UpdateSocialMediaRequest {
+  links: SocialMediaLink[]
+}
+
+// Update Social Media Response
+export interface UpdatedLink {
+  platform: string
+  url: string
+  message: string
+}
+
+export interface UpdateSocialMediaResponse {
+  updated_links: UpdatedLink[]
+  failed_links: any[]
+}
+
+// Update Social Media Request
+export interface UpdateSocialMediaRequest {
+  links: Array<{
+    platform: string
+    url: string
+  }>
+}
+
+// Social Media Response
+export interface SocialMediaResponse {
+  updated_links: Array<{
+    platform: string
+    url: string
+    message: string
+  }>
+  failed_links: Array<any>
 }
 

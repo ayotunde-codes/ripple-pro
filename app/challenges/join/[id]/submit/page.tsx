@@ -9,137 +9,138 @@ import { Input } from "@/components/ui/input"
 import { DashboardShell } from "@/components/dashboard-shell"
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog"
 
-// Mock data for available challenges - same as in challenges page
-const availableChallenges = [
-  {
-    id: 1,
-    title: "Summer Product Launch",
-    creator: "Brand X",
-    category: "High Fashion",
-    totalPool: 10000000,
-    paidOut: 4200000,
-    views: 250000,
-    participants: 45,
-    rewardRate: 1000,
-    maxPayout: 100000,
-    platforms: ["instagram", "tiktok", "youtube"],
-    requirements: "Must include product showcase for minimum 30 seconds",
-    endDate: "2024-08-01",
-    hasProfilePic: false,
-  },
-  {
-    id: 2,
-    title: "Holiday Campaign",
-    creator: "Fashion Co.",
-    category: "Lifestyle",
-    totalPool: 15000000,
-    paidOut: 4500750,
-    views: 320000,
-    participants: 62,
-    rewardRate: 1500,
-    maxPayout: 150000,
-    platforms: ["instagram", "facebook", "tiktok"],
-    requirements: "Feature holiday theme and tag @fashionco in all posts",
-    endDate: "2024-12-15",
-    hasProfilePic: true,
-  },
-  {
-    id: 3,
-    title: "Tech Gadget Review",
-    creator: "TechWorld",
-    category: "Technology",
-    totalPool: 8000000,
-    paidOut: 1200250,
-    views: 95000,
-    participants: 28,
-    rewardRate: 2000,
-    maxPayout: 80000,
-    platforms: ["youtube", "tiktok"],
-    requirements: "Detailed review of product features with honest feedback",
-    endDate: "2024-09-30",
-    hasProfilePic: false,
-  },
-  {
-    id: 4,
-    title: "Fitness Challenge",
-    creator: "GymBrand",
-    category: "Health & Fitness",
-    totalPool: 12000000,
-    paidOut: 5800500,
-    views: 430000,
-    participants: 75,
-    rewardRate: 1200,
-    maxPayout: 120000,
-    platforms: ["instagram", "tiktok", "youtube"],
-    requirements: "Show workout routine using our products for at least 45 seconds",
-    endDate: "2024-07-15",
-    hasProfilePic: true,
-  },
-  {
-    id: 5,
-    title: "Food Recipe Contest",
-    creator: "CookingSupplies",
-    category: "Food & Beverage",
-    totalPool: 7500000,
-    paidOut: 2100300,
-    views: 180000,
-    participants: 42,
-    rewardRate: 1250,
-    maxPayout: 75000,
-    platforms: ["instagram", "youtube", "facebook"],
-    requirements: "Create a unique recipe using our cookware and show the final result",
-    endDate: "2024-10-10",
-    hasProfilePic: false,
-  },
-  {
-    id: 6,
-    title: "Travel Vlog Series",
-    creator: "TravelAgency",
-    category: "Travel",
-    totalPool: 20000000,
-    paidOut: 8500750,
-    views: 750000,
-    participants: 35,
-    rewardRate: 1800,
-    maxPayout: 200000,
-    platforms: ["youtube", "instagram"],
-    requirements: "Document travel experience and mention our booking service",
-    endDate: "2024-11-20",
-    hasProfilePic: true,
-  },
-  {
-    id: 7,
-    title: "Beauty Product Review",
-    creator: "BeautyBrand",
-    category: "Beauty",
-    totalPool: 9000000,
-    paidOut: 3200000,
-    views: 280000,
-    participants: 50,
-    rewardRate: 1100,
-    maxPayout: 90000,
-    platforms: ["instagram", "youtube", "tiktok"],
-    requirements: "Demonstrate product application and results",
-    endDate: "2024-09-15",
-    hasProfilePic: true,
-  },
-  {
-    id: 8,
-    title: "Gaming Tournament",
-    creator: "GameStudio",
-    category: "Gaming",
-    totalPool: 18000000,
-    paidOut: 7200000,
-    views: 600000,
-    participants: 85,
-    rewardRate: 1300,
-    maxPayout: 180000,
-    platforms: ["youtube", "tiktok"],
-    requirements: "Stream gameplay and provide commentary",
-    endDate: "2024-10-30",
-    hasProfilePic: false,
-  },
-]
+// Mock data for available challenges - COMMENTED OUT: Using API data now
+// NOTE: This page may not be in use - the join flow is handled by /join/[id]/page.tsx
+// const availableChallenges = [
+//   {
+//     id: 1,
+//     title: "Summer Product Launch",
+//     creator: "Brand X",
+//     category: "High Fashion",
+//     totalPool: 10000000,
+//     paidOut: 4200000,
+//     views: 250000,
+//     participants: 45,
+//     rewardRate: 1000,
+//     maxPayout: 100000,
+//     platforms: ["instagram", "tiktok", "youtube"],
+//     requirements: "Must include product showcase for minimum 30 seconds",
+//     endDate: "2024-08-01",
+//     hasProfilePic: false,
+//   },
+//   {
+//     id: 2,
+//     title: "Holiday Campaign",
+//     creator: "Fashion Co.",
+//     category: "Lifestyle",
+//     totalPool: 15000000,
+//     paidOut: 4500750,
+//     views: 320000,
+//     participants: 62,
+//     rewardRate: 1500,
+//     maxPayout: 150000,
+//     platforms: ["instagram", "facebook", "tiktok"],
+//     requirements: "Feature holiday theme and tag @fashionco in all posts",
+//     endDate: "2024-12-15",
+//     hasProfilePic: true,
+//   },
+//   {
+//     id: 3,
+//     title: "Tech Gadget Review",
+//     creator: "TechWorld",
+//     category: "Technology",
+//     totalPool: 8000000,
+//     paidOut: 1200250,
+//     views: 95000,
+//     participants: 28,
+//     rewardRate: 2000,
+//     maxPayout: 80000,
+//     platforms: ["youtube", "tiktok"],
+//     requirements: "Detailed review of product features with honest feedback",
+//     endDate: "2024-09-30",
+//     hasProfilePic: false,
+//   },
+//   {
+//     id: 4,
+//     title: "Fitness Challenge",
+//     creator: "GymBrand",
+//     category: "Health & Fitness",
+//     totalPool: 12000000,
+//     paidOut: 5800500,
+//     views: 430000,
+//     participants: 75,
+//     rewardRate: 1200,
+//     maxPayout: 120000,
+//     platforms: ["instagram", "tiktok", "youtube"],
+//     requirements: "Show workout routine using our products for at least 45 seconds",
+//     endDate: "2024-07-15",
+//     hasProfilePic: true,
+//   },
+//   {
+//     id: 5,
+//     title: "Food Recipe Contest",
+//     creator: "CookingSupplies",
+//     category: "Food & Beverage",
+//     totalPool: 7500000,
+//     paidOut: 2100300,
+//     views: 180000,
+//     participants: 42,
+//     rewardRate: 1250,
+//     maxPayout: 75000,
+//     platforms: ["instagram", "youtube", "facebook"],
+//     requirements: "Create a unique recipe using our cookware and show the final result",
+//     endDate: "2024-10-10",
+//     hasProfilePic: false,
+//   },
+//   {
+//     id: 6,
+//     title: "Travel Vlog Series",
+//     creator: "TravelAgency",
+//     category: "Travel",
+//     totalPool: 20000000,
+//     paidOut: 8500750,
+//     views: 750000,
+//     participants: 35,
+//     rewardRate: 1800,
+//     maxPayout: 200000,
+//     platforms: ["youtube", "instagram"],
+//     requirements: "Document travel experience and mention our booking service",
+//     endDate: "2024-11-20",
+//     hasProfilePic: true,
+//   },
+//   {
+//     id: 7,
+//     title: "Beauty Product Review",
+//     creator: "BeautyBrand",
+//     category: "Beauty",
+//     totalPool: 9000000,
+//     paidOut: 3200000,
+//     views: 280000,
+//     participants: 50,
+//     rewardRate: 1100,
+//     maxPayout: 90000,
+//     platforms: ["instagram", "youtube", "tiktok"],
+//     requirements: "Demonstrate product application and results",
+//     endDate: "2024-09-15",
+//     hasProfilePic: true,
+//   },
+//   {
+//     id: 8,
+//     title: "Gaming Tournament",
+//     creator: "GameStudio",
+//     category: "Gaming",
+//     totalPool: 18000000,
+//     paidOut: 7200000,
+//     views: 600000,
+//     participants: 85,
+//     rewardRate: 1300,
+//     maxPayout: 180000,
+//     platforms: ["youtube", "tiktok"],
+//     requirements: "Stream gameplay and provide commentary",
+//     endDate: "2024-10-30",
+//     hasProfilePic: false,
+//   },
+// ]
 
 export default function SubmitChallengePage() {
   const router = useRouter()
@@ -157,12 +158,16 @@ export default function SubmitChallengePage() {
   const [showSuccess, setShowSuccess] = useState(false)
 
   useEffect(() => {
+    // COMMENTED OUT: Using API data now
     // Find the challenge by ID
-    const foundChallenge = availableChallenges.find((c) => c.id === challengeId)
-    setChallenge(foundChallenge)
+    // const foundChallenge = availableChallenges.find((c) => c.id === challengeId)
+    // setChallenge(foundChallenge)
+    
+    // NOTE: This page may not be used - the join flow is handled by /join/[id]/page.tsx
+    setChallenge(null)
   }, [challengeId])
 
-  const handleSubmitLinks = async (e) => {
+  const handleSubmitLinks = async (e: React.FormEvent) => {
     e.preventDefault()
     setShowSuccess(true)
 
@@ -203,18 +208,18 @@ export default function SubmitChallengePage() {
           <CardContent className="p-6">
             <div className="space-y-6">
               <div>
-                <h1 className="text-2xl font-bold dark:text-white">{challenge.title}</h1>
+                <h1 className="text-2xl font-bold dark:text-white">{(challenge as any)?.title || "Challenge"}</h1>
                 <p className="text-gray-600 dark:text-[#A9A9A9] mt-2">Submit your content links</p>
               </div>
 
               <form onSubmit={handleSubmitLinks} className="space-y-6">
-                {challenge.platforms.map((platform) => (
+                {((challenge as any)?.platforms || []).map((platform: string) => (
                   <div key={platform} className="space-y-2">
                     <label className="text-sm font-medium capitalize dark:text-[#A9A9A9]">{platform} link</label>
                     <Input
                       placeholder={`Enter your ${platform} content link`}
                       className="rounded-full border-gray-300 py-6"
-                      value={submissionLinks[platform] || ""}
+                      value={(submissionLinks as any)[platform] || ""}
                       onChange={(e) => {
                         setSubmissionLinks({
                           ...submissionLinks,

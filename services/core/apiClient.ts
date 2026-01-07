@@ -1,7 +1,7 @@
 import axios, { AxiosError, AxiosInstance, InternalAxiosRequestConfig } from "axios"
 
 // API Configuration
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "https://ripple-pro.onrender.com/api/v1"
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "https://joinripplepro.com/api/v1"
 const API_TIMEOUT = 30000 // 30 seconds
 
 // Create axios instance

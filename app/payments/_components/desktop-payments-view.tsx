@@ -56,6 +56,7 @@ export function DesktopPaymentsView({
   showWithdrawModal,
   onWithdrawModalChange,
   isWithdrawing,
+  onFundingSuccess,
 }: DesktopPaymentsViewProps) {
   const [searchQuery, setSearchQuery] = useState("")
   const [showFundingModal, setShowFundingModal] = useState(false)
@@ -182,7 +183,12 @@ export function DesktopPaymentsView({
         </CardContent>
       </Card>
 
-      <FundWalletModal open={showFundingModal} onOpenChange={setShowFundingModal} virtualAccount={virtualAccount} />
+      <FundWalletModal 
+        open={showFundingModal} 
+        onOpenChange={setShowFundingModal} 
+        virtualAccount={virtualAccount}
+        onSuccess={onFundingSuccess}
+      />
 
       <WithdrawalModal
         open={showWithdrawModal}

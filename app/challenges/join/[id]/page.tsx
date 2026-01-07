@@ -8,8 +8,8 @@ import { OnboardingModal } from "@/components/onboarding-modal"
 import { ChallengeDetailsView } from "./_components/challenge-details-view"
 import { SubmissionFormView } from "./_components/submission-form-view"
 import { SuccessModal } from "./_components/success-modal"
-import { availableChallenges } from "./_components/challenge-data"
-import { useJoinChallenge } from "@/services/challenge"
+// import { availableChallenges } from "./_components/challenge-data" // COMMENTED OUT: Using API data now
+import { useJoinChallenge, useAvailableChallenges } from "@/services/challenge"
 import { toast } from "@/components/ui/use-toast"
 import type { SubmissionFormData } from "./_components/submission-schema"
 
@@ -27,22 +27,48 @@ export default function JoinChallengePage() {
   const [initialStep, setInitialStep] = useState(0)
   const [mounted, setMounted] = useState(false)
   
-  // API hook
+  // API hooks
   const joinChallenge = useJoinChallenge()
+  const { data: challengesData, isLoading: isLoadingChallenges } = useAvailableChallenges({
+    page: 1,
+    length: 100,
+  })
 
   useEffect(() => {
     setMounted(true)
 
-    // Find the challenge by ID
-    const foundChallenge = availableChallenges.find((c) => c.id === challengeId)
-    setChallenge(foundChallenge)
+    // Find the challenge by ID from API data
+    if (challengesData?.data) {
+      const foundChallenge = challengesData.data.find((c: any) => c.id === challengeId)
+      if (foundChallenge) {
+        // Transform API campaign to challenge format for UI compatibility
+        setChallenge({
+          id: foundChallenge.id,
+          title: foundChallenge.campaign_name,
+          creator: "Brand", // Not available in API
+          category: foundChallenge.category,
+          totalPool: foundChallenge.challenge_pool,
+          paidOut: 0, // Not available in API
+          views: 0, // Not available in API
+          participants: 0, // Not available in API
+          rewardRate: foundChallenge.reward_rate_amount,
+          maxPayout: foundChallenge.max_payout,
+          platforms: foundChallenge.social_media_platforms,
+          requirements: foundChallenge.content_requirement || "No specific requirements",
+          endDate: foundChallenge.end_date,
+          hasProfilePic: false,
+          assetLinks: [], // Not available in API
+          additionalNotes: foundChallenge.content_requirement || "",
+        } as any)
+      }
+    }
 
     // Check verification status
     const loggedInEmail = localStorage.getItem("userEmail")
     if (loggedInEmail === "joshuaolugbode12+1@gmail.com") {
       setIsVerified(false)
     }
-  }, [challengeId])
+  }, [challengeId, challengesData])
 
   const handleJoinChallenge = () => {
     if (!isVerified) {
@@ -57,21 +83,21 @@ export default function JoinChallengePage() {
     // Transform form data to API format
     const socialMediaLinks: string[] = []
     
-    // Add links in order based on platform selection
-    if (data.platform === "instagram" || data.platform === "all") {
-      socialMediaLinks.push(data.instagramLink || "")
+    // Add links from the form data
+    if (data.instagram) {
+      socialMediaLinks.push(data.instagram)
     }
-    if (data.platform === "facebook" || data.platform === "all") {
-      socialMediaLinks.push(data.facebookLink || "")
+    if (data.facebook) {
+      socialMediaLinks.push(data.facebook)
     }
-    if (data.platform === "twitter" || data.platform === "all") {
-      socialMediaLinks.push(data.twitterLink || "")
+    if (data.twitter) {
+      socialMediaLinks.push(data.twitter)
     }
-    if (data.platform === "youtube" || data.platform === "all") {
-      socialMediaLinks.push(data.youtubeLink || "")
+    if (data.youtube) {
+      socialMediaLinks.push(data.youtube)
     }
-    if (data.platform === "tiktok" || data.platform === "all") {
-      socialMediaLinks.push(data.tiktokLink || "")
+    if (data.tiktok) {
+      socialMediaLinks.push(data.tiktok)
     }
 
     // Call API
@@ -79,7 +105,7 @@ export default function JoinChallengePage() {
       {
         challengeId,
         data: {
-          social_media_links: socialMediaLinks.filter(link => link !== ""),
+          social_media_links: socialMediaLinks,
         },
       },
       {
@@ -111,7 +137,7 @@ export default function JoinChallengePage() {
     setShowOnboarding(true)
   }
 
-  if (!challenge || !mounted) {
+  if (!mounted || isLoadingChallenges || !challenge) {
     return (
       <DashboardShell>
         <div className="flex items-center justify-center h-[60vh]">
@@ -132,8 +158,9 @@ export default function JoinChallengePage() {
       ) : (
         <SubmissionFormView
           challenge={challenge}
-          onClose={() => setShowSubmissionForm(false)}
+          onBack={() => setShowSubmissionForm(false)}
           onSubmit={handleSubmitLinks}
+          isSubmitting={joinChallenge.isPending}
         />
       )}
 

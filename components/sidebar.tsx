@@ -59,14 +59,21 @@ export function Sidebar() {
               alt="RipplePro Icon"
               width={30}
               height={30}
-              className="h-auto mr-2"
+              className="mr-2"
+              style={{ width: 'auto', height: '30px' }}
             />
             <span className="text-primary text-xl font-bold">RipplePro</span>
           </Link>
         )}
         {collapsed && (
           <Link href="/dashboard" className="mx-auto">
-            <Image src="/images/ripple-pro-icon.png" alt="RipplePro Icon" width={30} height={30} className="h-auto" />
+            <Image 
+              src="/images/ripple-pro-icon.png" 
+              alt="RipplePro Icon" 
+              width={30} 
+              height={30} 
+              style={{ width: 'auto', height: '30px' }}
+            />
           </Link>
         )}
         <div className="flex items-center">

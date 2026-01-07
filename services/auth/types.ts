@@ -12,7 +12,11 @@ export type UserRole = "brand" | "creator"
 export type UserStatus = "active" | "inactive"
 
 // KYC status
-export type KYCStatus = "pending" | "approved" | "rejected"
+// pending = user signed up but hasn't submitted KYC yet (default)
+// in-review = KYC submitted and awaiting admin review
+// approved = KYC approved by admin
+// rejected = KYC rejected by admin
+export type KYCStatus = "pending" | "in-review" | "approved" | "rejected"
 
 // User object
 export interface User {

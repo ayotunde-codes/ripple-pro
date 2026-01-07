@@ -32,17 +32,17 @@ export const useWallet = (userId: number) => {
 
 /**
  * Initialize funding mutation
- * Returns Paystack authorization URL
+ * Returns Paystack access_code and reference for popup
  */
 export const useInitializeFunding = () => {
+  const queryClient = useQueryClient()
+
   return useMutation({
     mutationFn: (data: InitializeFundingRequest) =>
       walletApi.initializeFunding(data),
     onSuccess: (response) => {
-      if (response.success && response.data.data.authorization_url) {
-        // Redirect to Paystack checkout
-        window.location.href = response.data.data.authorization_url
-      }
+      // Invalidate wallet queries to refetch balance after payment
+      queryClient.invalidateQueries({ queryKey: walletKeys.all })
     },
     onError: (error: any) => {
       console.error("Failed to initialize funding:", error)

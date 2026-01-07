@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -10,7 +10,11 @@ import {
   DialogTitle,
   DialogFooter,
 } from "@/components/ui/dialog"
-import { Copy, Check, X } from "lucide-react"
+import { Copy, Check, X, Loader2 } from "lucide-react"
+import { useInitializeFunding } from "@/services/wallet"
+import { toast } from "@/components/ui/use-toast"
+// @ts-ignore - No types available for @paystack/inline-js
+import PaystackPop from "@paystack/inline-js"
 
 interface VirtualAccount {
   account_number: string
@@ -23,16 +27,92 @@ interface FundWalletModalProps {
   open: boolean
   onOpenChange: (open: boolean) => void
   virtualAccount?: VirtualAccount
+  onSuccess?: () => void
 }
 
-export function FundWalletModal({ open, onOpenChange, virtualAccount }: FundWalletModalProps) {
+export function FundWalletModal({ open, onOpenChange, virtualAccount, onSuccess }: FundWalletModalProps) {
   const [copied, setCopied] = useState(false)
+  const [amount, setAmount] = useState("")
+  const [paymentMethod, setPaymentMethod] = useState<"paystack" | "bank-transfer">("paystack")
+  const initializeFunding = useInitializeFunding()
 
   const handleCopyAccountNumber = () => {
     if (virtualAccount?.account_number) {
       navigator.clipboard.writeText(virtualAccount.account_number)
       setCopied(true)
       setTimeout(() => setCopied(false), 2000)
+      toast({
+        title: "Copied!",
+        description: "Account number copied to clipboard",
+      })
+    }
+  }
+
+  const handlePaystackPayment = async () => {
+    if (!amount || Number.parseFloat(amount) <= 0) {
+      toast({
+        title: "Invalid amount",
+        description: "Please enter a valid amount",
+        variant: "destructive",
+      })
+      return
+    }
+
+    try {
+      const response = await initializeFunding.mutateAsync({
+        amount: Number.parseFloat(amount),
+      })
+
+      if (response.success && response.data) {
+        const { access_code, reference, authorization_url } = response.data.data
+
+        try {
+          // Initialize Paystack popup using the official SDK
+          const popup = new PaystackPop()
+          
+          // Resume transaction with access_code
+          popup.resumeTransaction(access_code)
+          
+          toast({
+            title: "Payment initiated",
+            description: "Complete your payment in the popup window",
+          })
+          
+          // Close modal after initiating payment
+          // The backend webhook will handle the payment verification
+          setTimeout(() => {
+            setAmount("")
+            onOpenChange(false)
+            if (onSuccess) {
+              onSuccess()
+            }
+          }, 1000)
+        } catch (popupError) {
+          console.error("Paystack popup error:", popupError)
+          
+          // Fallback: Redirect to Paystack checkout page if popup fails
+          toast({
+            title: "Redirecting to payment...",
+            description: "You will be redirected to complete your payment",
+          })
+          
+          setTimeout(() => {
+            window.location.href = authorization_url
+          }, 1000)
+        }
+      } else {
+        toast({
+          title: "Payment failed",
+          description: response.message || "Failed to initialize payment",
+          variant: "destructive",
+        })
+      }
+    } catch (error: any) {
+      toast({
+        title: "Payment failed",
+        description: error?.response?.data?.message || "Failed to initialize payment",
+        variant: "destructive",
+      })
     }
   }
 
@@ -50,13 +130,80 @@ export function FundWalletModal({ open, onOpenChange, virtualAccount }: FundWall
         </div>
 
         <div className="p-6">
-          {virtualAccount ? (
-            <>
-              <p className="text-gray-600 dark:text-[#FAFAFA] mb-6">
-                Transfer funds to the virtual account below to fund your wallet.
-              </p>
+          <p className="text-gray-600 dark:text-[#FAFAFA] mb-6">
+            Choose how you want to fund your wallet
+          </p>
 
-              <div className="space-y-6">
+          <div className="space-y-6">
+            {/* Payment Method Selection */}
+            <div className="space-y-2">
+              <Label className="text-gray-700 dark:text-[#FAFAFA] font-medium">Payment Method</Label>
+              <div className="grid grid-cols-2 gap-3">
+                <button
+                  type="button"
+                  onClick={() => setPaymentMethod("paystack")}
+                  className={`p-4 rounded-lg border-2 transition-colors ${
+                    paymentMethod === "paystack"
+                      ? "border-[#B125F9] bg-[#FDF8FF] dark:bg-[#0E0E0E]"
+                      : "border-gray-200 dark:border-gray-700"
+                  }`}
+                >
+                  <p className="font-medium dark:text-[#FAFAFA]">Paystack</p>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">Card/Bank Transfer</p>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setPaymentMethod("bank-transfer")}
+                  className={`p-4 rounded-lg border-2 transition-colors ${
+                    paymentMethod === "bank-transfer"
+                      ? "border-[#B125F9] bg-[#FDF8FF] dark:bg-[#0E0E0E]"
+                      : "border-gray-200 dark:border-gray-700"
+                  }`}
+                >
+                  <p className="font-medium dark:text-[#FAFAFA]">Bank Transfer</p>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">Virtual Account</p>
+                </button>
+              </div>
+            </div>
+
+            {/* Paystack Payment */}
+            {paymentMethod === "paystack" && (
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <Label className="text-gray-700 dark:text-[#FAFAFA] font-medium">
+                    Amount (₦) <span className="text-red-500">*</span>
+                  </Label>
+                  <Input
+                    type="number"
+                    placeholder="Enter amount"
+                    value={amount}
+                    onChange={(e) => setAmount(e.target.value)}
+                    className="rounded-full h-14 px-4 border-gray-200"
+                    min="1"
+                  />
+                </div>
+
+                <Button
+                  type="button"
+                  onClick={handlePaystackPayment}
+                  disabled={!amount || Number.parseFloat(amount) <= 0 || initializeFunding.isPending}
+                  className="w-full bg-gradient-to-r from-[#E43EFC] to-[#B125F9] hover:from-[#E43EFC]/90 hover:to-[#B125F9]/90 text-white rounded-full py-6 font-medium"
+                >
+                  {initializeFunding.isPending ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Processing...
+                    </>
+                  ) : (
+                    "Pay with Paystack"
+                  )}
+                </Button>
+              </div>
+            )}
+
+            {/* Bank Transfer */}
+            {paymentMethod === "bank-transfer" && virtualAccount && (
+              <div className="space-y-4">
                 <div className="space-y-2">
                   <Label className="text-gray-700 dark:text-[#FAFAFA] font-medium">Bank name</Label>
                   <div className="flex h-14 w-full rounded-full border border-gray-200 bg-background px-4 py-3 text-gray-700 dark:text-[#FAFAFA]">
@@ -86,12 +233,14 @@ export function FundWalletModal({ open, onOpenChange, virtualAccount }: FundWall
                   </div>
                 </div>
               </div>
-            </>
-          ) : (
-            <p className="text-gray-600 dark:text-[#FAFAFA] mb-6 text-center">
-              Loading virtual account details...
-            </p>
-          )}
+            )}
+
+            {paymentMethod === "bank-transfer" && !virtualAccount && (
+              <p className="text-gray-600 dark:text-[#FAFAFA] text-center py-4">
+                Loading virtual account details...
+              </p>
+            )}
+          </div>
         </div>
       </DialogContent>
     </Dialog>

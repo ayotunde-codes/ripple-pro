@@ -9,7 +9,13 @@ export default function Home() {
       <header className="w-full py-4 px-4 sm:px-6 lg:px-8 border-b">
         <div className="container mx-auto flex justify-between items-center">
           <div className="flex items-center">
-            <Image src="/images/ripple-pro-logo.png" alt="RipplePro" width={150} height={50} className="h-auto" />
+            <Image 
+              src="/images/ripple-pro-logo.png" 
+              alt="RipplePro" 
+              width={150} 
+              height={50} 
+              style={{ width: 'auto', height: '50px' }}
+            />
           </div>
           <div className="flex items-center space-x-4">
             <Link href="/login" className="text-sm font-medium text-gray-700 hover:text-gray-900">
@@ -52,7 +58,7 @@ export default function Home() {
                 alt="RipplePro Platform"
                 width={400}
                 height={400}
-                className="h-auto"
+                style={{ width: 'auto', maxWidth: '100%', height: 'auto' }}
               />
             </div>
           </div>
@@ -182,7 +188,8 @@ export default function Home() {
                 alt="RipplePro"
                 width={150}
                 height={50}
-                className="h-auto mb-4 invert"
+                className="mb-4 invert"
+                style={{ width: 'auto', height: '50px' }}
               />
               <p className="text-gray-400">Connecting brands with creators to create ripples of impact.</p>
             </div>
